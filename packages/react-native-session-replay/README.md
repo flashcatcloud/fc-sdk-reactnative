@@ -9,13 +9,13 @@ Mobile Session Replay expands visibility into your mobile applications by visual
 To install with NPM, run:
 
 ```sh
-npm install @datadog/mobile-react-native-session-replay
+npm install @flashcatcloud/mobile-react-native-session-replay
 ```
 
 To install with Yarn, run:
 
 ```sh
-yarn add @datadog/mobile-react-native-session-replay
+yarn add @flashcatcloud/mobile-react-native-session-replay
 ```
 
 ## Enable Session Replay
@@ -23,7 +23,7 @@ yarn add @datadog/mobile-react-native-session-replay
 To enable Session Replay, import and call the `enable` method with your configuration. Below is an example setup:
 
 ```js
-import { SessionReplay } from "@datadog/mobile-react-native-session-replay";
+import { SessionReplay } from "@flashcatcloud/mobile-react-native-session-replay";
 
 SessionReplay.enable({
     replaySampleRate: sampleRate, // The percentage of sampled replays, in the range 0.0 - 100.0 (Default: 100.0).
@@ -40,7 +40,7 @@ SessionReplay.enable({
 By default, Session Replay starts recording automatically. However, if you prefer to manually start recording at a specific point in your application, you can use the optional `startRecordingImmediately` parameter as shown below, and later call `SessionReplay.startRecording()`. You can also use `SessionReplay.stopRecording()` to stop the recording anytime.
 
 ```js
-import { SessionReplay } from "@datadog/mobile-react-native-session-replay";
+import { SessionReplay } from "@flashcatcloud/mobile-react-native-session-replay";
 
 SessionReplay.enable({
   replaySampleRate: sampleRate,
@@ -60,13 +60,13 @@ Session Replay provides enhanced support for capturing SVG images in your React 
 Install the Datadog Babel plugin:
 
 ```sh
-npm install @datadog/mobile-react-native-babel-plugin
+npm install @flashcatcloud/mobile-react-native-babel-plugin
 ```
 
 or with Yarn:
 
 ```sh
-yarn add @datadog/mobile-react-native-babel-plugin
+yarn add @flashcatcloud/mobile-react-native-babel-plugin
 ```
 
 ### Setup Babel Plugin
@@ -78,7 +78,7 @@ module.exports = {
   presets: ['module:@react-native/babel-preset'],
   plugins: [
     [
-      '@datadog/mobile-react-native-babel-plugin',
+      '@flashcatcloud/mobile-react-native-babel-plugin',
       {
         sessionReplay: {
           // SVG tracking is disabled by default
@@ -96,7 +96,7 @@ module.exports = {
 Configure the Metro plugin in your `metro.config.js` to enable automatic SVG asset bundling:
 
 ```js
-const { withSessionReplayAssetBundler } = require('@datadog/mobile-react-native-session-replay/metro');
+const { withSessionReplayAssetBundler } = require('@flashcatcloud/mobile-react-native-session-replay/metro');
 
 module.exports = withSessionReplayAssetBundler({
   /* your existing Metro config */
@@ -155,4 +155,4 @@ During development, the Metro plugin automatically handles SVG assets created by
 
 No manual asset management is required during development.
 
-[1]: https://www.npmjs.com/package/@datadog/mobile-react-native
+[1]: https://www.npmjs.com/package/@flashcatcloud/mobile-react-native

@@ -1,6 +1,6 @@
 {
-    "name": "@datadog/mobile-react-native-apollo-client",
-    "version": "2.14.1",
+    "name": "@flashcatcloud/mobile-react-native-apollo-client",
+    "version": "0.1.0",
     "description": "A client-side React Native module to interact with Apollo Client and Datadog",
     "keywords": [
         "datadog",
@@ -10,14 +10,14 @@
         "apollo",
         "graphql"
     ],
-    "author": "Datadog (https://github.com/DataDog)",
-    "homepage": "https://github.com/DataDog/dd-sdk-reactnative/packages/react-native-apollo-client#readme",
+    "author": "Flashcat",
+    "homepage": "https://github.com/flashcat/fc-sdk-reactnative/packages/react-native-apollo-client#readme",
     "repository": {
-        "url": "https://github.com/DataDog/dd-sdk-reactnative",
+        "url": "https://github.com/flashcat/fc-sdk-reactnative",
         "directory": "packages/react-native-apollo-client"
     },
     "bugs": {
-        "url": "https://github.com/DataDog/dd-sdk-reactnative/issues"
+        "url": "https://github.com/flashcat/fc-sdk-reactnative/issues"
     },
     "license": "Apache-2.0",
     "main": "lib/commonjs/index",
@@ -45,14 +45,14 @@
     },
     "peerDependencies": {
         "@apollo/client": ">=3.0",
-        "@datadog/mobile-react-native": "^2.6.1",
+        "@flashcatcloud/mobile-react-native": "^0.1.0",
         "react": ">=16.13.1",
         "react-native": ">=0.63.4 <1.0"
     },
     "jest": {
         "preset": "react-native",
         "moduleNameMapper": {
-            "@datadog/mobile-react-native": "<rootDir>../core/src"
+            "@flashcatcloud/mobile-react-native": "<rootDir>../core/src"
         },
         "modulePathIgnorePatterns": [
             "<rootDir>/lib/"

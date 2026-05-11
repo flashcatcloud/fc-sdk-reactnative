@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import styles from './styles';
 import { APPLICATION_KEY, API_KEY } from '../../src/ddCredentials';
-import { DdLogs, DdSdkReactNative, TrackingConsent } from '@datadog/mobile-react-native';
+import { DdLogs, DdSdkReactNative, TrackingConsent } from '@flashcatcloud/mobile-react-native';
 import { getTrackingConsent, saveTrackingConsent } from '../utils';
 import { ConsentModal } from '../components/consent';
 import { DdRum } from '../../../packages/core/src/rum/DdRum';

@@ -55,4 +55,4 @@ export default function App() {
 
 See the [documentation on asynchronous initialization][1].
 
-[1]: https://github.com/DataDog/dd-sdk-reactnative/blob/develop/docs/advanced_configuration.md#delaying-the-initialization
+[1]: https://github.com/flashcat/fc-sdk-reactnative/blob/develop/docs/advanced_configuration.md#delaying-the-initialization

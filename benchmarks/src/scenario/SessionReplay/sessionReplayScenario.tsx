@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createStaticNavigation } from '@react-navigation/native';
-import { ImagePrivacyLevel, SessionReplay, TextAndInputPrivacyLevel, TouchPrivacyLevel } from "@datadog/mobile-react-native-session-replay";
+import { ImagePrivacyLevel, SessionReplay, TextAndInputPrivacyLevel, TouchPrivacyLevel } from "@flashcatcloud/mobile-react-native-session-replay";
 
 import type { SessionReplayScenarioProps } from "./types";
 import { Colors, CommonStyles as styles } from '../../common/styles';

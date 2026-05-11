@@ -71,10 +71,10 @@ const resolveJSONConfiguration = (
                 !jsonContent['configuration']
             ) {
                 console.error(`Failed to parse the Datadog configuration file located at the root of the project.
-Your configuration must validate the node_modules/@datadog/mobile-react-native/datadog-configuration.schema.json JSON schema.
+Your configuration must validate the node_modules/@flashcatcloud/mobile-react-native/datadog-configuration.schema.json JSON schema.
 You can use VSCode to check your configuration by adding the following line to your JSON file:
 {
-    "$schema": "./node_modules/@datadog/mobile-react-native/datadog-configuration.schema.json",
+    "$schema": "./node_modules/@flashcatcloud/mobile-react-native/datadog-configuration.schema.json",
 }`);
 
                 return {};
@@ -95,10 +95,10 @@ new FileBasedConfiguration({configuration: require('./file/to/configuration-file
         !(userSpecifiedConfiguration as any)['configuration']
     ) {
         console.error(`Failed to parse the Datadog configuration file you provided.
-Your configuration must validate the node_modules/@datadog/mobile-react-native/datadog-configuration.schema.json JSON schema.
+Your configuration must validate the node_modules/@flashcatcloud/mobile-react-native/datadog-configuration.schema.json JSON schema.
 You can use VSCode to check your configuration by adding the following line to your JSON file:
 {
-    "$schema": "./node_modules/@datadog/mobile-react-native/datadog-configuration.schema.json",
+    "$schema": "./node_modules/@flashcatcloud/mobile-react-native/datadog-configuration.schema.json",
 }`);
 
         return {};

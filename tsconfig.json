@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@datadog/mobile-react-native": [
+      "@flashcatcloud/mobile-react-native": [
         "./packages/core/src"
       ]
     },

@@ -5,7 +5,7 @@
  * Copyright 2016-Present Datadog, Inc.
  */
 
-import { DdRum } from '@datadog/mobile-react-native';
+import { DdRum } from '@flashcatcloud/mobile-react-native';
 import { fireEvent, render, waitFor } from '@testing-library/react-native';
 import {
     ApplicationMock,
@@ -22,7 +22,7 @@ import { DdRumReactNativeNavigationTracking } from '../../../rum/instrumentation
 import { AppStateMockLegacy } from './__utils__/AppStateMockLegacy';
 import { AppStateMock } from './__utils__/AppStateMock';
 
-jest.mock('@datadog/mobile-react-native', () => {
+jest.mock('@flashcatcloud/mobile-react-native', () => {
     return {
         DdRum: {
             startView: jest.fn().mockImplementation(() => {}),

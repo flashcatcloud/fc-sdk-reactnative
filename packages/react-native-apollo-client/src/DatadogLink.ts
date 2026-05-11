@@ -9,7 +9,7 @@ import {
     DATADOG_GRAPH_QL_OPERATION_TYPE_HEADER,
     DATADOG_GRAPH_QL_OPERATION_NAME_HEADER,
     DATADOG_GRAPH_QL_VARIABLES_HEADER
-} from '@datadog/mobile-react-native';
+} from '@flashcatcloud/mobile-react-native';
 
 import { getOperationName, getVariables, getOperationType } from './helpers';
 

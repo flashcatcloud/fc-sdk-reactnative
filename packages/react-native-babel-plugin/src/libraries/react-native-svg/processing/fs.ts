@@ -53,7 +53,7 @@ function findModulePath(
  */
 export function getAssetsPath() {
     const hasDevFlag = process.env.pluginDev;
-    const moduleName = '@datadog/mobile-react-native-session-replay';
+    const moduleName = '@flashcatcloud/mobile-react-native-session-replay';
 
     if (!hasDevFlag) {
         const modulePath = findModulePath(moduleName);

@@ -8,7 +8,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const React = require('react');
 
-const actualDatadog = jest.requireActual('@datadog/mobile-react-native');
+const actualDatadog = jest.requireActual('@flashcatcloud/mobile-react-native');
 
 /**
  * Explicitly mocking the provider prevents auto-instrumentation in tests.

@@ -101,7 +101,7 @@ catch (error) {
             expect(wrappedCode).toBeDefined();
             expect(dedent(wrappedCode as string)).toBe(expected);
             expect(warnSpy).toHaveBeenCalledWith(
-                "[@datadog/mobile-react-native-webview] Invalid 'allowedHosts' format: Error: allowedHosts is undefined"
+                "[@flashcatcloud/mobile-react-native-webview] Invalid 'allowedHosts' format: Error: allowedHosts is undefined"
             );
 
             warnSpy.mockRestore();
@@ -137,7 +137,7 @@ catch (error) {
             expect(wrappedCode).toBeDefined();
             expect(dedent(wrappedCode as string)).toBe(expected);
             expect(warnSpy).toHaveBeenCalledWith(
-                "[@datadog/mobile-react-native-webview] Invalid 'allowedHosts' format: Error: JSON.stringify returned 'undefined' for the given hosts"
+                "[@flashcatcloud/mobile-react-native-webview] Invalid 'allowedHosts' format: Error: JSON.stringify returned 'undefined' for the given hosts"
             );
 
             warnSpy.mockRestore();

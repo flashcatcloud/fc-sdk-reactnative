@@ -1,6 +1,6 @@
 {
-    "name": "@datadog/mobile-react-navigation",
-    "version": "2.14.1",
+    "name": "@flashcatcloud/mobile-react-navigation",
+    "version": "0.1.0",
     "description": "A client-side React Native module to interact with Datadog",
     "keywords": [
         "datadog",
@@ -8,14 +8,14 @@
         "ios",
         "android"
     ],
-    "author": "Datadog (https://github.com/DataDog)",
-    "homepage": "https://github.com/DataDog/dd-sdk-reactnative#readme",
+    "author": "Flashcat",
+    "homepage": "https://github.com/flashcat/fc-sdk-reactnative#readme",
     "repository": {
-        "url": "https://github.com/DataDog/dd-sdk-reactnative",
+        "url": "https://github.com/flashcat/fc-sdk-reactnative",
         "directory": "packages/react-navigation"
     },
     "bugs": {
-        "url": "https://github.com/DataDog/dd-sdk-reactnative/issues"
+        "url": "https://github.com/flashcat/fc-sdk-reactnative/issues"
     },
     "license": "Apache-2.0",
     "main": "lib/commonjs/index",
@@ -36,7 +36,7 @@
         "prepare": "rm -rf lib && yarn bob build"
     },
     "devDependencies": {
-        "@datadog/mobile-react-native": "^2.14.1",
+        "@flashcatcloud/mobile-react-native": "^0.1.0",
         "@react-navigation/native-v5": "npm:@react-navigation/native@5.9.8",
         "@react-navigation/native-v6": "npm:@react-navigation/native@6.1.2",
         "@react-navigation/stack-v5": "npm:@react-navigation/stack@5.14.2",
@@ -47,14 +47,14 @@
         "react-native-safe-area-context": "3.1.9"
     },
     "peerDependencies": {
-        "@datadog/mobile-react-native": "^2.0.1",
+        "@flashcatcloud/mobile-react-native": "^0.1.0",
         "react": ">=16.13.1",
         "react-native": ">=0.63.4 <1.0"
     },
     "jest": {
         "preset": "react-native",
         "moduleNameMapper": {
-            "@datadog/mobile-react-native": "<rootDir>../core/src"
+            "@flashcatcloud/mobile-react-native": "<rootDir>../core/src"
         },
         "modulePathIgnorePatterns": [
             "<rootDir>/lib/"

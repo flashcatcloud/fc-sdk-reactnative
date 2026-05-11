@@ -281,7 +281,7 @@ function mergeSvgAssets(assetsDir: string) {
  * references are available during the build process.
  *
  * Usage:
- *   npx @datadog/mobile-react-native-babel-plugin generate-sr-assets [options]
+ *   npx @flashcatcloud/mobile-react-native-babel-plugin generate-sr-assets [options]
  *   or
  *   npx datadog-generate-sr-assets [options]
  *

@@ -5,7 +5,7 @@
  * Copyright 2016-Present Datadog, Inc.
  */
 
-import { DdRum, InternalLog } from '@datadog/mobile-react-native';
+import { DdRum, InternalLog } from '@flashcatcloud/mobile-react-native';
 import type { Route } from '@react-navigation/native-v5';
 import { render, fireEvent } from '@testing-library/react-native';
 import mockBackHandler from 'react-native/Libraries/Utilities/__mocks__/BackHandler.js';
@@ -50,7 +50,7 @@ jest.mock('react-native', () => {
     return reactNative;
 });
 
-jest.mock('@datadog/mobile-react-native', () => {
+jest.mock('@flashcatcloud/mobile-react-native', () => {
     return {
         DdRum: {
             // eslint-disable-next-line @typescript-eslint/no-empty-function

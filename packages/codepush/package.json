@@ -1,6 +1,6 @@
 {
-    "name": "@datadog/mobile-react-native-code-push",
-    "version": "2.14.1",
+    "name": "@flashcatcloud/mobile-react-native-code-push",
+    "version": "0.1.0",
     "description": "A client-side React Native module to interact with Appcenter Codepush and Datadog",
     "keywords": [
         "datadog",
@@ -10,16 +10,17 @@
         "codepush",
         "appcenter"
     ],
-    "author": "Datadog (https://github.com/DataDog)",
-    "homepage": "https://github.com/DataDog/dd-sdk-reactnative#readme",
+    "author": "Flashcat",
+    "homepage": "https://github.com/flashcat/fc-sdk-reactnative#readme",
     "repository": {
-        "url": "https://github.com/DataDog/dd-sdk-reactnative",
+        "url": "https://github.com/flashcat/fc-sdk-reactnative",
         "directory": "packages/codepush"
     },
     "bugs": {
-        "url": "https://github.com/DataDog/dd-sdk-reactnative/issues"
+        "url": "https://github.com/flashcat/fc-sdk-reactnative/issues"
     },
     "license": "Apache-2.0",
+    "private": true,
     "main": "lib/commonjs/index",
     "files": [
         "src/**",
@@ -38,13 +39,13 @@
         "prepare": "rm -rf lib && yarn bob build"
     },
     "devDependencies": {
-        "@datadog/mobile-react-native": "workspace:2.14.1",
+        "@flashcatcloud/mobile-react-native": "workspace:0.1.0",
         "@testing-library/react-native": "7.0.2",
         "react-native-builder-bob": "0.26.0",
         "react-native-code-push": "7.1.0"
     },
     "peerDependencies": {
-        "@datadog/mobile-react-native": "^2.0.1",
+        "@flashcatcloud/mobile-react-native": "^0.1.0",
         "react": ">=16.13.1",
         "react-native": ">=0.63.4 <1.0",
         "react-native-code-push": ">=2.0.0"
@@ -52,7 +53,7 @@
     "jest": {
         "preset": "react-native",
         "moduleNameMapper": {
-            "@datadog/mobile-react-native": "<rootDir>../core/src"
+            "@flashcatcloud/mobile-react-native": "<rootDir>../core/src"
         },
         "modulePathIgnorePatterns": [
             "<rootDir>/lib/"

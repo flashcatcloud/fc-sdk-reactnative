@@ -1,6 +1,6 @@
 {
-    "name": "@datadog/mobile-react-native-session-replay",
-    "version": "2.14.1",
+    "name": "@flashcatcloud/mobile-react-native-session-replay",
+    "version": "0.1.0",
     "description": "A client-side React Native module to enable session replay with Datadog",
     "keywords": [
         "datadog",
@@ -8,13 +8,14 @@
         "ios",
         "android"
     ],
-    "author": "Datadog (https://github.com/DataDog)",
-    "homepage": "https://github.com/DataDog/dd-sdk-reactnative#readme",
-    "repository": "https://github.com/DataDog/dd-sdk-reactnative",
+    "author": "Flashcat",
+    "homepage": "https://github.com/flashcat/fc-sdk-reactnative#readme",
+    "repository": "https://github.com/flashcat/fc-sdk-reactnative",
     "bugs": {
-        "url": "https://github.com/DataDog/dd-sdk-reactnative/issues"
+        "url": "https://github.com/flashcat/fc-sdk-reactnative/issues"
     },
     "license": "Apache-2.0",
+    "private": true,
     "main": "lib/commonjs/index",
     "files": [
         "src/**",
@@ -58,7 +59,7 @@
     "jest": {
         "preset": "react-native",
         "moduleNameMapper": {
-            "@datadog/mobile-react-native": "<rootDir>../core/src"
+            "@flashcatcloud/mobile-react-native": "<rootDir>../core/src"
         },
         "modulePathIgnorePatterns": [
             "<rootDir>/lib/"

@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { WebView } from "@datadog/mobile-react-native-webview";
+import { WebView } from "@flashcatcloud/mobile-react-native-webview";
 import { Alert, SafeAreaView } from 'react-native';
 import { CommonStyles as styles} from '../../../../common/styles';
 

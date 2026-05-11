@@ -7,13 +7,13 @@ Datadog Real User Monitoring (RUM) enables you to visualize and analyze the real
 To install with NPM, run:
 
 ```sh
-npm install @datadog/mobile-react-native
+npm install @flashcatcloud/mobile-react-native
 ```
 
 To install with Yarn, run:
 
 ```sh
-yarn add @datadog/mobile-react-native
+yarn add @flashcatcloud/mobile-react-native
 ```
 
 **Minimum React Native version**: SDK supports React Native version 0.63.4 or higher. Compatibility with older versions is not guaranteed out of the box.
@@ -28,7 +28,7 @@ Versions `1.0.0-rc5` and higher require you to have `compileSdkVersion = 31` in 
 
 ![image][2]
 
-To ensure the safety of your data, you must use a client token. You cannot use only [Datadog API keys][3] to configure the `@datadog/mobile-react-native` library, because they would be exposed client-side. For more information about setting up a client token, see the [Client Token documentation][4].
+To ensure the safety of your data, you must use a client token. You cannot use only [Datadog API keys][3] to configure the `@flashcatcloud/mobile-react-native` library, because they would be exposed client-side. For more information about setting up a client token, see the [Client Token documentation][4].
 
 ### Initialize the library with application context
 
@@ -36,7 +36,7 @@ To ensure the safety of your data, you must use a client token. You cannot use o
 import {
     DatadogProvider,
     DatadogProviderConfiguration
-} from '@datadog/mobile-react-native';
+} from '@flashcatcloud/mobile-react-native';
 
 const datadogConfiguration = new DatadogProviderConfiguration(
     '<CLIENT_TOKEN>',
@@ -80,7 +80,7 @@ import {
     DdSdkReactNativeConfiguration,
     DdLogs,
     DdRum
-} from '@datadog/mobile-react-native';
+} from '@flashcatcloud/mobile-react-native';
 
 // Start a view with a unique view identifier, a custom view url, and an object to attach additional attributes to the view
 DdRum.startView('ViewKey', 'ViewName', Date.now(), {
@@ -105,6 +105,6 @@ Before data is uploaded to Datadog, it is stored in cleartext in the cache direc
 of your [application sandbox][4], which can't be read by any other app installed on the device.
 
 [1]: https://app.datadoghq.com/rum/application/create
-[2]: https://raw.githubusercontent.com/DataDog/dd-sdk-reactnative/main/docs/image_reactnative.png
+[2]: https://raw.githubusercontent.com/flashcat/fc-sdk-reactnative/main/docs/image_reactnative.png
 [3]: https://source.android.com/security/app-sandbox
 [4]: https://support.apple.com/guide/security/security-of-runtime-process-sec15bfe098e/web

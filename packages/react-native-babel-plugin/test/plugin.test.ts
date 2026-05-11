@@ -74,7 +74,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
         `;
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { Button } from 'react-native';
             /*#__PURE__*/React.createElement(Button, {
               color: "red",
@@ -108,7 +108,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
         `;
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { TextInput } from 'react-native';
             /*#__PURE__*/React.createElement(TextInput, {
               placeholder: "Enter username",
@@ -148,7 +148,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
         `;
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { TextInput } from 'react-native';
             /*#__PURE__*/React.createElement(TextInput, {
               placeholder: "Enter username",
@@ -226,7 +226,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
         `;
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
             import { TextInput } from 'react-native';
             /*#__PURE__*/React.createElement(TextInput, _extends({}, props, {
@@ -333,7 +333,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
 
         const output = transformCode(input, options);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
             import { TextInput } from './TextInput';
             /*#__PURE__*/React.createElement(TextInput, _extends({}, props, {
@@ -363,7 +363,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
         `;
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { Pressable } from 'react-native';
             /*#__PURE__*/React.createElement(Pressable, {
               onPress: event => {
@@ -425,7 +425,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
 
         const output = transformCode(input, options);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
             import { TextInput } from './TextInput';
             /*#__PURE__*/React.createElement(TextInput, _extends({}, props, {
@@ -455,7 +455,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
         `;
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { Pressable } from 'react-native';
             /*#__PURE__*/React.createElement(Pressable, {
               onPress: event => {
@@ -489,7 +489,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
         `;
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { Pressable } from 'react-native';
             /*#__PURE__*/React.createElement(Pressable, {
               onPress: (test1, test2) => {
@@ -525,7 +525,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
         `;
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { Pressable } from 'react-native';
             const func = event => {
               console.log('Testing: ', event);
@@ -559,7 +559,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
         `;
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { Pressable } from 'react-native';
             function func3() {
               console.log('Testing 3');
@@ -593,7 +593,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
         `;
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { Pressable } from 'react-native';
             function a(event, data = 1, ...rest) {
               console.log(event, data, rest);
@@ -625,7 +625,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
         `;
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { Pressable } from 'react-native';
             /*#__PURE__*/React.createElement(Pressable, {
               onPress: _dd_arg0 => {
@@ -665,7 +665,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
         `;
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { Pressable } from 'react-native';
             /*#__PURE__*/React.createElement(Pressable, {
               onPress: (_dd_arg0, extra, _dd_arg2, ...rest) => {
@@ -706,7 +706,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
         `;
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { Pressable } from 'react-native';
             /*#__PURE__*/React.createElement(Pressable, {
               onPress: (event, context = 'default') => {
@@ -739,7 +739,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
         `;
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { Pressable } from 'react-native';
             /*#__PURE__*/React.createElement(Pressable, {
               onPress: _dd_arg0 => {
@@ -787,7 +787,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
 
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { Pressable } from 'react-native';
             const handler = test => {
               console.log('Testing ', test);
@@ -826,7 +826,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
 
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { Pressable } from 'react-native';
             function MyComponent() {
               return /*#__PURE__*/React.createElement(Pressable, {
@@ -862,7 +862,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
 
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { Pressable } from 'react-native';
             function MyComponent() {
               return /*#__PURE__*/React.createElement(Pressable, {
@@ -901,7 +901,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
 
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import React from 'react';
             import { View, Pressable } from 'react-native';
             function MyComponent(props) {
@@ -941,7 +941,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
 
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import React from 'react';
             import { View, Pressable } from 'react-native';
             function MyComponent({
@@ -984,7 +984,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
 
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import React from 'react';
             import { View, Pressable } from 'react-native';
             function MyComponent({
@@ -1033,7 +1033,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
 
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import React from 'react';
             import { View, Button } from 'react-native';
             class MyClassComponent2 extends Component {
@@ -1089,7 +1089,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
 
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import React from 'react';
             import { View, Button } from 'react-native';
             class MyClassComponent extends Component {
@@ -1135,7 +1135,7 @@ describe('Babel plugin: wrap interaction handlers for RUM', () => {
         `;
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { Button } from 'react-native';
             /*#__PURE__*/React.createElement(Button, {
               "dd-action-name": "test-action-button",
@@ -1184,7 +1184,7 @@ describe('Babel plugin: wrap interaction handlers for RUM ( with memoization )',
 
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { useCallback } from 'react';
             import { Pressable } from 'react-native';
             function MyComponent() {
@@ -1237,7 +1237,7 @@ describe('Babel plugin: wrap interaction handlers for RUM ( with memoization )',
 
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { useCallback } from 'react';
             import { Pressable } from 'react-native';
             function MyComponent() {
@@ -1284,7 +1284,7 @@ describe('Babel plugin: wrap interaction handlers for RUM ( with memoization )',
 
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { useCallback } from 'react';
             import { Pressable } from 'react-native';
             function MyComponent() {
@@ -1333,7 +1333,7 @@ describe('Babel plugin: wrap interaction handlers for RUM ( with memoization )',
         `;
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { useCallback } from 'react';
             import { View, Pressable } from 'react-native';
             function MyComponent() {
@@ -1389,7 +1389,7 @@ describe('Babel plugin: wrap interaction handlers for RUM ( with memoization )',
 
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import { useCallback } from 'react';
             import { View, Pressable } from 'react-native';
             function MyComponent() {
@@ -1443,7 +1443,7 @@ describe('Babel plugin: wrap interaction handlers for RUM ( with memoization )',
 
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import React from 'react';
             import { View, Pressable } from 'react-native';
             function MyComponent() {
@@ -1495,7 +1495,7 @@ describe('Babel plugin: wrap interaction handlers for RUM ( with memoization )',
 
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import React from 'react';
             import { View, Pressable } from 'react-native';
             const funcN = test => {
@@ -1542,7 +1542,7 @@ describe('Babel plugin: wrap interaction handlers for RUM ( with memoization )',
 
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import React from 'react';
             import { View, Pressable } from 'react-native';
             import { funcN } from '../myFile';
@@ -1578,7 +1578,7 @@ describe('Babel plugin: wrap interaction handlers for RUM ( with memoization )',
 
         const output = transformCode(input);
         expect(output).toMatchInlineSnapshot(`
-            "import { DdBabelInteractionTracking, __ddExtractText } from "@datadog/mobile-react-native";
+            "import { DdBabelInteractionTracking, __ddExtractText } from "@flashcatcloud/mobile-react-native";
             import React from 'react';
             import { View, Pressable } from 'react-native';
             const funcN = () => {

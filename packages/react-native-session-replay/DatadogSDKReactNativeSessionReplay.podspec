@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => "12.0", :tvos => "12.0" }
-  s.source       = { :git => "https://github.com/DataDog/dd-sdk-reactnative.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/flashcat/fc-sdk-reactnative.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/Sources/**/*.{h,m,mm,swift}"
 
@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
   s.dependency "React-Core"
 
   # /!\ Remember to keep the version in sync with DatadogSDKReactNative.podspec
-  s.dependency 'DatadogSessionReplay', '2.30.2'
+  s.dependency 'DatadogSessionReplay', '0.2.0'
   s.dependency 'DatadogSDKReactNative'
 
   s.test_spec 'Tests' do |test_spec|

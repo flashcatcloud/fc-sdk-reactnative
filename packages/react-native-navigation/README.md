@@ -9,13 +9,13 @@ Datadog *Real User Monitoring (RUM)* enables you to visualize and analyze the re
 To install with NPM, run:
 
 ```sh
-npm install @datadog/mobile-react-native-navigation
+npm install @flashcatcloud/mobile-react-native-navigation
 ```
 
 To install with Yarn, run:
 
 ```sh
-yarn add @datadog/mobile-react-native-navigation
+yarn add @flashcatcloud/mobile-react-native-navigation
 ```
 
 ### Track view navigation
@@ -25,7 +25,7 @@ In order to start tracking your navigation events, simply call the add the follo
 Returning `null` in the `ViewNamePredicate` prevents the new RUM View from being created. The previous RUM View remains active.
 
 ```js
-import { DdRumReactNativeNavigationTracking, ViewNamePredicate }  from '@datadog/mobile-react-native-navigation';
+import { DdRumReactNativeNavigationTracking, ViewNamePredicate }  from '@flashcatcloud/mobile-react-native-navigation';
 import { ComponentDidAppearEvent } from 'react-native-navigation';
 
 const viewNamePredicate: ViewNamePredicate = function customViewNamePredicate(event: ComponentDidAppearEvent, trackedName: string) {
@@ -36,5 +36,5 @@ DdRumReactNativeNavigationTracking.startTracking(viewNamePredicate);
 ```
 
 [1]: https://github.com/wix/react-native-navigation
-[2]: https://github.com/DataDog/dd-sdk-reactnative/tree/main/packages/core
+[2]: https://github.com/flashcat/fc-sdk-reactnative/tree/main/packages/core
 [3]: https://wix.github.io/react-native-navigation/api/events/#componentdidappear

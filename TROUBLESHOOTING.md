@@ -6,7 +6,7 @@ See the [dedicated troubleshooting guide](./docs/troubleshooting_no_data.md).
 
 ### `Undefined symbols: Swift`
 
-Original issue: https://github.com/DataDog/dd-sdk-reactnative/issues/41
+Original issue: https://github.com/flashcat/fc-sdk-reactnative/issues/41
 
 If you have the following error message:
 

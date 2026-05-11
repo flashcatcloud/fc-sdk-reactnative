@@ -423,10 +423,10 @@ export class ReactNativeSVG {
 
     /**
      * Ensures that the `SessionReplayView` import from
-     * `@datadog/mobile-react-native-session-replay` exists in the file.
+     * `@flashcatcloud/mobile-react-native-session-replay` exists in the file.
      *
      * If the import is not already present, this method injects a new
-     * `import { SessionReplayView } from '@datadog/mobile-react-native-session-replay'`
+     * `import { SessionReplayView } from '@flashcatcloud/mobile-react-native-session-replay'`
      * declaration at the top of the program.
      *
      * @param t - Babel types helper used to create and check AST nodes.
@@ -444,7 +444,7 @@ export class ReactNativeSVG {
             return (
                 t.isImportDeclaration(node) &&
                 node.source.value ===
-                    '@datadog/mobile-react-native-session-replay' &&
+                    '@flashcatcloud/mobile-react-native-session-replay' &&
                 node.specifiers.some(
                     spec =>
                         t.isImportSpecifier(spec) &&
@@ -461,7 +461,7 @@ export class ReactNativeSVG {
                         t.identifier('SessionReplayView')
                     )
                 ],
-                t.stringLiteral('@datadog/mobile-react-native-session-replay')
+                t.stringLiteral('@flashcatcloud/mobile-react-native-session-replay')
             );
             program.unshiftContainer('body', importDecl);
         }

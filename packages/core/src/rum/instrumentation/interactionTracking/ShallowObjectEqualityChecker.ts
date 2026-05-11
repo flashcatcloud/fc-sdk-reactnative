@@ -8,7 +8,7 @@
  * Does a shallow comparison between 2 objects.
  *
  * In some rare cases, one of the objects can be `undefined` or `null`.
- * This is documented in https://github.com/DataDog/dd-sdk-reactnative/issues/419.
+ * This is documented in https://github.com/flashcat/fc-sdk-reactnative/issues/419.
  */
 export const areObjectShallowEqual = (
     objectA: Record<string, unknown> | undefined | null,

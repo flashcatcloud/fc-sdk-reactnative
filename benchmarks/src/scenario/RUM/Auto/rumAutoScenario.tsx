@@ -7,10 +7,10 @@
 import * as React from 'react';
 import { Platform } from 'react-native';
 import { useNavigationContainerRef } from '@react-navigation/native';
-import { DatadogProvider } from "@datadog/mobile-react-native";
+import { DatadogProvider } from "@flashcatcloud/mobile-react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import { DdRumReactNavigationTracking, type ViewNamePredicate } from '@datadog/mobile-react-navigation';
+import { DdRumReactNavigationTracking, type ViewNamePredicate } from '@flashcatcloud/mobile-react-navigation';
 import type { Route } from "@react-navigation/native";
 import { RunType } from '../../../testSetup/types/testConfig';
 import { getDatadogProviderConfig } from '../../../testSetup/testUtils';

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { View, Text, Button } from 'react-native';
 
 import styles from './styles';
-import { DdTrace } from '@datadog/mobile-react-native';
+import { DdTrace } from '@flashcatcloud/mobile-react-native';
 
 const TraceScreen = props => {
     const [spanIds, setSpanIds] = useState<string[]>([]);

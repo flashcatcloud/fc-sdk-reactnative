@@ -15,8 +15,8 @@
  * the createElement function (which is still used in current versions in some cases).
  * From React 18, this seems to become the default. This is also used by default in Expo since Expo 45 at least.
  * On React versions below 16.14, trying to import 'react/jsx-runtime' would fail (see https://github.com/facebook/metro/issues/836)
- * and this failure then disables all imports (see first fix: https://github.com/DataDog/dd-sdk-reactnative/pull/310).
- * However, metro does not support inline requires (see https://github.com/DataDog/dd-sdk-reactnative/issues/353), so
+ * and this failure then disables all imports (see first fix: https://github.com/flashcat/fc-sdk-reactnative/pull/310).
+ * However, metro does not support inline requires (see https://github.com/flashcat/fc-sdk-reactnative/issues/353), so
  * we replace the import in this postinstall script.
  *
  * We choose to have 'react/jsx-runtime' as default in the code, that way we don't have to deal with this change in the source when we work on it.

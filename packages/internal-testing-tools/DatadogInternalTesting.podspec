@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => "12.0", :tvos => "12.0" }
-  s.source       = { :git => "https://github.com/DataDog/dd-sdk-reactnative.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/flashcat/fc-sdk-reactnative.git", :tag => "#{s.version}" }
 
 
   s.source_files = "ios/Sources/*.{h,m,mm,swift}"

@@ -23,7 +23,7 @@ endef
 export ReleaseTestAppPodfile
 
 define SDKUsageJavascript
-import { DdSdkReactNativeConfiguration, DdSdkReactNative, DdLogs, DdRum } from '@datadog/mobile-react-native';\n
+import { DdSdkReactNativeConfiguration, DdSdkReactNative, DdLogs, DdRum } from '@flashcatcloud/mobile-react-native';\n
 const config = new DdSdkReactNativeConfiguration("token", "env", "appID");\n
 DdSdkReactNative.initialize(config).then(() => {\n
   console.log("DD running...");\n
@@ -38,14 +38,14 @@ export SDKUsageJavascript
 
 test-for-release:
 	yarn install
-	yarn workspace @datadog/mobile-react-native pack
-	yarn workspace @datadog/mobile-react-navigation pack
-	yarn workspace @datadog/mobile-react-native-navigation pack
-	./check-release-content.sh packages/core/datadog-mobile-react-native-v${RELEASE_PACKAGE_VERSION}.tgz packages/core/release-content.txt
-	./check-release-content.sh packages/react-navigation/datadog-mobile-react-navigation-v${RELEASE_PACKAGE_VERSION}.tgz packages/react-navigation/release-content.txt
-	./check-release-content.sh packages/react-native-navigation/datadog-mobile-react-native-navigation-v${RELEASE_PACKAGE_VERSION}.tgz packages/react-native-navigation/release-content.txt
+	yarn workspace @flashcatcloud/mobile-react-native pack
+	yarn workspace @flashcatcloud/mobile-react-navigation pack
+	yarn workspace @flashcatcloud/mobile-react-native-navigation pack
+	./check-release-content.sh packages/core/flashcatcloud-mobile-react-native-v${RELEASE_PACKAGE_VERSION}.tgz packages/core/release-content.txt
+	./check-release-content.sh packages/react-navigation/flashcatcloud-mobile-react-navigation-v${RELEASE_PACKAGE_VERSION}.tgz packages/react-navigation/release-content.txt
+	./check-release-content.sh packages/react-native-navigation/flashcatcloud-mobile-react-native-navigation-v${RELEASE_PACKAGE_VERSION}.tgz packages/react-native-navigation/release-content.txt
 	npx react-native init ${RELEASE_TEST_APP_NAME} --version ${REACT_NATIVE_VERSION}
-	cd ${RELEASE_TEST_APP_NAME} && npm install --save ../packages/core/datadog-mobile-react-native-v${RELEASE_PACKAGE_VERSION}.tgz
+	cd ${RELEASE_TEST_APP_NAME} && npm install --save ../packages/core/flashcatcloud-mobile-react-native-v${RELEASE_PACKAGE_VERSION}.tgz
 	# write to Podfile
 	echo $$ReleaseTestAppPodfile > ${RELEASE_TEST_APP_NAME}/ios/Podfile
 	# append to App.js

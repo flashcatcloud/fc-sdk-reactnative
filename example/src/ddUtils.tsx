@@ -5,7 +5,7 @@ import {
     DdSdkReactNativeConfiguration,
     SdkVerbosity,
     TrackingConsent
-} from '@datadog/mobile-react-native';
+} from '@flashcatcloud/mobile-react-native';
 
 import {APPLICATION_ID, CLIENT_TOKEN, ENVIRONMENT} from './ddCredentials';
 
@@ -22,7 +22,7 @@ export function getDatadogConfig(trackingConsent: TrackingConsent) {
     )
     config.nativeCrashReportEnabled = true
     config.sessionSamplingRate = 100
-    config.serviceName = "com.datadoghq.reactnative.sample"
+    config.serviceName = "com.flashcat.reactnative.sample"
     config.verbosity = SdkVerbosity.DEBUG;
 
     return config
@@ -48,7 +48,7 @@ export function initializeDatadog(trackingConsent: TrackingConsent) {
     )
     config.nativeCrashReportEnabled = true
     config.sampleRate = 100
-    config.serviceName = "com.datadoghq.reactnative.sample"
+    config.serviceName = "com.flashcat.reactnative.sample"
     config.verbosity = SdkVerbosity.DEBUG;
 
     DdSdkReactNative.initialize(config).then(() => {

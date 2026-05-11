@@ -15,7 +15,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { DdRum, ErrorSource, RumActionType } from '@datadog/mobile-react-native';
+import { DdRum, ErrorSource, RumActionType } from '@flashcatcloud/mobile-react-native';
 import { RUMEvent} from '../types';
 import type { RUMManualScenarioProps } from '../types';
 import { RunType } from '../../../testSetup/types/testConfig';

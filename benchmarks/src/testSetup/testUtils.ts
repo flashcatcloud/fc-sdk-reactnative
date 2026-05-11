@@ -11,7 +11,7 @@ import {
     DdSdkReactNativeConfiguration,
     SdkVerbosity,
     TrackingConsent
-} from '@datadog/mobile-react-native';
+} from '@flashcatcloud/mobile-react-native';
 import Config from 'react-native-config';
 import BenchmarkVitals from '../specs/NativeBenchmarkVitals';
 import { Command, RunType, Scenario } from './types/testConfig';

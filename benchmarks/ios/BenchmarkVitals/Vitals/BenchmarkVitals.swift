@@ -16,7 +16,7 @@ internal final class Vitals {
 
     private lazy var meter: OpenTelemetryApi.Meter = provider.get(instrumentationName: "vitals", instrumentationVersion: nil)
 
-    let queue = DispatchQueue(label: "com.datadoghq.benchmarks.rn.ios.vitals", target: .global(qos: .utility))
+    let queue = DispatchQueue(label: "com.flashcat.benchmarks.rn.ios.vitals", target: .global(qos: .utility))
 
     init(provider: MeterProvider) {
         self.provider = provider

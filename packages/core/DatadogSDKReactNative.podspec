@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => "12.0", :tvos => "12.0" }
-  s.source       = { :git => "https://github.com/DataDog/dd-sdk-reactnative.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/flashcat/fc-sdk-reactnative.git", :tag => "#{s.version}" }
 
   
   s.source_files = "ios/Sources/*.{h,m,mm,swift}"
@@ -19,14 +19,14 @@ Pod::Spec.new do |s|
   s.dependency "React-Core"
 
   # /!\ Remember to keep the versions in sync with DatadogSDKReactNativeSessionReplay.podspec
-  s.dependency 'DatadogCore', '2.30.2'
-  s.dependency 'DatadogLogs', '2.30.2'
-  s.dependency 'DatadogTrace', '2.30.2'
-  s.dependency 'DatadogRUM', '2.30.2'
-  s.dependency 'DatadogCrashReporting', '2.30.2'
+  s.dependency 'DatadogCore', '0.2.0'
+  s.dependency 'DatadogLogs', '0.2.0'
+  s.dependency 'DatadogTrace', '0.2.0'
+  s.dependency 'DatadogRUM', '0.2.0'
+  s.dependency 'DatadogCrashReporting', '0.2.0'
 
   # DatadogWebViewTracking is not available for tvOS
-  s.ios.dependency 'DatadogWebViewTracking', '2.30.2'
+  s.ios.dependency 'DatadogWebViewTracking', '0.2.0'
   
   s.test_spec 'Tests' do |test_spec|
     test_spec.source_files = 'ios/Tests/**/*.{swift,json}'

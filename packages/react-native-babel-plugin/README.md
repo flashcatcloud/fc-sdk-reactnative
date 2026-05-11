@@ -1,6 +1,6 @@
 # Babel Plugin for React Native
 
-The `@datadog/mobile-react-native-babel-plugin` enhances the Datadog React Native SDK by automatically enriching React components with contextual metadata. This helps improve the accuracy of features such as RUM Action tracking and Session Replay.
+The `@flashcatcloud/mobile-react-native-babel-plugin` enhances the Datadog React Native SDK by automatically enriching React components with contextual metadata. This helps improve the accuracy of features such as RUM Action tracking and Session Replay.
 
 ## Setup
 
@@ -9,13 +9,13 @@ The `@datadog/mobile-react-native-babel-plugin` enhances the Datadog React Nativ
 To install with NPM, run:
 
 ```sh
-npm install @datadog/mobile-react-native-babel-plugin
+npm install @flashcatcloud/mobile-react-native-babel-plugin
 ```
 
 To install with Yarn, run:
 
 ```sh
-yarn add @datadog/mobile-react-native-babel-plugin
+yarn add @flashcatcloud/mobile-react-native-babel-plugin
 ```
 
 ## Configure Babel
@@ -27,7 +27,7 @@ Add the plugin to your Babel configuration. Depending on your setup, you might b
 ```js
 module.exports = {
   presets: ['module:@react-native/babel-preset'],
-  plugins: ['@datadog/mobile-react-native-babel-plugin'] // <-- Add here
+  plugins: ['@flashcatcloud/mobile-react-native-babel-plugin'] // <-- Add here
 };
 ```
 
@@ -93,7 +93,7 @@ module.exports = {
   presets: ['module:@react-native/babel-preset'],
   plugins: [
     [
-      '@datadog/mobile-react-native-babel-plugin',
+      '@flashcatcloud/mobile-react-native-babel-plugin',
       {
         actionNameAttribute: 'custom-prop-value',
         sessionReplay: {
@@ -150,8 +150,8 @@ module.exports = {
     'module:@react-native/babel-preset',
     '@babel/preset-typescript' // <-- Add here
   ],
-  plugins: ['@datadog/mobile-react-native-babel-plugin']
+  plugins: ['@flashcatcloud/mobile-react-native-babel-plugin']
 };
 ```
 
-[1]: https://www.npmjs.com/package/@datadog/mobile-react-native
+[1]: https://www.npmjs.com/package/@flashcatcloud/mobile-react-native

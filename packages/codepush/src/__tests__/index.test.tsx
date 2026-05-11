@@ -7,8 +7,8 @@ jest.mock('react-native-code-push', () => ({
     getUpdateMetadata: jest.fn()
 }));
 
-jest.mock('@datadog/mobile-react-native', () => {
-    const actualPackage = jest.requireActual('@datadog/mobile-react-native');
+jest.mock('@flashcatcloud/mobile-react-native', () => {
+    const actualPackage = jest.requireActual('@flashcatcloud/mobile-react-native');
     actualPackage.DdSdkReactNative.initialize = jest.fn();
     actualPackage.DdSdkReactNative._enableFeaturesFromDatadogProvider = jest.fn();
     actualPackage.DdSdkReactNative._enableFeaturesFromDatadogProviderAsync = jest.fn();
@@ -46,7 +46,7 @@ describe('AppCenter Codepush integration', () => {
             const {
                 DdSdkReactNativeConfiguration,
                 DdSdkReactNative
-            } = require('@datadog/mobile-react-native');
+            } = require('@flashcatcloud/mobile-react-native');
 
             (codePush.getUpdateMetadata as jest.MockedFunction<
                 typeof codePush.getUpdateMetadata
@@ -75,7 +75,7 @@ describe('AppCenter Codepush integration', () => {
             const {
                 DdSdkReactNativeConfiguration,
                 DdSdkReactNative
-            } = require('@datadog/mobile-react-native');
+            } = require('@flashcatcloud/mobile-react-native');
 
             (codePush.getUpdateMetadata as jest.MockedFunction<
                 typeof codePush.getUpdateMetadata
@@ -115,7 +115,7 @@ describe('AppCenter Codepush integration', () => {
             const {
                 DatadogProviderConfiguration,
                 DdSdkReactNative
-            } = require('@datadog/mobile-react-native');
+            } = require('@flashcatcloud/mobile-react-native');
 
             (codePush.getUpdateMetadata as jest.MockedFunction<
                 typeof codePush.getUpdateMetadata
@@ -146,7 +146,7 @@ describe('AppCenter Codepush integration', () => {
             const { DatadogCodepushProvider } = require('..');
             const {
                 DdSdkReactNative
-            } = require('@datadog/mobile-react-native');
+            } = require('@flashcatcloud/mobile-react-native');
 
             (codePush.getUpdateMetadata as jest.MockedFunction<
                 typeof codePush.getUpdateMetadata
@@ -186,7 +186,7 @@ describe('AppCenter Codepush integration', () => {
             const {
                 DatadogProviderConfiguration,
                 DdSdkReactNative
-            } = require('@datadog/mobile-react-native');
+            } = require('@flashcatcloud/mobile-react-native');
 
             (codePush.getUpdateMetadata as jest.MockedFunction<
                 typeof codePush.getUpdateMetadata
@@ -219,7 +219,7 @@ describe('AppCenter Codepush integration', () => {
             const { DatadogCodepushProvider } = require('..');
             const {
                 DdSdkReactNative
-            } = require('@datadog/mobile-react-native');
+            } = require('@flashcatcloud/mobile-react-native');
 
             (codePush.getUpdateMetadata as jest.MockedFunction<
                 typeof codePush.getUpdateMetadata
@@ -261,7 +261,7 @@ describe('AppCenter Codepush integration', () => {
                 DdSdkReactNative,
                 PropagatorType,
                 FileBasedConfiguration
-            } = require('@datadog/mobile-react-native');
+            } = require('@flashcatcloud/mobile-react-native');
 
             const autoInstrumentationConfig = {
                 trackErrors: true,
@@ -328,7 +328,7 @@ describe('AppCenter Codepush integration', () => {
                 DdSdkReactNative,
                 PropagatorType,
                 FileBasedConfiguration
-            } = require('@datadog/mobile-react-native');
+            } = require('@flashcatcloud/mobile-react-native');
 
             const autoInstrumentationConfig = {
                 trackErrors: true,

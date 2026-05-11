@@ -8,7 +8,7 @@ import {
   RumActionType,
   DdLogs,
   DdTrace,
-} from '@datadog/mobile-react-native';
+} from '@flashcatcloud/mobile-react-native';
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {

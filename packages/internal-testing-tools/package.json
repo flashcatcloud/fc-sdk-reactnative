@@ -1,6 +1,6 @@
 {
-    "name": "@datadog/react-native-internal-testing-tools",
-    "version": "2.14.1",
+    "name": "@flashcatcloud/react-native-internal-testing-tools",
+    "version": "0.1.0",
     "description": "Internal tools for testing the Datadog React Native SDK.",
     "keywords": [
         "datadog",
@@ -8,11 +8,11 @@
         "ios",
         "android"
     ],
-    "author": "Datadog (https://github.com/DataDog)",
-    "homepage": "https://github.com/DataDog/dd-sdk-reactnative#readme",
-    "repository": "https://github.com/DataDog/dd-sdk-reactnative",
+    "author": "Flashcat",
+    "homepage": "https://github.com/flashcat/fc-sdk-reactnative#readme",
+    "repository": "https://github.com/flashcat/fc-sdk-reactnative",
     "bugs": {
-        "url": "https://github.com/DataDog/dd-sdk-reactnative/issues"
+        "url": "https://github.com/flashcat/fc-sdk-reactnative/issues"
     },
     "license": "Apache-2.0",
     "main": "lib/commonjs/index",
@@ -55,7 +55,7 @@
     "jest": {
         "preset": "react-native",
         "moduleNameMapper": {
-            "@datadog/mobile-react-native": "<rootDir>../core/src"
+            "@flashcatcloud/mobile-react-native": "<rootDir>../core/src"
         },
         "modulePathIgnorePatterns": [
             "<rootDir>/lib/"

@@ -25,7 +25,7 @@ const isMap = (type: string, _: unknown): _ is Map<string, unknown> => {
 };
 
 /**
- * Be careful when changing this value, it can lead to performance issues: https://github.com/DataDog/dd-sdk-reactnative/issues/514.
+ * Be careful when changing this value, it can lead to performance issues: https://github.com/flashcat/fc-sdk-reactnative/issues/514.
  * Benchmark of average execution time for an action event mapper with different max depth on iOS simulator:
  * 7: 40ms
  * 6: 15ms

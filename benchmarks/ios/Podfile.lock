@@ -1823,9 +1823,9 @@ PODS:
 
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
-  - "DatadogSDKReactNative (from `../node_modules/@datadog/mobile-react-native`)"
-  - "DatadogSDKReactNativeSessionReplay (from `../node_modules/@datadog/mobile-react-native-session-replay`)"
-  - "DatadogSDKReactNativeWebView (from `../node_modules/@datadog/mobile-react-native-webview`)"
+  - "DatadogSDKReactNative (from `../node_modules/@flashcatcloud/mobile-react-native`)"
+  - "DatadogSDKReactNativeSessionReplay (from `../node_modules/@flashcatcloud/mobile-react-native-session-replay`)"
+  - "DatadogSDKReactNativeWebView (from `../node_modules/@flashcatcloud/mobile-react-native-webview`)"
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - fast_float (from `../node_modules/react-native/third-party-podspecs/fast_float.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -1919,11 +1919,11 @@ EXTERNAL SOURCES:
   boost:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DatadogSDKReactNative:
-    :path: "../node_modules/@datadog/mobile-react-native"
+    :path: "../node_modules/@flashcatcloud/mobile-react-native"
   DatadogSDKReactNativeSessionReplay:
-    :path: "../node_modules/@datadog/mobile-react-native-session-replay"
+    :path: "../node_modules/@flashcatcloud/mobile-react-native-session-replay"
   DatadogSDKReactNativeWebView:
-    :path: "../node_modules/@datadog/mobile-react-native-webview"
+    :path: "../node_modules/@flashcatcloud/mobile-react-native-webview"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   fast_float:

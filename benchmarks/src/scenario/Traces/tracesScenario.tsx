@@ -16,7 +16,7 @@ import {
     TextInput,
     View,
 } from 'react-native';
-import { DdLogs, DdTrace } from '@datadog/mobile-react-native';
+import { DdLogs, DdTrace } from '@flashcatcloud/mobile-react-native';
 import type { TracesScenarioProps } from './types';
 import { RunType } from '../../testSetup/types/testConfig';
 import { instrument, sleep } from '../../testSetup/testUtils';

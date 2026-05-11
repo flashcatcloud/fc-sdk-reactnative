@@ -226,7 +226,7 @@ export const injectDebugIdInCodeAndSourceMap = (
 const writeDebugIdToFile = (debugId: string): void => {
     try {
         const datadogPackageJsonPath = require.resolve(
-            '@datadog/mobile-react-native/package.json'
+            '@flashcatcloud/mobile-react-native/package.json'
         );
         const datadogTmpDir = path.join(
             path.dirname(datadogPackageJsonPath),

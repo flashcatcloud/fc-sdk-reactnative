@@ -83,10 +83,10 @@ else
 fi
 
 # Get iOS version
-extract_and_validate_version podspec_files[@] "dependency 'Datadog.*' *, *'" "s/.*dependency *'Datadog.*, *'\([0-9.]*\).*/\1/" "iOS" ios_version
+extract_and_validate_version podspec_files[@] "dependency '\(Datadog\|Flashcat\).*' *, *'" "s/.*dependency *'\(Datadog\|Flashcat\).*, *'\([0-9.]*\).*/\2/" "iOS" ios_version
 
 # Get Android version
-extract_and_validate_version build_gradle_files[@] "com.datadoghq:dd-sdk-android" 's/.*:\([0-9.]*\).*/\1/' "Android" android_version
+extract_and_validate_version build_gradle_files[@] "cloud.flashcat:fc-sdk-android" 's/.*:\([0-9.]*\).*/\1/' "Android" android_version
 
 # Check if NATIVE_SDK_VERSIONS.md exists, create it otherwise
 if [ ! -f "NATIVE_SDK_VERSIONS.md" ]; then

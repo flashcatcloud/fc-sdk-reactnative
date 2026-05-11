@@ -19,7 +19,7 @@ function loadDebugId() {
         if (!debugIds || Object.keys(debugIds).length === 0) {
             if (process.env.NODE_ENV !== 'test') {
                 console.warn(
-                    '[Datadog SDK] Debug ID not found. Are you using @datadog/mobile-react-native/metro config?'
+                    '[Datadog SDK] Debug ID not found. Are you using @flashcatcloud/mobile-react-native/metro config?'
                 );
             }
             return;
@@ -29,7 +29,7 @@ function loadDebugId() {
     } catch (error) {
         if (process.env.NODE_ENV !== 'test') {
             console.warn(
-                '[Datadog SDK] Error while retrieving Debug ID. Are you using @datadog/mobile-react-native/metro config?'
+                '[Datadog SDK] Error while retrieving Debug ID. Are you using @flashcatcloud/mobile-react-native/metro config?'
             );
         }
     }

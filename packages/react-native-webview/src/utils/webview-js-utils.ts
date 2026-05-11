@@ -91,7 +91,7 @@ function formatAllowedHosts(allowedHosts?: string[]): string | undefined {
             );
         }
         console.warn(
-            `[@datadog/mobile-react-native-webview] Invalid 'allowedHosts' format: ${e}`
+            `[@flashcatcloud/mobile-react-native-webview] Invalid 'allowedHosts' format: ${e}`
         );
         return undefined;
     }

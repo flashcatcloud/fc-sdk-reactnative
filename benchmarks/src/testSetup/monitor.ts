@@ -4,9 +4,9 @@
  * Copyright 2016-Present Datadog, Inc.
  */
 
-import { DefaultTimeProvider, RumActionType } from "@datadog/mobile-react-native";
-import { ErrorSource } from "@datadog/mobile-react-native/lib/typescript/rum/types";
-import type { DdRumType, ResourceKind } from "@datadog/mobile-react-native/lib/typescript/rum/types";
+import { DefaultTimeProvider, RumActionType } from "@flashcatcloud/mobile-react-native";
+import { ErrorSource } from "@flashcatcloud/mobile-react-native/lib/typescript/rum/types";
+import type { DdRumType, ResourceKind } from "@flashcatcloud/mobile-react-native/lib/typescript/rum/types";
 import type { GestureResponderEvent } from "react-native/types";
 
 const timeProvider = new DefaultTimeProvider();

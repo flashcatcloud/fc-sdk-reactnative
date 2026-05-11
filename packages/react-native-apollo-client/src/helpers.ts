@@ -10,7 +10,7 @@
 
 import { version } from '@apollo/client/package.json';
 import type { Operation } from '@apollo/client';
-import { DdSdk } from '@datadog/mobile-react-native';
+import { DdSdk } from '@flashcatcloud/mobile-react-native';
 import type { DefinitionNode, OperationDefinitionNode } from 'graphql';
 
 import { ErrorCode, errorMessages } from './types';

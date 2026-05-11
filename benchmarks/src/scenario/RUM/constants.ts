@@ -4,7 +4,7 @@
  * Copyright 2016-Present Datadog, Inc.
  */
 
-import { RumActionType } from "@datadog/mobile-react-native";
+import { RumActionType } from "@flashcatcloud/mobile-react-native";
 import { RUMEvent } from "./types";
 
 export const RUM_EVENTS = Object.entries(RUMEvent).map(([key, value]) => ({

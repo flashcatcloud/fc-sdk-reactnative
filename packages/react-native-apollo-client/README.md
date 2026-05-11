@@ -39,11 +39,11 @@ const apolloClient = new ApolloClient({
 
 #### Use the Datadog Apollo Client Link to collect information
 
-Import `DatadogLink` from `@datadog/mobile-react-native-apollo-client` and use it in your ApolloClient initialization:
+Import `DatadogLink` from `@flashcatcloud/mobile-react-native-apollo-client` and use it in your ApolloClient initialization:
 
 ```javascript
 import { ApolloClient, from, HttpLink } from '@apollo/client';
-import { DatadogLink } from '@datadog/mobile-react-native-apollo-client';
+import { DatadogLink } from '@flashcatcloud/mobile-react-native-apollo-client';
 
 const apolloClient = new ApolloClient({
     link: from([

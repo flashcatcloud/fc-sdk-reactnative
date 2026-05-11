@@ -8,10 +8,10 @@ import {
     ViewNamePredicate,
     ComponentDidAppearEvent,
     Navigation
-} from '@datadog/mobile-react-native-navigation';
+} from '@flashcatcloud/mobile-react-native-navigation';
 
 import styles from './screens/styles';
-import { DdTrace } from '@datadog/mobile-react-native';
+import { DdTrace } from '@flashcatcloud/mobile-react-native';
 import TraceScreen from './screens/TraceScreen';
 
 const viewPredicate: ViewNamePredicate = (

@@ -1,7 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
-apply from: "../../node_modules/@datadog/mobile-react-native/datadog-sourcemaps.gradle"
+apply from: "../../node_modules/@flashcatcloud/mobile-react-native/datadog-sourcemaps.gradle"
 
 /**
  * This is the configuration block to customize your React Native Android app.

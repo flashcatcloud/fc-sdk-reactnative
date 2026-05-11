@@ -7,11 +7,11 @@ import {
     DatadogProvider,
     DatadogProviderConfiguration,
     DdSdkReactNative
-} from '@datadog/mobile-react-native';
+} from '@flashcatcloud/mobile-react-native';
 import type {
     AutoInstrumentationConfiguration,
     DdSdkReactNativeConfiguration
-} from '@datadog/mobile-react-native';
+} from '@flashcatcloud/mobile-react-native';
 import codePush from 'react-native-code-push';
 
 import { DISCARD_PROPERTY, removeDiscardProperties } from './utils';

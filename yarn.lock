@@ -2296,9 +2296,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@datadog/mobile-react-native-apollo-client@workspace:packages/react-native-apollo-client":
+"@flashcatcloud/mobile-react-native-apollo-client@workspace:packages/react-native-apollo-client":
   version: 0.0.0-use.local
-  resolution: "@datadog/mobile-react-native-apollo-client@workspace:packages/react-native-apollo-client"
+  resolution: "@flashcatcloud/mobile-react-native-apollo-client@workspace:packages/react-native-apollo-client"
   dependencies:
     "@apollo/client": ^3.8.3
     "@testing-library/react-native": 7.0.2
@@ -2306,15 +2306,15 @@ __metadata:
     react-native-builder-bob: 0.26.0
   peerDependencies:
     "@apollo/client": ">=3.0"
-    "@datadog/mobile-react-native": ^2.6.1
+    "@flashcatcloud/mobile-react-native": ^2.6.1
     react: ">=16.13.1"
     react-native: ">=0.63.4 <1.0"
   languageName: unknown
   linkType: soft
 
-"@datadog/mobile-react-native-babel-plugin@workspace:packages/react-native-babel-plugin":
+"@flashcatcloud/mobile-react-native-babel-plugin@workspace:packages/react-native-babel-plugin":
   version: 0.0.0-use.local
-  resolution: "@datadog/mobile-react-native-babel-plugin@workspace:packages/react-native-babel-plugin"
+  resolution: "@flashcatcloud/mobile-react-native-babel-plugin@workspace:packages/react-native-babel-plugin"
   dependencies:
     "@babel/cli": ^7.27.2
     "@babel/core": ^7.27.1
@@ -2344,43 +2344,43 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@datadog/mobile-react-native-code-push@workspace:packages/codepush":
+"@flashcatcloud/mobile-react-native-code-push@workspace:packages/codepush":
   version: 0.0.0-use.local
-  resolution: "@datadog/mobile-react-native-code-push@workspace:packages/codepush"
+  resolution: "@flashcatcloud/mobile-react-native-code-push@workspace:packages/codepush"
   dependencies:
-    "@datadog/mobile-react-native": "workspace:2.14.1"
+    "@flashcatcloud/mobile-react-native": "workspace:2.14.1"
     "@testing-library/react-native": 7.0.2
     react-native-builder-bob: 0.26.0
     react-native-code-push: 7.1.0
   peerDependencies:
-    "@datadog/mobile-react-native": ^2.0.1
+    "@flashcatcloud/mobile-react-native": ^2.0.1
     react: ">=16.13.1"
     react-native: ">=0.63.4 <1.0"
     react-native-code-push: ">=2.0.0"
   languageName: unknown
   linkType: soft
 
-"@datadog/mobile-react-native-navigation@workspace:packages/react-native-navigation":
+"@flashcatcloud/mobile-react-native-navigation@workspace:packages/react-native-navigation":
   version: 0.0.0-use.local
-  resolution: "@datadog/mobile-react-native-navigation@workspace:packages/react-native-navigation"
+  resolution: "@flashcatcloud/mobile-react-native-navigation@workspace:packages/react-native-navigation"
   dependencies:
-    "@datadog/mobile-react-native": ^2.14.1
+    "@flashcatcloud/mobile-react-native": ^2.14.1
     "@testing-library/react-native": 7.0.2
     react-native-builder-bob: 0.26.0
     react-native-gesture-handler: 1.10.3
     react-native-navigation: 7.31.1
     remx: 3.x.x
   peerDependencies:
-    "@datadog/mobile-react-native": ^2.0.1
+    "@flashcatcloud/mobile-react-native": ^2.0.1
     react: ">=16.13.1"
     react-native: ">=0.63.4 <1.0"
     react-native-navigation: ^7.5.0
   languageName: unknown
   linkType: soft
 
-"@datadog/mobile-react-native-session-replay@workspace:packages/react-native-session-replay":
+"@flashcatcloud/mobile-react-native-session-replay@workspace:packages/react-native-session-replay":
   version: 0.0.0-use.local
-  resolution: "@datadog/mobile-react-native-session-replay@workspace:packages/react-native-session-replay"
+  resolution: "@flashcatcloud/mobile-react-native-session-replay@workspace:packages/react-native-session-replay"
   dependencies:
     "@testing-library/react-native": 7.0.2
     chokidar: ^4.0.3
@@ -2391,24 +2391,24 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@datadog/mobile-react-native-webview@workspace:packages/react-native-webview":
+"@flashcatcloud/mobile-react-native-webview@workspace:packages/react-native-webview":
   version: 0.0.0-use.local
-  resolution: "@datadog/mobile-react-native-webview@workspace:packages/react-native-webview"
+  resolution: "@flashcatcloud/mobile-react-native-webview@workspace:packages/react-native-webview"
   dependencies:
     "@testing-library/react-native": 7.0.2
     react-native-builder-bob: 0.26.0
     react-native-webview: ^13.12.2
   peerDependencies:
-    "@datadog/mobile-react-native": ^2.0.1
+    "@flashcatcloud/mobile-react-native": ^2.0.1
     react: ">=16.13.1"
     react-native: ">=0.63.4 <1.0"
     react-native-webview: ">=11.0.0"
   languageName: unknown
   linkType: soft
 
-"@datadog/mobile-react-native@^2.14.1, @datadog/mobile-react-native@workspace:2.14.1, @datadog/mobile-react-native@workspace:packages/core":
+"@flashcatcloud/mobile-react-native@^2.14.1, @flashcatcloud/mobile-react-native@workspace:2.14.1, @flashcatcloud/mobile-react-native@workspace:packages/core":
   version: 0.0.0-use.local
-  resolution: "@datadog/mobile-react-native@workspace:packages/core"
+  resolution: "@flashcatcloud/mobile-react-native@workspace:packages/core"
   dependencies:
     "@testing-library/react-native": 7.0.2
     big-integer: ^1.6.52
@@ -2419,11 +2419,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@datadog/mobile-react-navigation@workspace:packages/react-navigation":
+"@flashcatcloud/mobile-react-navigation@workspace:packages/react-navigation":
   version: 0.0.0-use.local
-  resolution: "@datadog/mobile-react-navigation@workspace:packages/react-navigation"
+  resolution: "@flashcatcloud/mobile-react-navigation@workspace:packages/react-navigation"
   dependencies:
-    "@datadog/mobile-react-native": ^2.14.1
+    "@flashcatcloud/mobile-react-native": ^2.14.1
     "@react-navigation/native-v5": "npm:@react-navigation/native@5.9.8"
     "@react-navigation/native-v6": "npm:@react-navigation/native@6.1.2"
     "@react-navigation/stack-v5": "npm:@react-navigation/stack@5.14.2"
@@ -2433,7 +2433,7 @@ __metadata:
     react-native-gesture-handler: 1.10.3
     react-native-safe-area-context: 3.1.9
   peerDependencies:
-    "@datadog/mobile-react-native": ^2.0.1
+    "@flashcatcloud/mobile-react-native": ^2.0.1
     react: ">=16.13.1"
     react-native: ">=0.63.4 <1.0"
   languageName: unknown
@@ -6164,7 +6164,7 @@ __metadata:
     "@babel/core": ^7.25.2
     "@babel/preset-env": ^7.25.3
     "@babel/runtime": ^7.26.10
-    "@datadog/mobile-react-native": "workspace:packages/core"
+    "@flashcatcloud/mobile-react-native": "workspace:packages/core"
     "@react-native-community/cli": 15.0.1
     "@react-native-community/cli-platform-android": 15.0.1
     "@react-native-community/cli-platform-ios": 15.0.1
@@ -6977,10 +6977,10 @@ __metadata:
     "@babel/preset-env": 7.25.3
     "@babel/runtime": ^7.26.10
     "@datadog/datadog-ci": ^4.4.0
-    "@datadog/mobile-react-native": "workspace:packages/core"
-    "@datadog/mobile-react-native-session-replay": "workspace:packages/react-native-session-replay"
-    "@datadog/mobile-react-native-webview": "workspace:packages/react-native-webview"
-    "@datadog/mobile-react-navigation": "workspace:packages/react-navigation"
+    "@flashcatcloud/mobile-react-native": "workspace:packages/core"
+    "@flashcatcloud/mobile-react-native-session-replay": "workspace:packages/react-native-session-replay"
+    "@flashcatcloud/mobile-react-native-webview": "workspace:packages/react-native-webview"
+    "@flashcatcloud/mobile-react-navigation": "workspace:packages/react-navigation"
     "@react-native-community/cli": 15.0.1
     "@react-native-community/cli-platform-android": 15.0.1
     "@react-native-community/cli-platform-ios": 15.0.1
@@ -8251,11 +8251,11 @@ __metadata:
     "@babel/preset-env": ^7.25.3
     "@babel/runtime": ^7.26.10
     "@datadog/datadog-ci": ^4.4.0
-    "@datadog/mobile-react-native": "workspace:packages/core"
-    "@datadog/mobile-react-native-navigation": "workspace:packages/react-native-navigation"
-    "@datadog/mobile-react-native-session-replay": "workspace:packages/react-native-session-replay"
-    "@datadog/mobile-react-native-webview": "workspace:packages/react-native-webview"
-    "@datadog/mobile-react-navigation": "workspace:packages/react-navigation"
+    "@flashcatcloud/mobile-react-native": "workspace:packages/core"
+    "@flashcatcloud/mobile-react-native-navigation": "workspace:packages/react-native-navigation"
+    "@flashcatcloud/mobile-react-native-session-replay": "workspace:packages/react-native-session-replay"
+    "@flashcatcloud/mobile-react-native-webview": "workspace:packages/react-native-webview"
+    "@flashcatcloud/mobile-react-navigation": "workspace:packages/react-navigation"
     "@react-native-async-storage/async-storage": ^2.1.2
     "@react-native-community/cli": 15.0.1
     "@react-native-community/cli-platform-android": 15.0.1

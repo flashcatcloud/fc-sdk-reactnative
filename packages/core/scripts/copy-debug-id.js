@@ -7,7 +7,7 @@ const { argv, exit } = require('process');
 
 const [, , packagerPath, composedPath] = argv;
 
-const TAG = '[@datadog/mobile-react-native]';
+const TAG = '[@flashcatcloud/mobile-react-native]';
 
 const warnAndExit = message => {
     console.log(`\n${TAG} WARNING: ${message}\n`);

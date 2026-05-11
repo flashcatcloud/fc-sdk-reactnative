@@ -19,10 +19,10 @@
     "library": "BenchmarkRunner"
   },
   "dependencies": {
-    "@datadog/mobile-react-native": "workspace:packages/core",
-    "@datadog/mobile-react-native-session-replay": "workspace:packages/react-native-session-replay",
-    "@datadog/mobile-react-native-webview": "workspace:packages/react-native-webview",
-    "@datadog/mobile-react-navigation": "workspace:packages/react-navigation",
+    "@flashcatcloud/mobile-react-native": "workspace:packages/core",
+    "@flashcatcloud/mobile-react-native-session-replay": "workspace:packages/react-native-session-replay",
+    "@flashcatcloud/mobile-react-native-webview": "workspace:packages/react-native-webview",
+    "@flashcatcloud/mobile-react-navigation": "workspace:packages/react-navigation",
     "@react-native-community/slider": "4.5.7",
     "@react-native-picker/picker": "2.11.0",
     "@react-navigation/bottom-tabs": "7.3.12",

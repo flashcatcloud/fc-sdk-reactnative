@@ -22,7 +22,7 @@ import { RunType } from '../../../testSetup/types/testConfig';
 import { instrument } from '../../../testSetup/testUtils';
 import { Colors, CommonStyles as styles } from '../../../common/styles';
 import Stepper from '../../../component/Stepper/Stepper';
-import { DdLogs } from '@datadog/mobile-react-native';
+import { DdLogs } from '@flashcatcloud/mobile-react-native';
 import { Logger } from '../../../testSetup/logger';
 import Picker from '../../../component/Picker/Picker';
 import { DEFAULT_LOGS_PER_SECOND, DEFAULT_LOG_INTERVAL, DEFAULT_LOG_MESSAGE, LOG_LEVELS, MAX_LOG_OUTPUT_ENTRIES, PAYLOAD_SIZES } from '../constants';
