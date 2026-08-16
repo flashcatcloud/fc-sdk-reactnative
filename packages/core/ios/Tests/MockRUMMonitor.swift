@@ -8,6 +8,7 @@
 @testable import DatadogRUM
 @testable import DatadogInternal
 @testable import DatadogSDKReactNative
+import UIKit
 
 internal class MockRUMMonitor: RUMMonitorProtocol {
     func currentSessionID(completion: @escaping (String?) -> Void) {
@@ -81,28 +82,96 @@ internal class MockRUMMonitor: RUMMonitorProtocol {
         receivedAttributes.append(attributes)
     }
 
-    func addError(message: String, type: String?, stack: String?, source: RUMErrorSource, attributes: [String: Encodable], file: StaticString?, line: UInt?) {
+    func addError(message: String, type: String?, stack: String?, source: RUMErrorSource, attributes: [AttributeKey: AttributeValue], file: StaticString?, line: UInt?) {
         calledMethods.append(.addError(message: message, source: source, stack: stack))
         receivedAttributes.append(attributes)
     }
 
-    func startResource(resourceKey: String, httpMethod: RUMMethod, urlString: String, attributes: [String: Encodable]) {
+    func addError(error: Error, source: RUMErrorSource, attributes: [AttributeKey: AttributeValue]) {
+        // Not implemented
+    }
+
+    func startResource(resourceKey: String, request: URLRequest, attributes: [AttributeKey: AttributeValue]) {
+        // Not implemented
+    }
+
+    func startResource(resourceKey: String, url: URL, attributes: [AttributeKey: AttributeValue]) {
+        // Not implemented
+    }
+
+    func addResourceMetrics(resourceKey: String, metrics: URLSessionTaskMetrics, attributes: [AttributeKey: AttributeValue]) {
+        // Not implemented
+    }
+
+    func stopResource(resourceKey: String, response: URLResponse, size: Int64?, attributes: [AttributeKey: AttributeValue]) {
+        // Not implemented
+    }
+
+    func stopResourceWithError(resourceKey: String, error: Error, response: URLResponse?, attributes: [AttributeKey: AttributeValue]) {
+        // Not implemented
+    }
+
+    func stopResourceWithError(resourceKey: String, message: String, type: String?, response: URLResponse?, attributes: [AttributeKey: AttributeValue]) {
+        // Not implemented
+    }
+
+    func reportAppFullyDisplayed() {
+        // Not implemented
+    }
+
+    func startFeatureOperation(name: String, operationKey: String?, attributes: [AttributeKey: AttributeValue]) {
+        // Not implemented
+    }
+
+    func succeedFeatureOperation(name: String, operationKey: String?, attributes: [AttributeKey: AttributeValue]) {
+        // Not implemented
+    }
+
+    func failFeatureOperation(name: String, operationKey: String?, reason: RUMFeatureOperationFailureReason, attributes: [AttributeKey: AttributeValue]) {
+        // Not implemented
+    }
+
+    func addViewAttribute(forKey key: AttributeKey, value: AttributeValue) {
+        // Not implemented
+    }
+
+    func addViewAttributes(_ attributes: [AttributeKey: AttributeValue]) {
+        // Not implemented
+    }
+
+    func removeViewAttribute(forKey key: AttributeKey) {
+        // Not implemented
+    }
+
+    func removeViewAttributes(forKeys keys: [AttributeKey]) {
+        // Not implemented
+    }
+
+    func startView(viewController: UIViewController, name: String?, attributes: [AttributeKey: AttributeValue]) {
+        // Not implemented
+    }
+
+    func stopView(viewController: UIViewController, attributes: [AttributeKey: AttributeValue]) {
+        // Not implemented
+    }
+
+    func startResource(resourceKey: String, httpMethod: RUMMethod, urlString: String, attributes: [AttributeKey: AttributeValue]) {
         calledMethods.append(.startResourceLoading(resourceKey: resourceKey, httpMethod: httpMethod, urlString: urlString))
         receivedAttributes.append(attributes)
     }
-    func stopResource(resourceKey: String, statusCode: Int?, kind: RUMResourceType, size: Int64?, attributes: [String: Encodable]) {
+    func stopResource(resourceKey: String, statusCode: Int?, kind: RUMResourceType, size: Int64?, attributes: [AttributeKey: AttributeValue]) {
         calledMethods.append(.stopResourceLoading(resourceKey: resourceKey, statusCode: statusCode ?? 0, kind: kind, size: size))
         receivedAttributes.append(attributes)
     }
-    func startAction(type: RUMActionType, name: String, attributes: [String: Encodable]) {
+    func startAction(type: RUMActionType, name: String, attributes: [AttributeKey: AttributeValue]) {
         calledMethods.append(.startUserAction(type: type, name: name))
         receivedAttributes.append(attributes)
     }
-    func stopAction(type: RUMActionType, name: String?, attributes: [String: Encodable]) {
+    func stopAction(type: RUMActionType, name: String?, attributes: [AttributeKey: AttributeValue]) {
         calledMethods.append(.stopUserAction(type: type, name: name))
         receivedAttributes.append(attributes)
     }
-    func addAction(type: RUMActionType, name: String, attributes: [String: Encodable]) {
+    func addAction(type: RUMActionType, name: String, attributes: [AttributeKey: AttributeValue]) {
         calledMethods.append(.addUserAction(type: type, name: name))
         receivedAttributes.append(attributes)
     }

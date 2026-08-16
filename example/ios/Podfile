@@ -1,5 +1,10 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
+# This example builds against the old architecture: under the new architecture the
+# unit-test bundles fail to link the codegen'd third-party component classes
+# (RNC*Cls). Use example-new-architecture for Fabric coverage.
+ENV['RCT_NEW_ARCH_ENABLED'] ||= '0'
+
 # Resolve react_native_pods.rb with node to allow for hoisting
 require Pod::Executable.execute_command('node', ['-p',
   'require.resolve(
@@ -18,7 +23,8 @@ end
 
 target 'ddSdkReactnativeExample' do
   pod 'DatadogSDKReactNative', :path => '../../packages/core/DatadogSDKReactNative.podspec', :testspecs => ['Tests']
-  pod 'DatadogSDKReactNativeSessionReplay', :path => '../../packages/react-native-session-replay/DatadogSDKReactNativeSessionReplay.podspec', :testspecs => ['Tests']
+  # Session Replay is out of scope for RN: FlashcatSessionReplay is not published,
+  # so the package's podspec cannot resolve. Intentionally not linked here.
   pod 'DatadogSDKReactNativeWebView', :path => '../../packages/react-native-webview/DatadogSDKReactNativeWebView.podspec', :testspecs => ['Tests']
 
   config = use_native_modules!

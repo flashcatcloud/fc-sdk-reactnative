@@ -1,108 +1,70 @@
 PODS:
   - boost (1.84.0)
-  - DatadogCore (2.30.2):
-    - DatadogInternal (= 2.30.2)
-  - DatadogCrashReporting (2.30.2):
-    - DatadogInternal (= 2.30.2)
-    - PLCrashReporter (~> 1.12.0)
-  - DatadogInternal (2.30.2)
-  - DatadogLogs (2.30.2):
-    - DatadogInternal (= 2.30.2)
-  - DatadogRUM (2.30.2):
-    - DatadogInternal (= 2.30.2)
-  - DatadogSDKReactNative (2.14.1):
-    - DatadogCore (= 2.30.2)
-    - DatadogCrashReporting (= 2.30.2)
-    - DatadogLogs (= 2.30.2)
-    - DatadogRUM (= 2.30.2)
-    - DatadogTrace (= 2.30.2)
-    - DatadogWebViewTracking (= 2.30.2)
+  - DatadogSDKReactNative (0.1.0):
+    - FlashcatCore (~> 0.5)
+    - FlashcatCrashReporting (~> 0.5)
+    - FlashcatLogs-NoOp (~> 0.5)
+    - FlashcatRUM (~> 0.5)
+    - FlashcatTrace (~> 0.5)
+    - FlashcatWebViewTracking (~> 0.5)
     - React-Core
-  - DatadogSDKReactNative/Tests (2.14.1):
-    - DatadogCore (= 2.30.2)
-    - DatadogCrashReporting (= 2.30.2)
-    - DatadogLogs (= 2.30.2)
-    - DatadogRUM (= 2.30.2)
-    - DatadogTrace (= 2.30.2)
-    - DatadogWebViewTracking (= 2.30.2)
+  - DatadogSDKReactNative/Tests (0.1.0):
+    - FlashcatCore (~> 0.5)
+    - FlashcatCrashReporting (~> 0.5)
+    - FlashcatLogs-NoOp (~> 0.5)
+    - FlashcatRUM (~> 0.5)
+    - FlashcatTrace (~> 0.5)
+    - FlashcatWebViewTracking (~> 0.5)
     - React-Core
-  - DatadogSDKReactNativeSessionReplay (2.14.1):
+  - DatadogSDKReactNativeWebView (0.1.0):
     - DatadogSDKReactNative
-    - DatadogSessionReplay (= 2.30.2)
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.10.14.00)
-    - RCTRequired
-    - RCTTypeSafety
+    - FlashcatInternal (~> 0.5)
+    - FlashcatWebViewTracking (~> 0.5)
     - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
-  - DatadogSDKReactNativeSessionReplay/Tests (2.14.1):
+  - DatadogSDKReactNativeWebView/Tests (0.1.0):
     - DatadogSDKReactNative
-    - DatadogSessionReplay (= 2.30.2)
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.10.14.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-RCTText
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
-  - DatadogSDKReactNativeWebView (2.14.1):
-    - DatadogInternal (= 2.30.2)
-    - DatadogSDKReactNative
-    - DatadogWebViewTracking (= 2.30.2)
-    - React-Core
-  - DatadogSDKReactNativeWebView/Tests (2.14.1):
-    - DatadogInternal (= 2.30.2)
-    - DatadogSDKReactNative
-    - DatadogWebViewTracking (= 2.30.2)
+    - FlashcatInternal (~> 0.5)
+    - FlashcatWebViewTracking (~> 0.5)
     - React-Core
     - react-native-webview
     - React-RCTText
-  - DatadogSessionReplay (2.30.2):
-    - DatadogInternal (= 2.30.2)
-  - DatadogTrace (2.30.2):
-    - DatadogInternal (= 2.30.2)
-    - OpenTelemetrySwiftApi (= 1.13.1)
-  - DatadogWebViewTracking (2.30.2):
-    - DatadogInternal (= 2.30.2)
   - DoubleConversion (1.1.6)
   - fast_float (6.1.4)
   - FBLazyVector (0.76.9)
+  - FlashcatCore (0.5.0):
+    - FlashcatInternal (= 0.5.0)
+  - FlashcatCrashReporting (0.5.0):
+    - FlashcatInternal (= 0.5.0)
+    - KSCrash/Filters (= 2.5.0)
+    - KSCrash/Recording (= 2.5.0)
+  - FlashcatInternal (0.5.0)
+  - FlashcatLogs-NoOp (0.5.0):
+    - FlashcatInternal (= 0.5.0)
+  - FlashcatRUM (0.5.0):
+    - FlashcatInternal (= 0.5.0)
+  - FlashcatTrace (0.5.0):
+    - FlashcatInternal (= 0.5.0)
+    - OpenTelemetrySwiftApi (= 1.13.1)
+  - FlashcatWebViewTracking (0.5.0):
+    - FlashcatInternal (= 0.5.0)
   - fmt (11.0.2)
   - glog (0.3.5)
   - hermes-engine (0.76.9):
     - hermes-engine/Pre-built (= 0.76.9)
   - hermes-engine/Pre-built (0.76.9)
   - HMSegmentedControl (1.5.6)
+  - KSCrash/Core (2.5.0)
+  - KSCrash/Filters (2.5.0):
+    - KSCrash/Recording
+    - KSCrash/RecordingCore
+    - KSCrash/ReportingCore
+  - KSCrash/Recording (2.5.0):
+    - KSCrash/RecordingCore
+  - KSCrash/RecordingCore (2.5.0):
+    - KSCrash/Core
+  - KSCrash/ReportingCore (2.5.0):
+    - KSCrash/Core
   - OpenTelemetrySwiftApi (1.13.1)
-  - PLCrashReporter (1.12.0)
   - RCT-Folly (2024.10.14.00):
     - boost
     - DoubleConversion
@@ -1743,8 +1705,6 @@ DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DatadogSDKReactNative (from `../../packages/core/DatadogSDKReactNative.podspec`)
   - DatadogSDKReactNative/Tests (from `../../packages/core/DatadogSDKReactNative.podspec`)
-  - DatadogSDKReactNativeSessionReplay (from `../../packages/react-native-session-replay/DatadogSDKReactNativeSessionReplay.podspec`)
-  - DatadogSDKReactNativeSessionReplay/Tests (from `../../packages/react-native-session-replay/DatadogSDKReactNativeSessionReplay.podspec`)
   - DatadogSDKReactNativeWebView (from `../../packages/react-native-webview/DatadogSDKReactNativeWebView.podspec`)
   - DatadogSDKReactNativeWebView/Tests (from `../../packages/react-native-webview/DatadogSDKReactNativeWebView.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
@@ -1822,17 +1782,16 @@ DEPENDENCIES:
 
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
-    - DatadogCore
-    - DatadogCrashReporting
-    - DatadogInternal
-    - DatadogLogs
-    - DatadogRUM
-    - DatadogSessionReplay
-    - DatadogTrace
-    - DatadogWebViewTracking
+    - FlashcatCore
+    - FlashcatCrashReporting
+    - FlashcatInternal
+    - FlashcatLogs-NoOp
+    - FlashcatRUM
+    - FlashcatTrace
+    - FlashcatWebViewTracking
     - HMSegmentedControl
+    - KSCrash
     - OpenTelemetrySwiftApi
-    - PLCrashReporter
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -1840,8 +1799,6 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   DatadogSDKReactNative:
     :path: "../../packages/core/DatadogSDKReactNative.podspec"
-  DatadogSDKReactNativeSessionReplay:
-    :path: "../../packages/react-native-session-replay/DatadogSDKReactNativeSessionReplay.podspec"
   DatadogSDKReactNativeWebView:
     :path: "../../packages/react-native-webview/DatadogSDKReactNativeWebView.podspec"
   DoubleConversion:
@@ -1988,26 +1945,24 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost: 1dca942403ed9342f98334bf4c3621f011aa7946
-  DatadogCore: 8e50ad6cb68343f701707f7eeca16e0acb52ed8c
-  DatadogCrashReporting: 34763d4276d4fce286c7e8729cfcd2ac04dca43b
-  DatadogInternal: bd8672d506a7e67936ed5f7ca612169e49029b44
-  DatadogLogs: d683aa9e0c9339f5ae679ead70bbdbe41cdc32f6
-  DatadogRUM: 8b794aa458e6323ea9b1cef3f820fd3d092cbe27
-  DatadogSDKReactNative: 676327b41d63d42172cc3543dbed83a9e5f0e32c
-  DatadogSDKReactNativeSessionReplay: 65bb7f28d508739d76c939d1e8242100c0d42204
-  DatadogSDKReactNativeWebView: dfddb218204ae6eec3c092fd20ed3c9d268b8683
-  DatadogSessionReplay: 56a91d799fe34967c5ae79a222364e37d67020f5
-  DatadogTrace: 3ba194791267efa09634234749111cac95abd3e5
-  DatadogWebViewTracking: 8287d5ad06e992de5e46dd72a17e05c7513344be
+  DatadogSDKReactNative: d6daba31b7e13b15f3a573dbabfab13f820cdbb3
+  DatadogSDKReactNativeWebView: 6a472aa637b88e01ef1b8ccc35058e36b8293bf3
   DoubleConversion: f16ae600a246532c4020132d54af21d0ddb2a385
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6
   FBLazyVector: 7605ea4810e0e10ae4815292433c09bf4324ba45
+  FlashcatCore: 68e162cf0ca46ec55586aeed8bbd6444c5e345d3
+  FlashcatCrashReporting: a26e3101e2a62201e5ab82575073eb9755ae15b8
+  FlashcatInternal: 109f40cd3587da1fbd6a846f0010b234a14ce10e
+  FlashcatLogs-NoOp: b41b36fd64df6f7cb3cfec76527f1ba0e8fa9a94
+  FlashcatRUM: eeba1dee1765ecbb570f015523ba2edb39c17d87
+  FlashcatTrace: d41871c3c1ad971dba4276a00e36c70d24a78f67
+  FlashcatWebViewTracking: 8844112f9684d6fd572eba97f5f64a400174dfee
   fmt: 01b82d4ca6470831d1cc0852a1af644be019e8f6
   glog: 08b301085f15bcbb6ff8632a8ebaf239aae04e6a
   hermes-engine: 9e868dc7be781364296d6ee2f56d0c1a9ef0bb11
   HMSegmentedControl: 34c1f54d822d8308e7b24f5d901ec674dfa31352
+  KSCrash: 80e1e24eaefbe5134934ae11ca8d7746586bc2ed
   OpenTelemetrySwiftApi: aaee576ed961e0c348af78df58b61300e95bd104
-  PLCrashReporter: db59ef96fa3d25f3650040d02ec2798cffee75f2
   RCT-Folly: 7b4f73a92ad9571b9dbdb05bb30fad927fa971e1
   RCTDeprecation: ebe712bb05077934b16c6bf25228bdec34b64f83
   RCTRequired: ca91e5dd26b64f577b528044c962baf171c6b716
@@ -2074,6 +2029,6 @@ SPEC CHECKSUMS:
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: feb4910aba9742cfedc059e2b2902e22ffe9954a
 
-PODFILE CHECKSUM: 2be76f6ff2a88869ff51bdbf48edb79d7d863c79
+PODFILE CHECKSUM: c90fb5d07370a7e0842615d402fbf25ad67bddd0
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.15.2
