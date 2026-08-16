@@ -317,107 +317,17 @@ class DdSdkTests: XCTestCase {
             configuration: configuration
         )
 
-        XCTAssertEqual(ddConfig.site, .us1)
+        XCTAssertEqual(ddConfig.site, .cn)
     }
 
-    func testBuildConfigurationUSEndpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "US")
+    func testBuildConfigurationStagingEndpoint() {
+        let configuration: DdSdkConfiguration = .mockAny(site: "STAGING")
 
         let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
             configuration: configuration
         )
 
-        XCTAssertEqual(ddConfig.site, .us1)
-    }
-
-    func testBuildConfigurationUS1Endpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "US1")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .us1)
-    }
-
-    func testBuildConfigurationUS3Endpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "US3")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .us3)
-    }
-
-    func testBuildConfigurationUS5Endpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "US5")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .us5)
-    }
-
-    func testBuildConfigurationUS1FEDEndpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "US1_FED")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .us1_fed)
-    }
-
-    func testBuildConfigurationGOVEndpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "GOV")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .us1_fed)
-    }
-
-    func testBuildConfigurationEUEndpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "EU")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .eu1)
-    }
-
-    func testBuildConfigurationEU1Endpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "EU1")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .eu1)
-    }
-
-    func testBuildConfigurationAP1Endpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "AP1")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .ap1)
-    }
-
-    func testBuildConfigurationAP2Endpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "AP2")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .ap2)
+        XCTAssertEqual(ddConfig.site, .staging)
     }
 
     func testBuildConfigurationAdditionalConfig() {

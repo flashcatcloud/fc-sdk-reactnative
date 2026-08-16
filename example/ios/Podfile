@@ -38,9 +38,9 @@ target 'ddSdkReactnativeExample' do
       config[:reactNativePath],
       :mac_catalyst_enabled => false
     )
-    # Enable `DD_SDK_COMPILED_FOR_TESTING` condition when compiling `DatadogSDK` dependency:
-    datadog_sdk_target = installer.pods_project.targets.detect {|t| ["DatadogCore", "DatadogRUM", "DatadogLogs", "DatadogInternal", "DatadogTrace", "DatadogCrashReporting"].include?(t.name) }
-    datadog_sdk_target.build_configurations.each do |config|
+    # Enable `DD_SDK_COMPILED_FOR_TESTING` condition when compiling the Flashcat SDK dependency:
+    flashcat_sdk_target = installer.pods_project.targets.detect {|t| ["FlashcatCore", "FlashcatRUM", "FlashcatLogs-NoOp", "FlashcatInternal", "FlashcatTrace", "FlashcatCrashReporting"].include?(t.name) }
+    flashcat_sdk_target.build_configurations.each do |config|
       config.build_settings['SWIFT_ACTIVE_COMPILATION_CONDITIONS'] = '$(inherited) DD_SDK_COMPILED_FOR_TESTING'
     end
 

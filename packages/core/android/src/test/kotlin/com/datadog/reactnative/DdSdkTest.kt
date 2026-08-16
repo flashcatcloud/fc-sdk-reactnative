@@ -10,7 +10,7 @@ import android.content.pm.PackageInfo
 import android.os.Looper
 import android.util.Log
 import android.view.Choreographer
-import com.datadog.android.DatadogSite
+import com.datadog.android.FlashcatSite
 import com.datadog.android.core.configuration.BatchProcessingLevel
 import com.datadog.android.core.configuration.BatchSize
 import com.datadog.android.core.configuration.Configuration
@@ -493,7 +493,7 @@ internal class DdSdkTest {
             .hasField("coreConfig") {
                 it.hasFieldEqualTo("needsClearTextHttp", false)
                 it.hasFieldEqualTo("firstPartyHostsWithHeaderTypes", emptyMap<String, String>())
-                it.hasFieldEqualTo("site", DatadogSite.US1)
+                it.hasFieldEqualTo("site", FlashcatSite.CN)
             }
             .hasFieldEqualTo("clientToken", fakeConfiguration.clientToken)
             .hasFieldEqualTo("env", fakeConfiguration.env)
@@ -507,11 +507,11 @@ internal class DdSdkTest {
     }
 
     @Test
-    fun `𝕄 initialize native SDK 𝕎 initialize() {site=us1}`(
+    fun `𝕄 initialize native SDK 𝕎 initialize() {site=staging}`(
         forge: Forge
     ) {
         // Given
-        val site = forge.randomizeCase("us1")
+        val site = forge.randomizeCase("staging")
         fakeConfiguration = fakeConfiguration.copy(site = site, nativeCrashReportEnabled = true)
         val sdkConfigCaptor = argumentCaptor<Configuration>()
         val rumConfigCaptor = argumentCaptor<RumConfiguration>()
@@ -536,265 +536,7 @@ internal class DdSdkTest {
             .hasField("coreConfig") {
                 it.hasFieldEqualTo("needsClearTextHttp", false)
                 it.hasFieldEqualTo("firstPartyHostsWithHeaderTypes", emptyMap<String, String>())
-                it.hasFieldEqualTo("site", DatadogSite.US1)
-            }
-            .hasFieldEqualTo("clientToken", fakeConfiguration.clientToken)
-            .hasFieldEqualTo("env", fakeConfiguration.env)
-            .hasFieldEqualTo("variant", "")
-            .hasFieldEqualTo(
-                "additionalConfig",
-                fakeConfiguration.additionalConfig?.filterValues { it != null }.orEmpty()
-            )
-        assertThat(rumConfigCaptor.firstValue)
-            .hasFieldEqualTo("applicationId", fakeConfiguration.applicationId)
-    }
-
-    @Test
-    fun `𝕄 initialize native SDK 𝕎 initialize() {site=us3}`(
-        forge: Forge
-    ) {
-        // Given
-        val site = forge.randomizeCase("us3")
-        fakeConfiguration = fakeConfiguration.copy(site = site, nativeCrashReportEnabled = true)
-        val sdkConfigCaptor = argumentCaptor<Configuration>()
-        val rumConfigCaptor = argumentCaptor<RumConfiguration>()
-        val logsConfigCaptor = argumentCaptor<LogsConfiguration>()
-        val traceConfigCaptor = argumentCaptor<TraceConfiguration>()
-
-        // When
-        testedBridgeSdk.initialize(fakeConfiguration.toReadableJavaOnlyMap(), mockPromise)
-
-        // Then
-        inOrder(mockDatadog) {
-            verify(mockDatadog).initialize(
-                same(mockContext),
-                sdkConfigCaptor.capture(),
-                any()
-            )
-            verify(mockDatadog).enableRum(rumConfigCaptor.capture())
-            verify(mockDatadog).enableTrace(traceConfigCaptor.capture())
-            verify(mockDatadog).enableLogs(logsConfigCaptor.capture())
-        }
-        assertThat(sdkConfigCaptor.firstValue)
-            .hasField("coreConfig") {
-                it.hasFieldEqualTo("needsClearTextHttp", false)
-                it.hasFieldEqualTo("firstPartyHostsWithHeaderTypes", emptyMap<String, String>())
-                it.hasFieldEqualTo("site", DatadogSite.US3)
-            }
-            .hasFieldEqualTo("clientToken", fakeConfiguration.clientToken)
-            .hasFieldEqualTo("env", fakeConfiguration.env)
-            .hasFieldEqualTo("variant", "")
-            .hasFieldEqualTo(
-                "additionalConfig",
-                fakeConfiguration.additionalConfig?.filterValues { it != null }.orEmpty()
-            )
-        assertThat(rumConfigCaptor.firstValue)
-            .hasFieldEqualTo("applicationId", fakeConfiguration.applicationId)
-    }
-
-    @Test
-    fun `𝕄 initialize native SDK 𝕎 initialize() {site=us5}`(
-        forge: Forge
-    ) {
-        // Given
-        val site = forge.randomizeCase("us5")
-        fakeConfiguration = fakeConfiguration.copy(site = site, nativeCrashReportEnabled = true)
-        val sdkConfigCaptor = argumentCaptor<Configuration>()
-        val rumConfigCaptor = argumentCaptor<RumConfiguration>()
-        val logsConfigCaptor = argumentCaptor<LogsConfiguration>()
-        val traceConfigCaptor = argumentCaptor<TraceConfiguration>()
-
-        // When
-        testedBridgeSdk.initialize(fakeConfiguration.toReadableJavaOnlyMap(), mockPromise)
-
-        // Then
-        inOrder(mockDatadog) {
-            verify(mockDatadog).initialize(
-                same(mockContext),
-                sdkConfigCaptor.capture(),
-                any()
-            )
-            verify(mockDatadog).enableRum(rumConfigCaptor.capture())
-            verify(mockDatadog).enableTrace(traceConfigCaptor.capture())
-            verify(mockDatadog).enableLogs(logsConfigCaptor.capture())
-        }
-        assertThat(sdkConfigCaptor.firstValue)
-            .hasField("coreConfig") {
-                it.hasFieldEqualTo("needsClearTextHttp", false)
-                it.hasFieldEqualTo("firstPartyHostsWithHeaderTypes", emptyMap<String, String>())
-                it.hasFieldEqualTo("site", DatadogSite.US5)
-            }
-            .hasFieldEqualTo("clientToken", fakeConfiguration.clientToken)
-            .hasFieldEqualTo("env", fakeConfiguration.env)
-            .hasFieldEqualTo("variant", "")
-            .hasFieldEqualTo(
-                "additionalConfig",
-                fakeConfiguration.additionalConfig?.filterValues { it != null }.orEmpty()
-            )
-        assertThat(rumConfigCaptor.firstValue)
-            .hasFieldEqualTo("applicationId", fakeConfiguration.applicationId)
-    }
-
-    @Test
-    fun `𝕄 initialize native SDK 𝕎 initialize() {site=us1_fed}`(
-        forge: Forge
-    ) {
-        // Given
-        val site = forge.randomizeCase("us1_fed")
-        fakeConfiguration = fakeConfiguration.copy(site = site, nativeCrashReportEnabled = true)
-        val sdkConfigCaptor = argumentCaptor<Configuration>()
-        val rumConfigCaptor = argumentCaptor<RumConfiguration>()
-        val logsConfigCaptor = argumentCaptor<LogsConfiguration>()
-        val traceConfigCaptor = argumentCaptor<TraceConfiguration>()
-
-        // When
-        testedBridgeSdk.initialize(fakeConfiguration.toReadableJavaOnlyMap(), mockPromise)
-
-        // Then
-        inOrder(mockDatadog) {
-            verify(mockDatadog).initialize(
-                same(mockContext),
-                sdkConfigCaptor.capture(),
-                any()
-            )
-            verify(mockDatadog).enableRum(rumConfigCaptor.capture())
-            verify(mockDatadog).enableTrace(traceConfigCaptor.capture())
-            verify(mockDatadog).enableLogs(logsConfigCaptor.capture())
-        }
-        assertThat(sdkConfigCaptor.firstValue)
-            .hasField("coreConfig") {
-                it.hasFieldEqualTo("needsClearTextHttp", false)
-                it.hasFieldEqualTo("firstPartyHostsWithHeaderTypes", emptyMap<String, String>())
-                it.hasFieldEqualTo("site", DatadogSite.US1_FED)
-            }
-            .hasFieldEqualTo("clientToken", fakeConfiguration.clientToken)
-            .hasFieldEqualTo("env", fakeConfiguration.env)
-            .hasFieldEqualTo("variant", "")
-            .hasFieldEqualTo(
-                "additionalConfig",
-                fakeConfiguration.additionalConfig?.filterValues { it != null }.orEmpty()
-            )
-        assertThat(rumConfigCaptor.firstValue)
-            .hasFieldEqualTo("applicationId", fakeConfiguration.applicationId)
-    }
-
-    @Test
-    fun `𝕄 initialize native SDK 𝕎 initialize() {site=eu1}`(
-        forge: Forge
-    ) {
-        // Given
-        val site = forge.randomizeCase("eu1")
-        fakeConfiguration = fakeConfiguration.copy(site = site, nativeCrashReportEnabled = true)
-        val sdkConfigCaptor = argumentCaptor<Configuration>()
-        val rumConfigCaptor = argumentCaptor<RumConfiguration>()
-        val logsConfigCaptor = argumentCaptor<LogsConfiguration>()
-        val traceConfigCaptor = argumentCaptor<TraceConfiguration>()
-
-        // When
-        testedBridgeSdk.initialize(fakeConfiguration.toReadableJavaOnlyMap(), mockPromise)
-
-        // Then
-        inOrder(mockDatadog) {
-            verify(mockDatadog).initialize(
-                same(mockContext),
-                sdkConfigCaptor.capture(),
-                any()
-            )
-            verify(mockDatadog).enableRum(rumConfigCaptor.capture())
-            verify(mockDatadog).enableTrace(traceConfigCaptor.capture())
-            verify(mockDatadog).enableLogs(logsConfigCaptor.capture())
-        }
-        assertThat(sdkConfigCaptor.firstValue)
-            .hasField("coreConfig") {
-                it.hasFieldEqualTo("needsClearTextHttp", false)
-                it.hasFieldEqualTo("firstPartyHostsWithHeaderTypes", emptyMap<String, String>())
-                it.hasFieldEqualTo("site", DatadogSite.EU1)
-            }
-            .hasFieldEqualTo("clientToken", fakeConfiguration.clientToken)
-            .hasFieldEqualTo("env", fakeConfiguration.env)
-            .hasFieldEqualTo("variant", "")
-            .hasFieldEqualTo(
-                "additionalConfig",
-                fakeConfiguration.additionalConfig?.filterValues { it != null }.orEmpty()
-            )
-        assertThat(rumConfigCaptor.firstValue)
-            .hasFieldEqualTo("applicationId", fakeConfiguration.applicationId)
-    }
-
-    @Test
-    fun `𝕄 initialize native SDK 𝕎 initialize() {site=ap1}`(
-        forge: Forge
-    ) {
-        // Given
-        val site = forge.randomizeCase("ap1")
-        fakeConfiguration = fakeConfiguration.copy(site = site, nativeCrashReportEnabled = true)
-        val sdkConfigCaptor = argumentCaptor<Configuration>()
-        val rumConfigCaptor = argumentCaptor<RumConfiguration>()
-        val logsConfigCaptor = argumentCaptor<LogsConfiguration>()
-        val traceConfigCaptor = argumentCaptor<TraceConfiguration>()
-
-        // When
-        testedBridgeSdk.initialize(fakeConfiguration.toReadableJavaOnlyMap(), mockPromise)
-
-        // Then
-        inOrder(mockDatadog) {
-            verify(mockDatadog).initialize(
-                same(mockContext),
-                sdkConfigCaptor.capture(),
-                any()
-            )
-            verify(mockDatadog).enableRum(rumConfigCaptor.capture())
-            verify(mockDatadog).enableTrace(traceConfigCaptor.capture())
-            verify(mockDatadog).enableLogs(logsConfigCaptor.capture())
-        }
-        assertThat(sdkConfigCaptor.firstValue)
-            .hasField("coreConfig") {
-                it.hasFieldEqualTo("needsClearTextHttp", false)
-                it.hasFieldEqualTo("firstPartyHostsWithHeaderTypes", emptyMap<String, String>())
-                it.hasFieldEqualTo("site", DatadogSite.AP1)
-            }
-            .hasFieldEqualTo("clientToken", fakeConfiguration.clientToken)
-            .hasFieldEqualTo("env", fakeConfiguration.env)
-            .hasFieldEqualTo("variant", "")
-            .hasFieldEqualTo(
-                "additionalConfig",
-                fakeConfiguration.additionalConfig?.filterValues { it != null }.orEmpty()
-            )
-        assertThat(rumConfigCaptor.firstValue)
-            .hasFieldEqualTo("applicationId", fakeConfiguration.applicationId)
-    }
-
-    @Test
-    fun `𝕄 initialize native SDK 𝕎 initialize() {site=ap2}`(
-        forge: Forge
-    ) {
-        // Given
-        val site = forge.randomizeCase("ap2")
-        fakeConfiguration = fakeConfiguration.copy(site = site, nativeCrashReportEnabled = true)
-        val sdkConfigCaptor = argumentCaptor<Configuration>()
-        val rumConfigCaptor = argumentCaptor<RumConfiguration>()
-        val logsConfigCaptor = argumentCaptor<LogsConfiguration>()
-        val traceConfigCaptor = argumentCaptor<TraceConfiguration>()
-
-        // When
-        testedBridgeSdk.initialize(fakeConfiguration.toReadableJavaOnlyMap(), mockPromise)
-
-        // Then
-        inOrder(mockDatadog) {
-            verify(mockDatadog).initialize(
-                same(mockContext),
-                sdkConfigCaptor.capture(),
-                any()
-            )
-            verify(mockDatadog).enableRum(rumConfigCaptor.capture())
-            verify(mockDatadog).enableTrace(traceConfigCaptor.capture())
-            verify(mockDatadog).enableLogs(logsConfigCaptor.capture())
-        }
-        assertThat(sdkConfigCaptor.firstValue)
-            .hasField("coreConfig") {
-                it.hasFieldEqualTo("needsClearTextHttp", false)
-                it.hasFieldEqualTo("firstPartyHostsWithHeaderTypes", emptyMap<String, String>())
-                it.hasFieldEqualTo("site", DatadogSite.AP2)
+                it.hasFieldEqualTo("site", FlashcatSite.STAGING)
             }
             .hasFieldEqualTo("clientToken", fakeConfiguration.clientToken)
             .hasFieldEqualTo("env", fakeConfiguration.env)

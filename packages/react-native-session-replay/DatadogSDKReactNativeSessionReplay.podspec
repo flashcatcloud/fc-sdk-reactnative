@@ -23,7 +23,9 @@ Pod::Spec.new do |s|
   s.dependency "React-Core"
 
   # /!\ Remember to keep the version in sync with DatadogSDKReactNative.podspec
-  s.dependency 'DatadogSessionReplay', '0.2.0'
+  # NOTE: FlashcatSessionReplay is not published to CocoaPods trunk yet; this
+  # dependency will only resolve once fc-sdk-ios publishes it (~> 0.5 line).
+  s.dependency 'FlashcatSessionReplay', '~> 0.5'
   s.dependency 'DatadogSDKReactNative'
 
   s.test_spec 'Tests' do |test_spec|

@@ -4,7 +4,11 @@
  * Copyright 2016-Present Datadog, Inc.
  */
 
-import { DdRum, InternalLog, SdkVerbosity } from '@flashcatcloud/mobile-react-native';
+import {
+    DdRum,
+    InternalLog,
+    SdkVerbosity
+} from '@flashcatcloud/mobile-react-native';
 import type { ComponentDidAppearEvent } from 'react-native-navigation';
 import { Navigation } from 'react-native-navigation';
 import type {

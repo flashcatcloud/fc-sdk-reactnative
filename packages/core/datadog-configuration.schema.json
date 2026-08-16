@@ -38,16 +38,11 @@
                     "type": "integer"
                 },
                 "site": {
-                    "description": "The Datadog site of your organization (can be 'US1', 'US1_FED', 'US3', 'US5', 'AP1', 'AP2', or 'EU1', default is 'US1').",
+                    "description": "The Flashcat site to send data to (can be 'CN' or 'STAGING', default is 'CN').",
                     "type": "string",
                     "enum": [
-                        "US1",
-                        "US1_FED",
-                        "US3",
-                        "US5",
-                        "EU1",
-                        "AP1",
-                        "AP2"
+                        "CN",
+                        "STAGING"
                     ]
                 },
                 "trackingConsent": {

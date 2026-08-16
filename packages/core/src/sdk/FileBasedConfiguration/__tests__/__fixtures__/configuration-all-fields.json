@@ -13,7 +13,7 @@
         "actionNameAttribute": "action-name-attr",
         "useAccessibilityLabel": false,
         "resourceTracingSamplingRate": 33,
-        "site": "US5",
+        "site": "STAGING",
         "firstPartyHosts": [
             {
                 "match": "example.com",

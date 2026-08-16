@@ -28,6 +28,8 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+// ddCredentials.js is gitignored: create it with your Flashcat credentials
+// (APPLICATION_ID, CLIENT_TOKEN, ENVIRONMENT).
 // @ts-ignore
 import {APPLICATION_ID, CLIENT_TOKEN, ENVIRONMENT} from './ddCredentials';
 
@@ -41,6 +43,8 @@ import {APPLICATION_ID, CLIENT_TOKEN, ENVIRONMENT} from './ddCredentials';
     true,
   );
   config.sessionSamplingRate = 100;
+  // Defaults to 'CN'; use 'STAGING' or customEndpoints for other environments.
+  config.site = 'CN';
   config.verbosity = SdkVerbosity.DEBUG;
   config.telemetrySampleRate = 100;
   config.uploadFrequency = UploadFrequency.FREQUENT;

@@ -30,7 +30,7 @@
         "ios/DdSdkReactNative.xcodeproj/*.pbxproj",
         "jest",
         "DatadogSDKReactNative.podspec",
-        "datadog-sourcemaps.gradle",
+        "flashcat-sourcemaps.gradle",
         "datadog-configuration.gradle",
         "datadog-configuration.schema.json"
     ],

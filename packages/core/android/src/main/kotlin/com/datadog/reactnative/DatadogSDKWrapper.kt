@@ -132,7 +132,9 @@ internal class DatadogSDKWrapper : DatadogWrapper {
         email: String?,
         extraInfo: Map<String, Any?>
     ) {
-        Datadog.setUserInfo(id, name, email, extraInfo)
+        // The native SDK requires a non-null user id; drop the call when it is missing.
+        val userId = id ?: return
+        Datadog.setUserInfo(userId, name, email, extraInfo)
     }
 
     override fun setUserInfo(

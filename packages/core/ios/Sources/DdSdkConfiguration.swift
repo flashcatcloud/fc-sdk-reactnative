@@ -52,7 +52,7 @@ public class DdSdkConfiguration: NSObject {
     public var nativeLongTaskThresholdMs: Double? = nil
     public var longTaskThresholdMs: Double = 0.0
     public var sampleRate: Double? = nil
-    public var site: DatadogSite
+    public var site: FlashcatSite
     public var trackingConsent: TrackingConsent
     public var telemetrySampleRate: Double? = nil
     public var vitalsUpdateFrequency: RUM.Configuration.VitalsFrequency? = nil
@@ -85,7 +85,7 @@ public class DdSdkConfiguration: NSObject {
         nativeLongTaskThresholdMs: Double?,
         longTaskThresholdMs: Double,
         sampleRate: Double?,
-        site: DatadogSite,
+        site: FlashcatSite,
         trackingConsent: TrackingConsent,
         telemetrySampleRate: Double?,
         vitalsUpdateFrequency: RUM.Configuration.VitalsFrequency?,

@@ -461,7 +461,9 @@ export class ReactNativeSVG {
                         t.identifier('SessionReplayView')
                     )
                 ],
-                t.stringLiteral('@flashcatcloud/mobile-react-native-session-replay')
+                t.stringLiteral(
+                    '@flashcatcloud/mobile-react-native-session-replay'
+                )
             );
             program.unshiftContainer('body', importDecl);
         }

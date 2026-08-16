@@ -4,7 +4,11 @@
  * Copyright 2016-Present Datadog, Inc.
  */
 
-import { DdRum, SdkVerbosity, InternalLog } from '@flashcatcloud/mobile-react-native';
+import {
+    DdRum,
+    SdkVerbosity,
+    InternalLog
+} from '@flashcatcloud/mobile-react-native';
 import type { AppStateStatus, NativeEventSubscription } from 'react-native';
 import { AppState, BackHandler } from 'react-native';
 

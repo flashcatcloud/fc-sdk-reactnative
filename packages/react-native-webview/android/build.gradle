@@ -196,10 +196,10 @@ dependencies {
     implementation "com.facebook.react:react-android:$reactNativeVersion"
   }
 
-  implementation "cloud.flashcat:fc-sdk-android-webview:0.1.0"
+  implementation "cloud.flashcat:dd-sdk-android-webview:0.5.0"
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
-  implementation project(path: ':datadog_mobile-react-native')
+  implementation project(path: ':flashcatcloud_mobile-react-native')
   implementation project(path: ':react-native-webview')
 
   testImplementation "org.junit.platform:junit-platform-launcher:1.6.2"
