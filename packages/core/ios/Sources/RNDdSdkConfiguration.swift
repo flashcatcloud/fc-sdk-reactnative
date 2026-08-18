@@ -339,24 +339,12 @@ extension NSString? {
         }
     }
     
-    func asSite() -> DatadogSite {
+    func asSite() -> FlashcatSite {
         switch self?.lowercased {
-        case "us1", "us":
-            return .us1
-        case "eu1", "eu":
-            return .eu1
-        case "us3":
-            return .us3
-        case "us5":
-            return .us5
-        case "us1_fed", "gov":
-            return .us1_fed
-        case "ap1":
-            return .ap1
-        case "ap2":
-            return .ap2
+        case "staging":
+            return .staging
         default:
-            return .us1
+            return .cn
         }
     }
     

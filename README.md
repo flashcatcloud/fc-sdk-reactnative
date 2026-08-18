@@ -1,20 +1,26 @@
-# Datadog SDK for React Native
+# Flashcat SDK for React Native
 
-Datadog Real User Monitoring (RUM) enables you to visualize and analyze the real-time performance and user journeys of your application’s individual users.
+Flashcat Real User Monitoring (RUM) enables you to visualize and analyze the real-time performance and user journeys of your application’s individual users.
 
 ## Setup
 
-See the dedicated [Datadog React Native RUM Collection documentation][1] to learn how to send RUM data from your React Native application to Datadog.
+Install the core package:
 
-The RUM React Native SDK supports [Expo][2]. For more information, see the [Expo documentation][3].
+```sh
+yarn add @flashcatcloud/mobile-react-native
+```
 
-The RUM React Native SDK supports monitoring hybrid applications. For more information, see the [hybrid app documentation][8].
+Then initialize the SDK with your Flashcat client token and RUM application ID. Data is sent to the Flashcat `CN` site by default; use the `STAGING` site or `customEndpoints` for other environments.
 
-The RUM React Native SDK supports [OpenTelemetry][9] and distributed traces through header generation. For more information, see the [OpenTelemetry documentation][10].
+The RUM React Native SDK supports [Expo][2].
+
+The RUM React Native SDK supports monitoring hybrid applications.
+
+The RUM React Native SDK supports [OpenTelemetry][9] and distributed traces through header generation.
 
 ## Troubleshooting
 
-If you encounter any issue when using the Datadog SDK for React Native, please take a look at the [troubleshooting documentation][4], or at the [existing issues][5].
+If you encounter any issue when using the Flashcat SDK for React Native, please take a look at the [troubleshooting documentation][4], or at the [existing issues][5].
 
 ## Contributing
 
@@ -24,13 +30,9 @@ Pull requests are welcome. First, open an issue to discuss what you would like t
 
 For more information, see [Apache License, v2.0][7]
 
-[1]: https://docs.datadoghq.com/real_user_monitoring/reactnative/
 [2]: https://docs.expo.dev/
-[3]: https://docs.datadoghq.com/real_user_monitoring/reactnative/expo/
-[4]: https://docs.datadoghq.com/real_user_monitoring/mobile_and_tv_monitoring/troubleshooting/#react-native
+[4]: https://github.com/flashcat/fc-sdk-reactnative/blob/develop/TROUBLESHOOTING.md
 [5]: https://github.com/flashcat/fc-sdk-reactnative/issues?q=is%3Aissue
 [6]: https://github.com/flashcat/fc-sdk-reactnative/blob/develop/CONTRIBUTING.md
 [7]: https://github.com/flashcat/fc-sdk-reactnative/blob/main/LICENSE
-[8]: https://docs.datadoghq.com/real_user_monitoring/guide/monitor-hybrid-react-native-applications/
 [9]: https://opentelemetry.io/
-[10]: https://docs.datadoghq.com/real_user_monitoring/platform/connect_rum_and_traces/?tab=reactnativerum#opentelemetry-support

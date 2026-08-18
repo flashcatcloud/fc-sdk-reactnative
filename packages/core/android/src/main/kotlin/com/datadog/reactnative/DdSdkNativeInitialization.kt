@@ -9,7 +9,7 @@ package com.datadog.reactnative
 import android.content.Context
 import android.content.pm.PackageManager
 import android.util.Log
-import com.datadog.android.DatadogSite
+import com.datadog.android.FlashcatSite
 import com.datadog.android.core.configuration.BatchProcessingLevel
 import com.datadog.android.core.configuration.BatchSize
 import com.datadog.android.core.configuration.Configuration
@@ -300,17 +300,11 @@ class DdSdkNativeInitialization internal constructor(
         }
     }
 
-    private fun buildSite(site: String?): DatadogSite {
+    private fun buildSite(site: String?): FlashcatSite {
         val siteLower = site?.lowercase(Locale.US)
         return when (siteLower) {
-            "us1", "us" -> DatadogSite.US1
-            "eu1", "eu" -> DatadogSite.EU1
-            "us3" -> DatadogSite.US3
-            "us5" -> DatadogSite.US5
-            "us1_fed", "gov" -> DatadogSite.US1_FED
-            "ap1" -> DatadogSite.AP1
-            "ap2" -> DatadogSite.AP2
-            else -> DatadogSite.US1
+            "staging" -> FlashcatSite.STAGING
+            else -> FlashcatSite.CN
         }
     }
 

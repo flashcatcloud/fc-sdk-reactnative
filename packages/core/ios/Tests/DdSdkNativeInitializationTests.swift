@@ -33,7 +33,7 @@ class DdSdkNativeInitializationTests: XCTestCase {
         XCTAssertEqual(configuration?.nativeLongTaskThresholdMs, 333.0)
         XCTAssertEqual(configuration?.longTaskThresholdMs, 44.0)
         XCTAssertEqual(configuration?.sampleRate, 80.0)
-        XCTAssertEqual(configuration?.site, .us3)
+        XCTAssertEqual(configuration?.site, .staging)
         XCTAssertEqual(configuration?.trackingConsent, .notGranted)
         XCTAssertEqual(configuration?.telemetrySampleRate, 60.0)
         XCTAssertEqual(configuration?.vitalsUpdateFrequency, .none)
@@ -75,7 +75,7 @@ class DdSdkNativeInitializationTests: XCTestCase {
         XCTAssertEqual(configuration?.nativeLongTaskThresholdMs, 200.0)
         XCTAssertEqual(configuration?.longTaskThresholdMs, 0.0)
         XCTAssertEqual(configuration?.sampleRate, 100.0)
-        XCTAssertEqual(configuration?.site, .us1)
+        XCTAssertEqual(configuration?.site, .cn)
         XCTAssertEqual(configuration?.trackingConsent, .pending) // This is different from JS and Android which have granted by default.
         XCTAssertEqual(configuration?.telemetrySampleRate, 20.0)
         XCTAssertEqual(configuration?.vitalsUpdateFrequency, .average)

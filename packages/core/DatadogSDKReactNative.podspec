@@ -19,14 +19,16 @@ Pod::Spec.new do |s|
   s.dependency "React-Core"
 
   # /!\ Remember to keep the versions in sync with DatadogSDKReactNativeSessionReplay.podspec
-  s.dependency 'DatadogCore', '0.2.0'
-  s.dependency 'DatadogLogs', '0.2.0'
-  s.dependency 'DatadogTrace', '0.2.0'
-  s.dependency 'DatadogRUM', '0.2.0'
-  s.dependency 'DatadogCrashReporting', '0.2.0'
+  s.dependency 'FlashcatCore', '~> 0.5'
+  # FlashcatLogs is not published to CocoaPods trunk yet; use the NoOp variant
+  # (same as the Flutter bridge) until it is published.
+  s.dependency 'FlashcatLogs-NoOp', '~> 0.5'
+  s.dependency 'FlashcatTrace', '~> 0.5'
+  s.dependency 'FlashcatRUM', '~> 0.5'
+  s.dependency 'FlashcatCrashReporting', '~> 0.5'
 
-  # DatadogWebViewTracking is not available for tvOS
-  s.ios.dependency 'DatadogWebViewTracking', '0.2.0'
+  # FlashcatWebViewTracking is not available for tvOS
+  s.ios.dependency 'FlashcatWebViewTracking', '~> 0.5'
   
   s.test_spec 'Tests' do |test_spec|
     test_spec.source_files = 'ios/Tests/**/*.{swift,json}'

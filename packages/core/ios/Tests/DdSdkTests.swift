@@ -62,7 +62,8 @@ class DdSdkTests: XCTestCase {
             reject: mockReject
         )
 
-        XCTAssertEqual(consoleMessage, "")
+        // FlashcatLogs-NoOp prints a notice the first time Logs.enable is called.
+        XCTAssertEqual(consoleMessage, "Logs was enabled but it is currently No-Op due to `FC_NOOP_LOGS` flag.")
 
         DdSdkImplementation(
             mainDispatchQueue: DispatchQueueMock(),
@@ -77,7 +78,7 @@ class DdSdkTests: XCTestCase {
         )
 
         XCTAssertEqual(
-            consoleMessage, "Datadog SDK is already initialized, skipping initialization.")
+            consoleMessage, "Logs was enabled but it is currently No-Op due to `FC_NOOP_LOGS` flag.Datadog SDK is already initialized, skipping initialization.")
     }
 
     func testResolvesPromiseAfterInitializationIsDone() throws {
@@ -306,7 +307,8 @@ class DdSdkTests: XCTestCase {
         )
 
         XCTAssertNotNil(core.features[RUMFeature.name])
-        XCTAssertNotNil(core.features[LogsFeature.name])
+        // Logs is FlashcatLogs-NoOp: enableLogs is a no-op and no logging feature is registered.
+        XCTAssertNil(core.features[LogsFeature.name])
         XCTAssertNotNil(core.features[TraceFeature.name])
     }
 
@@ -317,107 +319,17 @@ class DdSdkTests: XCTestCase {
             configuration: configuration
         )
 
-        XCTAssertEqual(ddConfig.site, .us1)
+        XCTAssertEqual(ddConfig.site, .cn)
     }
 
-    func testBuildConfigurationUSEndpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "US")
+    func testBuildConfigurationStagingEndpoint() {
+        let configuration: DdSdkConfiguration = .mockAny(site: "STAGING")
 
         let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
             configuration: configuration
         )
 
-        XCTAssertEqual(ddConfig.site, .us1)
-    }
-
-    func testBuildConfigurationUS1Endpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "US1")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .us1)
-    }
-
-    func testBuildConfigurationUS3Endpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "US3")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .us3)
-    }
-
-    func testBuildConfigurationUS5Endpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "US5")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .us5)
-    }
-
-    func testBuildConfigurationUS1FEDEndpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "US1_FED")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .us1_fed)
-    }
-
-    func testBuildConfigurationGOVEndpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "GOV")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .us1_fed)
-    }
-
-    func testBuildConfigurationEUEndpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "EU")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .eu1)
-    }
-
-    func testBuildConfigurationEU1Endpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "EU1")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .eu1)
-    }
-
-    func testBuildConfigurationAP1Endpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "AP1")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .ap1)
-    }
-
-    func testBuildConfigurationAP2Endpoint() {
-        let configuration: DdSdkConfiguration = .mockAny(site: "AP2")
-
-        let ddConfig = DdSdkNativeInitialization().buildSDKConfiguration(
-            configuration: configuration
-        )
-
-        XCTAssertEqual(ddConfig.site, .ap2)
+        XCTAssertEqual(ddConfig.site, .staging)
     }
 
     func testBuildConfigurationAdditionalConfig() {
@@ -573,7 +485,7 @@ class DdSdkTests: XCTestCase {
         XCTAssertEqual(userInfo.extraInfo["extra-info-3"] as? Bool, true)
     }
 
-    func testSetUserOptionalId() throws {
+    func testSetUserWithoutIdIsDropped() throws {
         let bridge = DdSdkImplementation(
             mainDispatchQueue: DispatchQueueMock(),
             jsDispatchQueue: DispatchQueueMock(),
@@ -587,14 +499,13 @@ class DdSdkTests: XCTestCase {
             reject: mockReject
         )
 
+        // The native SDK requires a non-nil user id: a call without one is dropped.
         bridge.setUser(
             user: NSDictionary(
                 dictionary: [
                     "name": "John Doe",
                     "email": "john@doe.com",
                     "extra-info-1": 123,
-                    "extra-info-2": "abc",
-                    "extra-info-3": true,
                 ]
             ),
             resolve: mockResolve,
@@ -602,14 +513,11 @@ class DdSdkTests: XCTestCase {
         )
 
         let ddContext = try XCTUnwrap(CoreRegistry.default as? DatadogCore).contextProvider.read()
-        let userInfo = try XCTUnwrap(ddContext.userInfo)
 
-        XCTAssertEqual(userInfo.id, nil)
-        XCTAssertEqual(userInfo.name, "John Doe")
-        XCTAssertEqual(userInfo.email, "john@doe.com")
-        XCTAssertEqual(userInfo.extraInfo["extra-info-1"] as? Int64, 123)
-        XCTAssertEqual(userInfo.extraInfo["extra-info-2"] as? String, "abc")
-        XCTAssertEqual(userInfo.extraInfo["extra-info-3"] as? Bool, true)
+        XCTAssertNil(ddContext.userInfo?.id)
+        XCTAssertNil(ddContext.userInfo?.name)
+        XCTAssertNil(ddContext.userInfo?.email)
+        XCTAssertEqual(ddContext.userInfo?.extraInfo.count, 0)
     }
 
     func testSetUserInfo() throws {
@@ -666,7 +574,7 @@ class DdSdkTests: XCTestCase {
         }
     }
 
-    func testSetUserInfoOptionalId() throws {
+    func testSetUserInfoWithoutIdIsDropped() throws {
         let bridge = DdSdkImplementation(
             mainDispatchQueue: DispatchQueueMock(),
             jsDispatchQueue: DispatchQueueMock(),
@@ -680,6 +588,7 @@ class DdSdkTests: XCTestCase {
             reject: mockReject
         )
 
+        // The native SDK requires a non-nil user id: a call without one is dropped.
         bridge.setUserInfo(
             userInfo: NSDictionary(
                 dictionary: [
@@ -687,11 +596,6 @@ class DdSdkTests: XCTestCase {
                     "email": "john@doe.com",
                     "extraInfo": [
                         "extra-info-1": 123,
-                        "extra-info-2": "abc",
-                        "extra-info-3": true,
-                        "extra-info-4": [
-                            "nested-extra-info-1": 456
-                        ],
                     ],
                 ]
             ),
@@ -700,23 +604,11 @@ class DdSdkTests: XCTestCase {
         )
 
         let ddContext = try XCTUnwrap(CoreRegistry.default as? DatadogCore).contextProvider.read()
-        let userInfo = try XCTUnwrap(ddContext.userInfo)
 
-        XCTAssertEqual(userInfo.id, nil)
-        XCTAssertEqual(userInfo.name, "John Doe")
-        XCTAssertEqual(userInfo.email, "john@doe.com")
-        XCTAssertEqual(userInfo.extraInfo["extra-info-1"] as? Int64, 123)
-        XCTAssertEqual(userInfo.extraInfo["extra-info-2"] as? String, "abc")
-        XCTAssertEqual(userInfo.extraInfo["extra-info-3"] as? Bool, true)
-
-        if let extraInfo4Encodable = userInfo.extraInfo["extra-info-4"]
-            as? DatadogSDKReactNative.AnyEncodable,
-            let extraInfo4Dict = extraInfo4Encodable.value as? [String: Int]
-        {
-            XCTAssertEqual(extraInfo4Dict, ["nested-extra-info-1": 456])
-        } else {
-            XCTFail("extra-info-4 is not of expected type or value")
-        }
+        XCTAssertNil(ddContext.userInfo?.id)
+        XCTAssertNil(ddContext.userInfo?.name)
+        XCTAssertNil(ddContext.userInfo?.email)
+        XCTAssertEqual(ddContext.userInfo?.extraInfo.count, 0)
     }
 
     func testAddUserExtraInfo() throws {
@@ -868,7 +760,8 @@ class DdSdkTests: XCTestCase {
 
         XCTAssertEqual(actualFirstPartyHosts, expectedFirstPartyHosts)
         XCTAssertEqual(actualTracingSamplingRate, 66)
-        XCTAssertEqual(actualTraceContextInjection, .all)
+        // FlashcatRUM defaults trace context injection to .sampled (upstream dd-sdk-ios defaulted to .all).
+        XCTAssertEqual(actualTraceContextInjection, .sampled)
     }
 
     func testBuildTelemetrySampleRate() {
@@ -1155,13 +1048,8 @@ class DdSdkTests: XCTestCase {
             reject: mockReject
         )
 
-        let logsFeature = try XCTUnwrap(CoreRegistry.default as? DatadogCore).get(
-            feature: LogsFeature.self)
-        let customLogsEndpoint = try XCTUnwrap(
-            logsFeature?.requestBuilder as? DatadogLogs.RequestBuilder
-        ).customIntakeURL
-        XCTAssertEqual(customLogsEndpoint?.absoluteString, "https://logs.example.com/api/v2/logs")
-
+        // Logs is FlashcatLogs-NoOp: no logging feature (or request builder) is registered,
+        // so the custom logs endpoint cannot be asserted here.
         let rumFeature = try XCTUnwrap(CoreRegistry.default as? DatadogCore).get(
             feature: RUMFeature.self)
         let customRumEndpoint = try XCTUnwrap(
@@ -1406,8 +1294,9 @@ class DdSdkTests: XCTestCase {
         // mock data is written only after this operation completes - otherwise, migration may delete mocked files.
         core.readWriteQueue.sync {}
 
+        // Only "tracing" is exercised: logs is FlashcatLogs-NoOp, which registers no
+        // feature and therefore does not take part in clearAllData.
         let featureDirectories: [FeatureDirectories] = try [
-            core.directory.getFeatureDirectories(forFeatureNamed: "logging"),
             core.directory.getFeatureDirectories(forFeatureNamed: "tracing"),
         ]
 
@@ -1421,7 +1310,7 @@ class DdSdkTests: XCTestCase {
             try acc + nextDirectory.files().count
         }
         XCTAssertEqual(
-            numberOfFiles, 4, "Each feature stores 2 files - one authorised and one unauthorised")
+            numberOfFiles, 2, "The feature stores 2 files - one authorised and one unauthorised")
 
         // When
         sdk.clearAllData(resolve: mockResolve, reject: mockReject)

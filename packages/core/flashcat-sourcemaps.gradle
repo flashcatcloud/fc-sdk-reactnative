@@ -12,8 +12,8 @@ interface InjectedExecOps {
 }
 
 def isDryRun = (
-    System.getenv("DATADOG_SOURCEMAPS_DRY_RUN")?.toBoolean() ?:
-    (project.hasProperty("datadogSourcemapsDryRun") && project.property("datadogSourcemapsDryRun") == "true")
+    System.getenv("FLASHCAT_SOURCEMAPS_DRY_RUN")?.toBoolean() ?:
+    (project.hasProperty("flashcatSourcemapsDryRun") && project.property("flashcatSourcemapsDryRun") == "true")
 )
 
 afterEvaluate {
@@ -21,7 +21,7 @@ afterEvaluate {
 
     if (androidExtension == null || android.applicationVariants == null) {
         throw new GradleException("Android extension is missing or running not in the application" +
-                " module. Make sure you've applied datadog-sourcemaps.gradle in the" +
+                " module. Make sure you've applied flashcat-sourcemaps.gradle in the" +
                 " application module (usually it is located in the android/app/build.gradle file).")
     }
 
@@ -63,14 +63,14 @@ afterEvaluate {
         def packagerOutputSourceMapFile = file("$buildDir/intermediates/sourcemaps/react/${targetPath}/${bundleAssetName}.packager.map")
 
         def uploadTask = tasks.create("upload${targetName}Sourcemaps") {
-            group = "datadog"
-            description = "Uploads sourcemaps to Datadog."
+            group = "flashcat"
+            description = "Uploads sourcemaps to Flashcat."
 
             def uploadSourcemap = { jsBundleFile ->
                 return [
-                        "${getDatadogCiExecPath(reactConfig)}",
-                        "react-native",
-                        "upload",
+                        "${getFlashcatCliExecPath(reactConfig)}",
+                        "sourcemaps",
+                        "upload-react-native",
                         "--platform",
                         "android",
                         "--service",
@@ -104,7 +104,7 @@ afterEvaluate {
 
                 def uploadCommand = uploadSourcemap(jsBundleFile);
                 if (isDryRun) {
-                    logger.lifecycle("Dry run mode enabled, not uploading sourcemaps to Datadog.")
+                    logger.lifecycle("Dry run mode enabled, not uploading sourcemaps to Flashcat.")
                     uploadCommand += ["--dry-run"]
                 }
 
@@ -121,13 +121,13 @@ afterEvaluate {
  * Copies the Debug ID from the packager sourcemap to the composed sourcemap (Hermes).
  */
 private def copyDebugId(String packagerSourceMapPath, String jsSourceMapPath, File workingDirectory) {
-    def ddReactNativePath = getDatadogReactNativePath(workingDirectory)
-    def copyDebugIdScript = new File("$ddReactNativePath/scripts/copy-debug-id.js")
+    def fcReactNativePath = getFlashcatReactNativePath(workingDirectory)
+    def copyDebugIdScript = new File("$fcReactNativePath/scripts/copy-debug-id.js")
     if (!copyDebugIdScript.exists()) {
         println("ERROR: copy Debug ID script does not exist at ${copyDebugIdScript.absolutePath}")
         return
     }
-    
+
     def nodeExecutable = Os.isFamily(Os.FAMILY_WINDOWS) ? 'node.exe' : 'node'
 
     def copyDebugIdCommand = [
@@ -141,29 +141,29 @@ private def copyDebugId(String packagerSourceMapPath, String jsSourceMapPath, Fi
 }
 
 /**
- * We use a function here to resolve the datadog-ci executable path.
- * If DATADOG_CI_EXEC env variable is defined, it will be returned (if valid).
+ * We use a function here to resolve the flashcat-cli executable path.
+ * If FLASHCAT_CI_EXEC env variable is defined, it will be returned (if valid).
  */
-private def getDatadogCiExecPath(reactConfig) {
-    def defaultPath = "${reactConfig.root}/node_modules/.bin/datadog-ci"
+private def getFlashcatCliExecPath(reactConfig) {
+    def defaultPath = "${reactConfig.root}/node_modules/.bin/flashcat-cli"
 
     // Try to retrieve the path from ENV variable
-    def envPath = System.getenv('DATADOG_CI_EXEC')
+    def envPath = System.getenv('FLASHCAT_CI_EXEC')
     if (envPath != null) {
-        if (isValidDatadogCiExec(envPath)) {
+        if (isValidFlashcatCliExec(envPath)) {
             return envPath
         } else {
-            println("WARNING: Ignoring DATADOG_CI_EXEC as it does not point to a valid datadog-ci executable")
+            println("WARNING: Ignoring FLASHCAT_CI_EXEC as it does not point to a valid flashcat-cli executable")
         }
     }
 
     def nodeExecutable = Os.isFamily(Os.FAMILY_WINDOWS) ? 'node.exe' : 'node'
     def nodeScript = '''
     const path = require('path');
-    const modulePath = require.resolve('@datadog/datadog-ci/package.json');
+    const modulePath = require.resolve('@flashcatcloud/flashcat-cli/package.json');
     const nodeModulesDir = path.resolve(path.dirname(modulePath), '../../');
-    const datadogCiExec = path.join(nodeModulesDir, '.bin', 'datadog-ci');
-    console.log(datadogCiExec);
+    const flashcatCliExec = path.join(nodeModulesDir, '.bin', 'flashcat-cli');
+    console.log(flashcatCliExec);
     '''
 
     def stdout = new ByteArrayOutputStream()
@@ -178,33 +178,33 @@ private def getDatadogCiExecPath(reactConfig) {
     process.inputStream.eachLine { line ->
         stdout << line << '\n'
     }
-    
+
     process.waitFor()
 
     def resolvedPath = stdout.toString().trim()
-    if (isValidDatadogCiExec(resolvedPath)) {
+    if (isValidFlashcatCliExec(resolvedPath)) {
         return resolvedPath
     } else {
-        println("WARNING: Could not resolve datadog-ci executable path, falling back to default: ${defaultPath}")
+        println("WARNING: Could not resolve flashcat-cli executable path, falling back to default: ${defaultPath}")
     }
 
     return defaultPath
 }
 
 /**
- * We use a function here to resolve the Datadog React Native package path.
- * If DATADOG_REACT_NATIVE_PATH env variable is defined, it will be returned (if valid).
+ * We use a function here to resolve the Flashcat React Native package path.
+ * If FLASHCAT_REACT_NATIVE_PATH env variable is defined, it will be returned (if valid).
  */
-private def getDatadogReactNativePath(File workingDirectory) {
+private def getFlashcatReactNativePath(File workingDirectory) {
     def defaultPath = "${workingDirectory.absolutePath}/node_modules/@flashcatcloud/mobile-react-native"
 
     // Try to retrieve the path from ENV variable
-    def envPath = System.getenv('DATADOG_REACT_NATIVE_PATH')
+    def envPath = System.getenv('FLASHCAT_REACT_NATIVE_PATH')
     if (envPath != null) {
-        if (isValidDatadogPackagePath(envPath)) {
+        if (isValidFlashcatPackagePath(envPath)) {
             return envPath
         } else {
-            println("WARNING: Ignoring DATADOG_REACT_NATIVE_PATH as it does not point to a valid @flashcatcloud/mobile-react-native package (${envPath})")
+            println("WARNING: Ignoring FLASHCAT_REACT_NATIVE_PATH as it does not point to a valid @flashcatcloud/mobile-react-native package (${envPath})")
         }
     }
 
@@ -228,11 +228,11 @@ private def getDatadogReactNativePath(File workingDirectory) {
     process.inputStream.eachLine { line ->
         stdout << line << '\n'
     }
-    
+
     process.waitFor()
 
     def resolvedPath = stdout.toString().trim()
-    if (isValidDatadogPackagePath(resolvedPath)) {
+    if (isValidFlashcatPackagePath(resolvedPath)) {
         return resolvedPath
     } else {
         println("WARNING: Could not resolve @flashcatcloud/mobile-react-native path, falling back to default: ${defaultPath}")
@@ -244,7 +244,7 @@ private def getDatadogReactNativePath(File workingDirectory) {
 /**
  * Function to validate @flashcatcloud/mobile-react-native path
  */
- private def isValidDatadogPackagePath(String path) {
+ private def isValidFlashcatPackagePath(String path) {
     def packageJsonFile = new File(path, "package.json")
 
     // Check package.json exists
@@ -262,14 +262,14 @@ private def getDatadogReactNativePath(File workingDirectory) {
  }
 
 /**
- * Function to validate datadog-ci executable path.
+ * Function to validate flashcat-cli executable path.
  */
-private def isValidDatadogCiExec(String path) {
+private def isValidFlashcatCliExec(String path) {
     def file = new File(path)
     if (!file.exists() || !file.canExecute()) {
         return false
     }
-    
+
     return true
 }
 
@@ -289,13 +289,13 @@ private def getBundleFileResolver(String[] jsBundleDirs, String bundleAssetName)
     return resolver
 }
 
-/** 
+/**
  * From RN 0.71, the following things changed in the RN gradle plugin:
  * - bundle task name changed from "bundle${targetName}JsAndAssets" to "createBundle${targetName}JsAndAssets"
  * - bundle dir changed from "$buildDir/generated/assets/react/${targetPath}" to "$buildDir/ASSETS/createBundle${targetName}JsAndAssets"
- *   (and then "$buildDir/generated/assets/createBundle${targetPath}JsAndAssets" with the release of Android Gradle Plugin 7.4, see https://github.com/facebook/react-native/issues/35439)
+ *   (and then "$buildDir/generated/assets/createBundle${targetName}JsAndAssets" with the release of Android Gradle Plugin 7.4, see https://github.com/facebook/react-native/issues/35439)
  * - config was in "project.react" and is now in "project.extensions.react"
- * - accessing parameters values requires calling a getter 
+ * - accessing parameters values requires calling a getter
  * - target path changed from variant.dirName to variant.name
  */
 private def getReactConfig(File buildDir, variant) {
@@ -385,19 +385,19 @@ private def runShellCommand(
 }
 
 private def getServiceName(variant) {
-    if (project.ext.has("datadog") && project.ext.datadog.serviceName) {
-        return project.ext.datadog.serviceName
+    if (project.ext.has("flashcat") && project.ext.flashcat.serviceName) {
+        return project.ext.flashcat.serviceName
     }
 
-    if (project.hasProperty("datadog") && project.datadog.serviceName) {
-        return project.datadog.serviceName
+    if (project.hasProperty("flashcat") && project.flashcat.serviceName) {
+        return project.flashcat.serviceName
     }
 
     return variant.applicationId
 }
 
 private def getVersionName(variant) {
-    def envVersionName = System.getenv('DATADOG_RELEASE_VERSION')
+    def envVersionName = System.getenv('FLASHCAT_RELEASE_VERSION')
     if (envVersionName != null) {
         return envVersionName;
     }

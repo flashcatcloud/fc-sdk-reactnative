@@ -7,6 +7,8 @@ import {
     TrackingConsent
 } from '@flashcatcloud/mobile-react-native';
 
+// ddCredentials.tsx is gitignored: create it with your Flashcat credentials
+// (APPLICATION_ID, CLIENT_TOKEN, ENVIRONMENT).
 import {APPLICATION_ID, CLIENT_TOKEN, ENVIRONMENT} from './ddCredentials';
 
 // New SDK Setup - not available for react-native-navigation
@@ -23,6 +25,8 @@ export function getDatadogConfig(trackingConsent: TrackingConsent) {
     config.nativeCrashReportEnabled = true
     config.sessionSamplingRate = 100
     config.serviceName = "com.flashcat.reactnative.sample"
+    // Defaults to 'CN'; use 'STAGING' or customEndpoints for other environments.
+    config.site = 'CN'
     config.verbosity = SdkVerbosity.DEBUG;
 
     return config
@@ -49,6 +53,8 @@ export function initializeDatadog(trackingConsent: TrackingConsent) {
     config.nativeCrashReportEnabled = true
     config.sampleRate = 100
     config.serviceName = "com.flashcat.reactnative.sample"
+    // Defaults to 'CN'; use 'STAGING' or customEndpoints for other environments.
+    config.site = 'CN'
     config.verbosity = SdkVerbosity.DEBUG;
 
     DdSdkReactNative.initialize(config).then(() => {

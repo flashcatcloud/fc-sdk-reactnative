@@ -2296,149 +2296,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@flashcatcloud/mobile-react-native-apollo-client@workspace:packages/react-native-apollo-client":
-  version: 0.0.0-use.local
-  resolution: "@flashcatcloud/mobile-react-native-apollo-client@workspace:packages/react-native-apollo-client"
-  dependencies:
-    "@apollo/client": ^3.8.3
-    "@testing-library/react-native": 7.0.2
-    graphql: ^16.8.0
-    react-native-builder-bob: 0.26.0
-  peerDependencies:
-    "@apollo/client": ">=3.0"
-    "@flashcatcloud/mobile-react-native": ^2.6.1
-    react: ">=16.13.1"
-    react-native: ">=0.63.4 <1.0"
-  languageName: unknown
-  linkType: soft
-
-"@flashcatcloud/mobile-react-native-babel-plugin@workspace:packages/react-native-babel-plugin":
-  version: 0.0.0-use.local
-  resolution: "@flashcatcloud/mobile-react-native-babel-plugin@workspace:packages/react-native-babel-plugin"
-  dependencies:
-    "@babel/cli": ^7.27.2
-    "@babel/core": ^7.27.1
-    "@babel/generator": ^7.28.0
-    "@babel/helper-plugin-utils": ^7.27.1
-    "@babel/parser": ^7.28.4
-    "@babel/preset-env": ^7.27.2
-    "@babel/preset-react": ^7.27.1
-    "@babel/preset-typescript": ^7.27.1
-    "@babel/traverse": ^7.28.4
-    "@babel/types": ^7.27.1
-    "@swc/core": ^1.11.31
-    "@swc/jest": ^0.2.38
-    "@types/jest": ^29.5.14
-    fast-glob: ^3.3.3
-    jest: ^29.7.0
-    react-native-builder-bob: 0.26.0
-    svgo: ^4.0.0
-    tsc-alias: ^1.8.16
-    typescript: 5.0.4
-    uuid: ^8.3.2
-  peerDependencies:
-    react: ">=16.13.1"
-    react-native: ">=0.63.4 <1.0"
-  bin:
-    datadog-generate-sr-assets: ./lib/commonjs/cli/generate-sr-assets.js
-  languageName: unknown
-  linkType: soft
-
-"@flashcatcloud/mobile-react-native-code-push@workspace:packages/codepush":
-  version: 0.0.0-use.local
-  resolution: "@flashcatcloud/mobile-react-native-code-push@workspace:packages/codepush"
-  dependencies:
-    "@flashcatcloud/mobile-react-native": "workspace:2.14.1"
-    "@testing-library/react-native": 7.0.2
-    react-native-builder-bob: 0.26.0
-    react-native-code-push: 7.1.0
-  peerDependencies:
-    "@flashcatcloud/mobile-react-native": ^2.0.1
-    react: ">=16.13.1"
-    react-native: ">=0.63.4 <1.0"
-    react-native-code-push: ">=2.0.0"
-  languageName: unknown
-  linkType: soft
-
-"@flashcatcloud/mobile-react-native-navigation@workspace:packages/react-native-navigation":
-  version: 0.0.0-use.local
-  resolution: "@flashcatcloud/mobile-react-native-navigation@workspace:packages/react-native-navigation"
-  dependencies:
-    "@flashcatcloud/mobile-react-native": ^2.14.1
-    "@testing-library/react-native": 7.0.2
-    react-native-builder-bob: 0.26.0
-    react-native-gesture-handler: 1.10.3
-    react-native-navigation: 7.31.1
-    remx: 3.x.x
-  peerDependencies:
-    "@flashcatcloud/mobile-react-native": ^2.0.1
-    react: ">=16.13.1"
-    react-native: ">=0.63.4 <1.0"
-    react-native-navigation: ^7.5.0
-  languageName: unknown
-  linkType: soft
-
-"@flashcatcloud/mobile-react-native-session-replay@workspace:packages/react-native-session-replay":
-  version: 0.0.0-use.local
-  resolution: "@flashcatcloud/mobile-react-native-session-replay@workspace:packages/react-native-session-replay"
-  dependencies:
-    "@testing-library/react-native": 7.0.2
-    chokidar: ^4.0.3
-    react-native-builder-bob: 0.26.0
-  peerDependencies:
-    react: ">=16.13.1"
-    react-native: ">=0.63.4 <1.0"
-  languageName: unknown
-  linkType: soft
-
-"@flashcatcloud/mobile-react-native-webview@workspace:packages/react-native-webview":
-  version: 0.0.0-use.local
-  resolution: "@flashcatcloud/mobile-react-native-webview@workspace:packages/react-native-webview"
-  dependencies:
-    "@testing-library/react-native": 7.0.2
-    react-native-builder-bob: 0.26.0
-    react-native-webview: ^13.12.2
-  peerDependencies:
-    "@flashcatcloud/mobile-react-native": ^2.0.1
-    react: ">=16.13.1"
-    react-native: ">=0.63.4 <1.0"
-    react-native-webview: ">=11.0.0"
-  languageName: unknown
-  linkType: soft
-
-"@flashcatcloud/mobile-react-native@^2.14.1, @flashcatcloud/mobile-react-native@workspace:2.14.1, @flashcatcloud/mobile-react-native@workspace:packages/core":
-  version: 0.0.0-use.local
-  resolution: "@flashcatcloud/mobile-react-native@workspace:packages/core"
-  dependencies:
-    "@testing-library/react-native": 7.0.2
-    big-integer: ^1.6.52
-    react-native-builder-bob: 0.26.0
-  peerDependencies:
-    react: ">=16.13.1"
-    react-native: ">=0.63.4 <1.0"
-  languageName: unknown
-  linkType: soft
-
-"@flashcatcloud/mobile-react-navigation@workspace:packages/react-navigation":
-  version: 0.0.0-use.local
-  resolution: "@flashcatcloud/mobile-react-navigation@workspace:packages/react-navigation"
-  dependencies:
-    "@flashcatcloud/mobile-react-native": ^2.14.1
-    "@react-navigation/native-v5": "npm:@react-navigation/native@5.9.8"
-    "@react-navigation/native-v6": "npm:@react-navigation/native@6.1.2"
-    "@react-navigation/stack-v5": "npm:@react-navigation/stack@5.14.2"
-    "@react-navigation/stack-v6": "npm:@react-navigation/stack@6.2.1"
-    "@testing-library/react-native": 7.0.2
-    react-native-builder-bob: 0.26.0
-    react-native-gesture-handler: 1.10.3
-    react-native-safe-area-context: 3.1.9
-  peerDependencies:
-    "@flashcatcloud/mobile-react-native": ^2.0.1
-    react: ">=16.13.1"
-    react-native: ">=0.63.4 <1.0"
-  languageName: unknown
-  linkType: soft
-
 "@datadog/native-appsec@npm:8.5.2":
   version: 8.5.2
   resolution: "@datadog/native-appsec@npm:8.5.2"
@@ -2483,21 +2340,6 @@ __metadata:
   checksum: 8cd6ef1f04b0f966f3e133b9d04eb7d487c29a16f5a258e4653f2308af931f0c9adffa3160166d636bb98d9931ebd02b11322ef9ca0f94a81f21e1e2eac30da8
   languageName: node
   linkType: hard
-
-"@datadog/react-native-internal-testing-tools@workspace:packages/internal-testing-tools":
-  version: 0.0.0-use.local
-  resolution: "@datadog/react-native-internal-testing-tools@workspace:packages/internal-testing-tools"
-  dependencies:
-    "@testing-library/react-native": 7.0.2
-    "@types/lodash.isequal": ^4.5.8
-    lodash.isequal: ^4.5.0
-    react-native-builder-bob: 0.26.0
-    rum-events-format: "DataDog/rum-events-format#workspace=rum-events-format"
-  peerDependencies:
-    react: ">=16.13.1"
-    react-native: ">=0.63.4 <1.0"
-  languageName: unknown
-  linkType: soft
 
 "@datadog/sketches-js@npm:^2.1.1":
   version: 2.1.1
@@ -2613,6 +2455,191 @@ __metadata:
   checksum: 2afb77454c06e8316793d2e8e79a0154854d35e6782a1217da274ca60b5044d2c69d6091155234ed0551a1e408f86f09dd4ece02752c59568fa403e60611e880
   languageName: node
   linkType: hard
+
+"@flashcatcloud/flashcat-cli@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@flashcatcloud/flashcat-cli@npm:0.3.0"
+  dependencies:
+    async-retry: 1.3.1
+    axios: ^1.8.4
+    chalk: 3.0.0
+    clipanion: ^3.2.1
+    deep-extend: ^0.6.0
+    form-data: ^4.0.0
+    glob: ^10.4.5
+    inquirer: ^8.2.5
+    js-yaml: 3.13.1
+    jszip: ^3.10.1
+    ora: 5.4.1
+    proxy-agent: ^6.4.0
+    semver: ^7.5.3
+    simple-git: 3.16.0
+    terminal-link: 2.1.1
+    tiny-async-pool: ^2.1.0
+    typanion: ^3.14.0
+  bin:
+    flashcat-cli: dist/cli.js
+  checksum: 8836621fd5a6670a87050b7d0aed31d93c1afa5181e2653d972e261f4b04a4363901ea6137f29198dbf5b534cffe56b656e932a0eb1471194a1349bf4fe75106
+  languageName: node
+  linkType: hard
+
+"@flashcatcloud/mobile-react-native-apollo-client@workspace:packages/react-native-apollo-client":
+  version: 0.0.0-use.local
+  resolution: "@flashcatcloud/mobile-react-native-apollo-client@workspace:packages/react-native-apollo-client"
+  dependencies:
+    "@apollo/client": ^3.8.3
+    "@testing-library/react-native": 7.0.2
+    graphql: ^16.8.0
+    react-native-builder-bob: 0.26.0
+  peerDependencies:
+    "@apollo/client": ">=3.0"
+    "@flashcatcloud/mobile-react-native": ^0.1.0
+    react: ">=16.13.1"
+    react-native: ">=0.63.4 <1.0"
+  languageName: unknown
+  linkType: soft
+
+"@flashcatcloud/mobile-react-native-babel-plugin@workspace:packages/react-native-babel-plugin":
+  version: 0.0.0-use.local
+  resolution: "@flashcatcloud/mobile-react-native-babel-plugin@workspace:packages/react-native-babel-plugin"
+  dependencies:
+    "@babel/cli": ^7.27.2
+    "@babel/core": ^7.27.1
+    "@babel/generator": ^7.28.0
+    "@babel/helper-plugin-utils": ^7.27.1
+    "@babel/parser": ^7.28.4
+    "@babel/preset-env": ^7.27.2
+    "@babel/preset-react": ^7.27.1
+    "@babel/preset-typescript": ^7.27.1
+    "@babel/traverse": ^7.28.4
+    "@babel/types": ^7.27.1
+    "@swc/core": ^1.11.31
+    "@swc/jest": ^0.2.38
+    "@types/jest": ^29.5.14
+    fast-glob: ^3.3.3
+    jest: ^29.7.0
+    react-native-builder-bob: 0.26.0
+    svgo: ^4.0.0
+    tsc-alias: ^1.8.16
+    typescript: 5.0.4
+    uuid: ^8.3.2
+  peerDependencies:
+    react: ">=16.13.1"
+    react-native: ">=0.63.4 <1.0"
+  bin:
+    datadog-generate-sr-assets: ./lib/commonjs/cli/generate-sr-assets.js
+  languageName: unknown
+  linkType: soft
+
+"@flashcatcloud/mobile-react-native-code-push@workspace:packages/codepush":
+  version: 0.0.0-use.local
+  resolution: "@flashcatcloud/mobile-react-native-code-push@workspace:packages/codepush"
+  dependencies:
+    "@flashcatcloud/mobile-react-native": "workspace:0.1.0"
+    "@testing-library/react-native": 7.0.2
+    react-native-builder-bob: 0.26.0
+    react-native-code-push: 7.1.0
+  peerDependencies:
+    "@flashcatcloud/mobile-react-native": ^0.1.0
+    react: ">=16.13.1"
+    react-native: ">=0.63.4 <1.0"
+    react-native-code-push: ">=2.0.0"
+  languageName: unknown
+  linkType: soft
+
+"@flashcatcloud/mobile-react-native-navigation@workspace:packages/react-native-navigation":
+  version: 0.0.0-use.local
+  resolution: "@flashcatcloud/mobile-react-native-navigation@workspace:packages/react-native-navigation"
+  dependencies:
+    "@flashcatcloud/mobile-react-native": ^0.1.0
+    "@testing-library/react-native": 7.0.2
+    react-native-builder-bob: 0.26.0
+    react-native-gesture-handler: 1.10.3
+    react-native-navigation: 7.31.1
+    remx: 3.x.x
+  peerDependencies:
+    "@flashcatcloud/mobile-react-native": ^0.1.0
+    react: ">=16.13.1"
+    react-native: ">=0.63.4 <1.0"
+    react-native-navigation: ^7.5.0
+  languageName: unknown
+  linkType: soft
+
+"@flashcatcloud/mobile-react-native-session-replay@workspace:packages/react-native-session-replay":
+  version: 0.0.0-use.local
+  resolution: "@flashcatcloud/mobile-react-native-session-replay@workspace:packages/react-native-session-replay"
+  dependencies:
+    "@testing-library/react-native": 7.0.2
+    chokidar: ^4.0.3
+    react-native-builder-bob: 0.26.0
+  peerDependencies:
+    react: ">=16.13.1"
+    react-native: ">=0.63.4 <1.0"
+  languageName: unknown
+  linkType: soft
+
+"@flashcatcloud/mobile-react-native-webview@workspace:packages/react-native-webview":
+  version: 0.0.0-use.local
+  resolution: "@flashcatcloud/mobile-react-native-webview@workspace:packages/react-native-webview"
+  dependencies:
+    "@testing-library/react-native": 7.0.2
+    react-native-builder-bob: 0.26.0
+    react-native-webview: ^13.12.2
+  peerDependencies:
+    "@flashcatcloud/mobile-react-native": ^0.1.0
+    react: ">=16.13.1"
+    react-native: ">=0.63.4 <1.0"
+    react-native-webview: ">=11.0.0"
+  languageName: unknown
+  linkType: soft
+
+"@flashcatcloud/mobile-react-native@^0.1.0, @flashcatcloud/mobile-react-native@workspace:0.1.0, @flashcatcloud/mobile-react-native@workspace:packages/core":
+  version: 0.0.0-use.local
+  resolution: "@flashcatcloud/mobile-react-native@workspace:packages/core"
+  dependencies:
+    "@testing-library/react-native": 7.0.2
+    big-integer: ^1.6.52
+    react-native-builder-bob: 0.26.0
+  peerDependencies:
+    react: ">=16.13.1"
+    react-native: ">=0.63.4 <1.0"
+  languageName: unknown
+  linkType: soft
+
+"@flashcatcloud/mobile-react-navigation@workspace:packages/react-navigation":
+  version: 0.0.0-use.local
+  resolution: "@flashcatcloud/mobile-react-navigation@workspace:packages/react-navigation"
+  dependencies:
+    "@flashcatcloud/mobile-react-native": ^0.1.0
+    "@react-navigation/native-v5": "npm:@react-navigation/native@5.9.8"
+    "@react-navigation/native-v6": "npm:@react-navigation/native@6.1.2"
+    "@react-navigation/stack-v5": "npm:@react-navigation/stack@5.14.2"
+    "@react-navigation/stack-v6": "npm:@react-navigation/stack@6.2.1"
+    "@testing-library/react-native": 7.0.2
+    react-native-builder-bob: 0.26.0
+    react-native-gesture-handler: 1.10.3
+    react-native-safe-area-context: 3.1.9
+  peerDependencies:
+    "@flashcatcloud/mobile-react-native": ^0.1.0
+    react: ">=16.13.1"
+    react-native: ">=0.63.4 <1.0"
+  languageName: unknown
+  linkType: soft
+
+"@flashcatcloud/react-native-internal-testing-tools@workspace:packages/internal-testing-tools":
+  version: 0.0.0-use.local
+  resolution: "@flashcatcloud/react-native-internal-testing-tools@workspace:packages/internal-testing-tools"
+  dependencies:
+    "@testing-library/react-native": 7.0.2
+    "@types/lodash.isequal": ^4.5.8
+    lodash.isequal: ^4.5.0
+    react-native-builder-bob: 0.26.0
+    rum-events-format: "DataDog/rum-events-format#workspace=rum-events-format"
+  peerDependencies:
+    react: ">=16.13.1"
+    react-native: ">=0.63.4 <1.0"
+  languageName: unknown
+  linkType: soft
 
 "@graphql-typed-document-node/core@npm:^3.1.1":
   version: 3.2.0
@@ -8250,7 +8277,7 @@ __metadata:
     "@babel/core": ^7.25.2
     "@babel/preset-env": ^7.25.3
     "@babel/runtime": ^7.26.10
-    "@datadog/datadog-ci": ^4.4.0
+    "@flashcatcloud/flashcat-cli": ^0.3.0
     "@flashcatcloud/mobile-react-native": "workspace:packages/core"
     "@flashcatcloud/mobile-react-native-navigation": "workspace:packages/react-native-navigation"
     "@flashcatcloud/mobile-react-native-session-replay": "workspace:packages/react-native-session-replay"
@@ -10470,7 +10497,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^10.5.0":
+"glob@npm:^10.4.5, glob@npm:^10.5.0":
   version: 10.5.0
   resolution: "glob@npm:10.5.0"
   dependencies:
@@ -12279,6 +12306,18 @@ __metadata:
   version: 4.0.0
   resolution: "js-tokens@npm:4.0.0"
   checksum: 8a95213a5a77deb6cbe94d86340e8d9ace2b93bc367790b260101d2f36a2eaf4e4e22d9fa9cf459b38af3a32fb4190e638024cf82ec95ef708680e405ea7cc78
+  languageName: node
+  linkType: hard
+
+"js-yaml@npm:3.13.1":
+  version: 3.13.1
+  resolution: "js-yaml@npm:3.13.1"
+  dependencies:
+    argparse: ^1.0.7
+    esprima: ^4.0.0
+  bin:
+    js-yaml: bin/js-yaml.js
+  checksum: 7511b764abb66d8aa963379f7d2a404f078457d106552d05a7b556d204f7932384e8477513c124749fa2de52eb328961834562bd09924902c6432e40daa408bc
   languageName: node
   linkType: hard
 

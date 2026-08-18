@@ -6,6 +6,11 @@
 
 package com.datadog.reactnative
 
+import com.datadog.android.trace.api.scope.DatadogScope
+import com.datadog.android.trace.api.span.DatadogSpan
+import com.datadog.android.trace.api.span.DatadogSpanBuilder
+import com.datadog.android.trace.api.span.DatadogSpanContext
+import com.datadog.android.trace.api.tracer.DatadogTracer
 import com.datadog.tools.unit.toReadableMap
 import com.facebook.react.bridge.Promise
 import fr.xgouchet.elmyr.annotation.AdvancedForgery
@@ -15,11 +20,6 @@ import fr.xgouchet.elmyr.annotation.MapForgery
 import fr.xgouchet.elmyr.annotation.StringForgery
 import fr.xgouchet.elmyr.annotation.StringForgeryType
 import fr.xgouchet.elmyr.junit5.ForgeExtension
-import io.opentracing.Scope
-import io.opentracing.ScopeManager
-import io.opentracing.Span
-import io.opentracing.SpanContext
-import io.opentracing.Tracer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assumptions.assumeTrue
@@ -51,22 +51,19 @@ internal class DdTraceTest {
     lateinit var testedTrace: DdTraceImplementation
 
     @Mock
-    lateinit var mockTracer: Tracer
+    lateinit var mockTracer: DatadogTracer
 
     @Mock
-    lateinit var mockSpanBuilder: Tracer.SpanBuilder
+    lateinit var mockSpanBuilder: DatadogSpanBuilder
 
     @Mock
-    lateinit var mockSpanContext: SpanContext
+    lateinit var mockSpanContext: DatadogSpanContext
 
     @Mock
-    lateinit var mockScopeManager: ScopeManager
+    lateinit var mockSpan: DatadogSpan
 
     @Mock
-    lateinit var mockSpan: Span
-
-    @Mock
-    lateinit var mockScope: Scope
+    lateinit var mockScope: DatadogScope
 
     @StringForgery
     lateinit var fakeOperation: String
@@ -74,11 +71,11 @@ internal class DdTraceTest {
     @DoubleForgery(1000000000000.0, 2000000000000.0)
     var fakeTimestamp: Double = 0.0
 
-    @StringForgery(type = StringForgeryType.HEXADECIMAL)
-    lateinit var fakeSpanId: String
+    @LongForgery(1000000000000L, 2000000000000L)
+    var fakeSpanIdLong: Long = 0L
 
-    @StringForgery(type = StringForgeryType.HEXADECIMAL)
-    lateinit var fakeTraceId: String
+    private val fakeSpanId: String
+        get() = fakeSpanIdLong.toString()
 
     @MapForgery(
         key = AdvancedForgery(string = [StringForgery()]),
@@ -102,7 +99,6 @@ internal class DdTraceTest {
     @BeforeEach
     fun `set up`() {
         whenever(mockTracer.buildSpan(fakeOperation)) doReturn mockSpanBuilder
-        whenever(mockTracer.scopeManager()) doReturn mockScopeManager
         whenever(
             mockSpanBuilder.withStartTimestamp(
                 fakeTimestamp.toLong() * 1000
@@ -110,9 +106,8 @@ internal class DdTraceTest {
         ) doReturn mockSpanBuilder
         whenever(mockSpanBuilder.start()) doReturn mockSpan
         whenever(mockSpan.context()) doReturn mockSpanContext
-        whenever(mockSpanContext.toSpanId()) doReturn fakeSpanId
-        whenever(mockSpanContext.toTraceId()) doReturn fakeTraceId
-        whenever(mockScopeManager.activate(mockSpan)) doReturn mockScope
+        whenever(mockSpanContext.spanId) doReturn fakeSpanIdLong
+        whenever(mockTracer.activateSpan(mockSpan)) doReturn mockScope
 
         testedTrace = DdTraceImplementation(tracerProvider = { mockTracer })
     }

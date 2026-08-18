@@ -27,6 +27,7 @@ internal class DatadogSdkWrapperTests: XCTestCase {
 
         XCTAssertNotNil(coreMock.features["tracing"])
         XCTAssertNotNil(coreMock.features["rum"])
-        XCTAssertNotNil(coreMock.features["logging"])
+        // Logs is FlashcatLogs-NoOp: enableLogs is a no-op and no logging feature is registered.
+        XCTAssertNil(coreMock.features["logging"])
     }
 }

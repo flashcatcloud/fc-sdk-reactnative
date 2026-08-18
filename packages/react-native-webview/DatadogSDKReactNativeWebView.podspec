@@ -23,8 +23,8 @@ Pod::Spec.new do |s|
   end
 
   # /!\ Remember to keep the version in sync with DatadogSDKReactNative.podspec
-  s.dependency 'DatadogWebViewTracking', '0.2.0'
-  s.dependency 'DatadogInternal', '0.2.0'
+  s.dependency 'FlashcatWebViewTracking', '~> 0.5'
+  s.dependency 'FlashcatInternal', '~> 0.5'
   s.dependency 'DatadogSDKReactNative'
 
   s.test_spec 'Tests' do |test_spec|

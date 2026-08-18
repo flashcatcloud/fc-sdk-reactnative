@@ -473,6 +473,18 @@ extension MockNativeLogger: InternalLoggerProtocol {
             attributes: attributes
         ))
     }
+
+    func critical(message: String, error: Error?, attributes: [String: Encodable]?, completionHandler: @escaping CompletionHandler) {
+        receivedMethodCalls.append(MethodCall(
+            kind: .error,
+            message: message,
+            errorKind: nil,
+            errorMessage: nil,
+            stackTrace: nil,
+            attributes: attributes
+        ))
+        completionHandler()
+    }
 }
 
 extension MockNativeLogger.MethodCall.Kind {

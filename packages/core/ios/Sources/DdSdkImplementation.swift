@@ -90,10 +90,14 @@ public class DdSdkImplementation: NSObject {
     @objc
     public func setUser(user: NSDictionary, resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
         var castedUser = castAttributesToSwift(user)
-        let id = castedUser.removeValue(forKey: "id") as? String
+        // The native SDK requires a non-nil user id; drop the call when it is missing.
+        guard let id = castedUser.removeValue(forKey: "id") as? String else {
+            resolve(nil)
+            return
+        }
         let name = castedUser.removeValue(forKey: "name") as? String
         let email = castedUser.removeValue(forKey: "email") as? String
-        let extraInfo: [String: Encodable] = castedUser // everything what's left is an `extraInfo`
+        let extraInfo = castedUser // everything what's left is an `extraInfo`
 
         Datadog.setUserInfo(id: id, name: name, email: email, extraInfo: extraInfo)
         resolve(nil)
@@ -102,7 +106,6 @@ public class DdSdkImplementation: NSObject {
     @objc
     public func setUserInfo(userInfo: NSDictionary, resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
         let castedUserInfo = castAttributesToSwift(userInfo)
-        let id = castedUserInfo["id"] as? String
         let name = castedUserInfo["name"] as? String
         let email = castedUserInfo["email"] as? String
         var extraInfo: [AttributeKey: AttributeValue] = [:]
@@ -112,11 +115,12 @@ public class DdSdkImplementation: NSObject {
             extraInfo = castAttributesToSwift(extraInfoDict)
         }
 
-        if let validId = id {
-            Datadog.setUserInfo(id: validId, name: name, email: email, extraInfo: extraInfo)
-        } else {
-            Datadog.setUserInfo(name: name, email: email, extraInfo: extraInfo)
+        // The native SDK requires a non-nil user id; drop the call when it is missing.
+        guard let id = castedUserInfo["id"] as? String else {
+            resolve(nil)
+            return
         }
+        Datadog.setUserInfo(id: id, name: name, email: email, extraInfo: extraInfo)
         resolve(nil)
     }
 

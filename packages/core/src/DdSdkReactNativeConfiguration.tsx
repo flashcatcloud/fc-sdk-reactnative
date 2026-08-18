@@ -110,7 +110,7 @@ export const DEFAULTS = {
     nativeCrashReportEnabled: false,
     sessionSamplingRate: 100.0,
     resourceTracingSamplingRate: 20.0,
-    site: 'US1',
+    site: 'CN',
     longTaskThresholdMs: 0,
     nativeLongTaskThresholdMs: 200,
     nativeViewTracking: false,
@@ -159,6 +159,9 @@ export class DdSdkReactNativeConfiguration {
      */
     public resourceTracingSamplingRate: number =
         DEFAULTS.resourceTracingSamplingRate;
+    /**
+     * The Flashcat site to send data to. Supported values: `'CN'` (default) and `'STAGING'`.
+     */
     public site: string = DEFAULTS.site;
     /**
      * Verbosity for internal SDK logging.

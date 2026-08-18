@@ -8,7 +8,9 @@ jest.mock('react-native-code-push', () => ({
 }));
 
 jest.mock('@flashcatcloud/mobile-react-native', () => {
-    const actualPackage = jest.requireActual('@flashcatcloud/mobile-react-native');
+    const actualPackage = jest.requireActual(
+        '@flashcatcloud/mobile-react-native'
+    );
     actualPackage.DdSdkReactNative.initialize = jest.fn();
     actualPackage.DdSdkReactNative._enableFeaturesFromDatadogProvider = jest.fn();
     actualPackage.DdSdkReactNative._enableFeaturesFromDatadogProviderAsync = jest.fn();
