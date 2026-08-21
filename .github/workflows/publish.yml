@@ -15,3 +15,48 @@ jobs:
             - run: yarn run lerna publish from-package --yes
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Notify deployment success
+              if: success()
+              uses: zcong1993/actions-ding@master
+              with:
+                  dingToken: ${{ secrets.DING_TALK_TOKEN }}
+                  secret: ${{ secrets.DING_TALK_SECRET }}
+                  body: |
+                      {
+                        "msgtype": "markdown",
+                        "markdown": {
+                          "title": "fc-sdk-reactnative 发布通知",
+                          "text": "### ✅ fc-sdk-reactnative 发布成功\n\n---\n\n 🔖 分支/标签: ${{ github.ref_name }}\n\n 📦 包: lerna 发布的 @flashcatcloud/* 全部包\n\n 👨‍💻 发布者: ${{ github.actor }}\n\n 🚀 [查看详情](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+                        }
+                      }
+
+            - name: Notify secondary DingTalk group on success
+              if: success()
+              uses: zcong1993/actions-ding@master
+              with:
+                  dingToken: ${{ secrets.DING_TALK_TOKEN_2 }}
+                  secret: ${{ secrets.DING_TALK_SECRET_2 }}
+                  body: |
+                      {
+                        "msgtype": "markdown",
+                        "markdown": {
+                          "title": "fc-sdk-reactnative 发布通知",
+                          "text": "### ✅ fc-sdk-reactnative 发布成功\n\n---\n\n 🔖 分支/标签: ${{ github.ref_name }}\n\n 📦 包: lerna 发布的 @flashcatcloud/* 全部包\n\n 👨‍💻 发布者: ${{ github.actor }}\n\n 🚀 [查看详情](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+                        }
+                      }
+
+            - name: Notify deployment failure
+              if: failure()
+              uses: zcong1993/actions-ding@master
+              with:
+                  dingToken: ${{ secrets.DING_TALK_TOKEN }}
+                  secret: ${{ secrets.DING_TALK_SECRET }}
+                  body: |
+                      {
+                        "msgtype": "markdown",
+                        "markdown": {
+                          "title": "fc-sdk-reactnative 发布通知",
+                          "text": "### ❌ fc-sdk-reactnative 发布失败\n\n---\n\n 🔖 分支/标签: ${{ github.ref_name }}\n\n 👨‍💻 发布者: ${{ github.actor }}\n\n 🚀 [查看详情](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+                        }
+                      }
