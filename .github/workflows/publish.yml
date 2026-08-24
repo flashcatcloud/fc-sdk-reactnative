@@ -18,9 +18,9 @@ jobs:
 
             - name: Notify deployment success
               if: success()
-              continue-on-error: true
               uses: zcong1993/actions-ding@master
               with:
+                  ignoreError: "true"
                   dingToken: ${{ secrets.DING_TALK_TOKEN }}
                   secret: ${{ secrets.DING_TALK_SECRET }}
                   body: |
@@ -34,9 +34,9 @@ jobs:
 
             - name: Notify secondary DingTalk group on success
               if: success()
-              continue-on-error: true
               uses: zcong1993/actions-ding@master
               with:
+                  ignoreError: "true"
                   dingToken: ${{ secrets.DING_TALK_TOKEN_2 }}
                   secret: ${{ secrets.DING_TALK_SECRET_2 }}
                   body: |
@@ -50,9 +50,9 @@ jobs:
 
             - name: Notify deployment failure
               if: failure()
-              continue-on-error: true
               uses: zcong1993/actions-ding@master
               with:
+                  ignoreError: "true"
                   dingToken: ${{ secrets.DING_TALK_TOKEN }}
                   secret: ${{ secrets.DING_TALK_SECRET }}
                   body: |
