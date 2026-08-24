@@ -16,50 +16,124 @@ jobs:
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-            - name: Notify deployment success
+            - name: Notify DingTalk on success
               if: success()
-              uses: zcong1993/actions-ding@master
-              with:
-                  ignoreError: "true"
-                  dingToken: ${{ secrets.DING_TALK_TOKEN }}
-                  secret: ${{ secrets.DING_TALK_SECRET }}
-                  body: |
-                      {
-                        "msgtype": "markdown",
-                        "markdown": {
-                          "title": "fc-sdk-reactnative 发布通知",
-                          "text": "### ✅ fc-sdk-reactnative 发布成功\n\n---\n\n 🔖 分支/标签: ${{ github.ref_name }}\n\n 📦 包: lerna 发布的 @flashcatcloud/* 全部包\n\n 👨‍💻 发布者: ${{ github.actor }}\n\n 🚀 [查看详情](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-                        }
-                      }
+              env:
+                  DING_TOKEN_1: ${{ secrets.DING_TALK_TOKEN }}
+                  DING_SECRET_1: ${{ secrets.DING_TALK_SECRET }}
+                  DING_TOKEN_2: ${{ secrets.DING_TALK_TOKEN_2 }}
+                  DING_SECRET_2: ${{ secrets.DING_TALK_SECRET_2 }}
+                  DING_GROUPS: "1 2"
+                  TITLE: fc-sdk-reactnative 发布通知
+                  TEXT: "### ✅ fc-sdk-reactnative 发布成功\n\n---\n\n 🔖 分支/标签: ${{ github.ref_name }}\n\n 📦 包: lerna 发布的 @flashcatcloud/* 全部包\n\n 👨\u200d💻 发布者: ${{ github.actor }}\n\n 🚀 [查看详情](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+              run: |
+                # A notification must never decide whether a release succeeded, so this
+                # step never fails: `set -e` is deliberately off and an undeliverable
+                # message degrades to a warning.
+                #
+                # It retries because the robot's quota is 20 messages per minute and is
+                # shared with everything else posting to that group: a send rejected with
+                # "sending too many messages per minute" succeeds once the window rolls
+                # over, which is why rounds are spaced past one minute.
+                set +e
 
-            - name: Notify secondary DingTalk group on success
-              if: success()
-              uses: zcong1993/actions-ding@master
-              with:
-                  ignoreError: "true"
-                  dingToken: ${{ secrets.DING_TALK_TOKEN_2 }}
-                  secret: ${{ secrets.DING_TALK_SECRET_2 }}
-                  body: |
-                      {
-                        "msgtype": "markdown",
-                        "markdown": {
-                          "title": "fc-sdk-reactnative 发布通知",
-                          "text": "### ✅ fc-sdk-reactnative 发布成功\n\n---\n\n 🔖 分支/标签: ${{ github.ref_name }}\n\n 📦 包: lerna 发布的 @flashcatcloud/* 全部包\n\n 👨‍💻 发布者: ${{ github.actor }}\n\n 🚀 [查看详情](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-                        }
-                      }
+                body=$(jq -n --arg title "$TITLE" --arg text "$TEXT" \
+                  '{msgtype: "markdown", markdown: {title: $title, text: $text}}')
+                if [ -z "$body" ]; then
+                  echo "::warning::could not build the DingTalk payload; no notification sent"
+                  exit 0
+                fi
 
-            - name: Notify deployment failure
+                post() {
+                  ts=$(( $(date +%s) * 1000 ))
+                  sign=$(printf '%s\n%s' "$ts" "$2" \
+                    | openssl dgst -sha256 -hmac "$2" -binary \
+                    | base64 | tr -d '\n' | sed 's/+/%2B/g; s|/|%2F|g; s/=/%3D/g')
+                  curl -sS --max-time 20 -X POST -H 'Content-Type: application/json' \
+                    "https://oapi.dingtalk.com/robot/send?access_token=$1&timestamp=${ts}&sign=${sign}" \
+                    -d "$body"
+                }
+
+                pending="$DING_GROUPS"
+                for round in 1 2 3; do
+                  failed=""
+                  for group in $pending; do
+                    token_var="DING_TOKEN_${group}"
+                    secret_var="DING_SECRET_${group}"
+                    response=$(post "${!token_var}" "${!secret_var}")
+                    [ -z "$response" ] && response='{"errcode":-1,"errmsg":"no response"}'
+                    if [ "$(printf '%s' "$response" | jq -r '.errcode // -1')" = "0" ]; then
+                      echo "group ${group}: delivered on attempt ${round}"
+                    else
+                      echo "group ${group}: attempt ${round} rejected: $(printf '%s' "$response" | jq -r '.errmsg // "unparseable response"')"
+                      failed="${failed} ${group}"
+                    fi
+                  done
+                  pending=$failed
+                  [ -z "$pending" ] && break
+                  [ "$round" -lt 3 ] && sleep 65
+                done
+
+                for group in $pending; do
+                  echo "::warning::DingTalk notification to group ${group} was not delivered after 3 attempts"
+                done
+
+            - name: Notify DingTalk on failure
               if: failure()
-              uses: zcong1993/actions-ding@master
-              with:
-                  ignoreError: "true"
-                  dingToken: ${{ secrets.DING_TALK_TOKEN }}
-                  secret: ${{ secrets.DING_TALK_SECRET }}
-                  body: |
-                      {
-                        "msgtype": "markdown",
-                        "markdown": {
-                          "title": "fc-sdk-reactnative 发布通知",
-                          "text": "### ❌ fc-sdk-reactnative 发布失败\n\n---\n\n 🔖 分支/标签: ${{ github.ref_name }}\n\n 👨‍💻 发布者: ${{ github.actor }}\n\n 🚀 [查看详情](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
-                        }
-                      }
+              env:
+                  DING_TOKEN_1: ${{ secrets.DING_TALK_TOKEN }}
+                  DING_SECRET_1: ${{ secrets.DING_TALK_SECRET }}
+                  DING_GROUPS: "1"
+                  TITLE: fc-sdk-reactnative 发布通知
+                  TEXT: "### ❌ fc-sdk-reactnative 发布失败\n\n---\n\n 🔖 分支/标签: ${{ github.ref_name }}\n\n 👨\u200d💻 发布者: ${{ github.actor }}\n\n 🚀 [查看详情](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+              run: |
+                # A notification must never decide whether a release succeeded, so this
+                # step never fails: `set -e` is deliberately off and an undeliverable
+                # message degrades to a warning.
+                #
+                # It retries because the robot's quota is 20 messages per minute and is
+                # shared with everything else posting to that group: a send rejected with
+                # "sending too many messages per minute" succeeds once the window rolls
+                # over, which is why rounds are spaced past one minute.
+                set +e
+
+                body=$(jq -n --arg title "$TITLE" --arg text "$TEXT" \
+                  '{msgtype: "markdown", markdown: {title: $title, text: $text}}')
+                if [ -z "$body" ]; then
+                  echo "::warning::could not build the DingTalk payload; no notification sent"
+                  exit 0
+                fi
+
+                post() {
+                  ts=$(( $(date +%s) * 1000 ))
+                  sign=$(printf '%s\n%s' "$ts" "$2" \
+                    | openssl dgst -sha256 -hmac "$2" -binary \
+                    | base64 | tr -d '\n' | sed 's/+/%2B/g; s|/|%2F|g; s/=/%3D/g')
+                  curl -sS --max-time 20 -X POST -H 'Content-Type: application/json' \
+                    "https://oapi.dingtalk.com/robot/send?access_token=$1&timestamp=${ts}&sign=${sign}" \
+                    -d "$body"
+                }
+
+                pending="$DING_GROUPS"
+                for round in 1 2 3; do
+                  failed=""
+                  for group in $pending; do
+                    token_var="DING_TOKEN_${group}"
+                    secret_var="DING_SECRET_${group}"
+                    response=$(post "${!token_var}" "${!secret_var}")
+                    [ -z "$response" ] && response='{"errcode":-1,"errmsg":"no response"}'
+                    if [ "$(printf '%s' "$response" | jq -r '.errcode // -1')" = "0" ]; then
+                      echo "group ${group}: delivered on attempt ${round}"
+                    else
+                      echo "group ${group}: attempt ${round} rejected: $(printf '%s' "$response" | jq -r '.errmsg // "unparseable response"')"
+                      failed="${failed} ${group}"
+                    fi
+                  done
+                  pending=$failed
+                  [ -z "$pending" ] && break
+                  [ "$round" -lt 3 ] && sleep 65
+                done
+
+                for group in $pending; do
+                  echo "::warning::DingTalk notification to group ${group} was not delivered after 3 attempts"
+                done
