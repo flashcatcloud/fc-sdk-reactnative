@@ -66,6 +66,18 @@ afterEvaluate {
             group = "flashcat"
             description = "Uploads sourcemaps to Flashcat."
 
+            // The upload must never break the release build: skip it when no API key is
+            // available (the dry run mode does not need one).
+            onlyIf {
+                if (isDryRun || System.getenv("FLASHCAT_API_KEY")) {
+                    return true
+                }
+                logger.warn("WARNING: FLASHCAT_API_KEY is not set, skipping sourcemap upload to Flashcat" +
+                        " for variant=${targetName}. Set FLASHCAT_API_KEY to upload sourcemaps," +
+                        " or set FLASHCAT_SOURCEMAPS_DRY_RUN=true to silence this warning.")
+                return false
+            }
+
             def uploadSourcemap = { jsBundleFile ->
                 return [
                         "${getFlashcatCliExecPath(reactConfig)}",
@@ -362,6 +374,8 @@ private def runShellCommand(
             workingDir = workingDirectory
             standardOutput = outputStream
             errorOutput = errorStream
+            // A failed upload must not fail the build: report it and move on.
+            ignoreExitValue = true
             if (Os.isFamily(Os.FAMILY_WINDOWS)) {
                 commandLine("cmd", "/c", *command)
             } else {
@@ -370,17 +384,17 @@ private def runShellCommand(
         }
 
         if (result.exitValue != 0) {
-            logger.error(errorStream.toString("UTF-8"))
-            result.rethrowFailure()
+            logger.warn("WARNING: Flashcat sourcemap upload step failed (exit code ${result.exitValue})," +
+                    " the build continues without it. stderr=${errorStream.toString("UTF-8")}" +
+                    " stdout=${outputStream.toString("UTF-8")}")
         } else {
             logger.lifecycle(outputStream.toString("UTF-8"))
         }
     } catch (Exception e) {
         def errorStreamContent = errorStream.toString("UTF-8")
         def standardStreamContent = outputStream.toString("UTF-8")
-        logger.error("Exception raised during command execution," +
+        logger.warn("WARNING: Flashcat sourcemap upload step failed, the build continues without it." +
                 " stderr=${errorStreamContent}, stdout=${standardStreamContent}, exception=${e}")
-        throw e
     }
 }
 

@@ -18,6 +18,22 @@ The RUM React Native SDK supports monitoring hybrid applications.
 
 The RUM React Native SDK supports [OpenTelemetry][9] and distributed traces through header generation.
 
+### Source maps (Android)
+
+Uploading source maps lets Flashcat show readable stack traces for release builds. Apply the bundled Gradle script in `android/app/build.gradle`:
+
+```groovy
+apply from: "../../node_modules/@flashcatcloud/mobile-react-native/flashcat-sourcemaps.gradle"
+```
+
+It adds an `upload<Variant>Sourcemaps` task that runs automatically after the JS bundle task and uploads the bundle and its source map through `@flashcatcloud/flashcat-cli`, authenticated with the `FLASHCAT_API_KEY` environment variable.
+
+The upload never blocks the build:
+
+- If `FLASHCAT_API_KEY` is not set, the task is skipped and a warning is printed.
+- If the upload fails (invalid key, network error, ...), a warning containing the CLI output is printed and the build continues.
+- Set `FLASHCAT_SOURCEMAPS_DRY_RUN=true` (or the Gradle property `flashcatSourcemapsDryRun=true`) to run the task without uploading; this also silences the missing-key warning.
+
 ## Troubleshooting
 
 If you encounter any issue when using the Flashcat SDK for React Native, please take a look at the [troubleshooting documentation][4], or at the [existing issues][5].
