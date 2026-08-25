@@ -131,7 +131,7 @@ internal class DdSessionReplayTests: XCTestCase {
             fabricWrapper: fabricWrapperMock
         ).enable(
             replaySampleRate: 100,
-            customEndpoint: "https://session-replay.example.com",
+            customEndpoint: "https://session-replay.example.com/api/v2/replay",
             imagePrivacyLevel: NSString(string: imagePrivacyLevel),
             touchPrivacyLevel: NSString(string: touchPrivacyLevel),
             textAndInputPrivacyLevel: NSString(string: textAndInputPrivacyLevel),

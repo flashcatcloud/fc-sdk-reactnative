@@ -1039,9 +1039,9 @@ class DdSdkTests: XCTestCase {
         ).initialize(
             configuration: .mockAny(
                 customEndpoints: [
-                    "rum": "https://rum.example.com",
-                    "logs": "https://logs.example.com",
-                    "trace": "https://trace.example.com",
+                    "rum": "https://rum.example.com/api/v2/rum",
+                    "logs": "https://logs.example.com/api/v2/logs",
+                    "trace": "https://trace.example.com/api/v2/spans",
                 ]
             ),
             resolve: mockResolve,

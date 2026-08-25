@@ -155,10 +155,12 @@ public class DdSdkNativeInitialization: NSObject {
             )
         }
         
+        // A custom endpoint is the final intake URL: hand it to the native SDK untouched,
+        // as the Android bridge does. Appending a path here would double the intake path.
         var customRUMEndpointURL: URL? = nil
         if let customRUMEndpoint = configuration.customEndpoints?.rum as? NSString {
             if (customRUMEndpoint != "") {
-                customRUMEndpointURL = URL(string: "\(customRUMEndpoint)/api/v2/rum" as String)
+                customRUMEndpointURL = URL(string: customRUMEndpoint as String)
             }
         }
 
@@ -202,7 +204,7 @@ public class DdSdkNativeInitialization: NSObject {
         var customLogsEndpointURL: URL? = nil
         if let customLogsEndpoint = configuration.customEndpoints?.logs as? NSString {
             if (customLogsEndpoint != "") {
-                customLogsEndpointURL = URL(string: "\(customLogsEndpoint)/api/v2/logs" as String)
+                customLogsEndpointURL = URL(string: customLogsEndpoint as String)
             }
         }
         
@@ -214,7 +216,7 @@ public class DdSdkNativeInitialization: NSObject {
         var customTraceEndpointURL: URL? = nil
         if let customTraceEndpoint = configuration.customEndpoints?.trace as? NSString {
             if (customTraceEndpoint != "") {
-                customTraceEndpointURL = URL(string: "\(customTraceEndpoint)/api/v2/spans" as String)
+                customTraceEndpointURL = URL(string: customTraceEndpoint as String)
             }
         }
         

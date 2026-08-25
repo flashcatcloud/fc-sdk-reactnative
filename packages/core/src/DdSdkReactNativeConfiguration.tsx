@@ -79,9 +79,19 @@ const isLegacyFirstPartyHost = (
     return typeof firstPartyHost === 'string';
 };
 
+/**
+ * Final intake URLs for each feature, used instead of the ones derived from `site`.
+ *
+ * Each value is the complete URL the feature posts to, path included, and is passed to
+ * the native SDKs untouched. Keep any path prefix the deployment is served under, e.g.
+ * `https://example.com/prefix/api/v2/rum`. An empty string means "not configured".
+ */
 export type CustomEndpoints = {
+    /** Complete RUM intake URL, e.g. `https://example.com/api/v2/rum`. */
     rum?: string;
+    /** Complete Logs intake URL, e.g. `https://example.com/api/v2/logs`. */
     logs?: string;
+    /** Complete Trace intake URL, e.g. `https://example.com/api/v2/spans`. */
     trace?: string;
 };
 
