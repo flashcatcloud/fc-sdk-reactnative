@@ -2302,13 +2302,16 @@ internal class DdSdkTest {
         verify(mockDatadog).setTrackingConsent(consent.asTrackingConsent())
     }
 
+    @Test
     fun `𝕄 initialize native SDK 𝕎 initialize() {with custom endpoints}`(
         forge: Forge
     ) {
         // Given
-        val customRumEndpoint = forge.aNullable { aString() }
-        val customLogsEndpoint = forge.aNullable { aString() }
-        val customTraceEndpoint = forge.aNullable { aString() }
+        // Custom endpoints are the final intake URLs: the bridge passes them through
+        // untouched, exactly like the native SDKs do.
+        val customRumEndpoint = forge.aNullable { "https://${anAlphabeticalString()}/api/v2/rum" }
+        val customLogsEndpoint = forge.aNullable { "https://${anAlphabeticalString()}/api/v2/logs" }
+        val customTraceEndpoint = forge.aNullable { "https://${anAlphabeticalString()}/api/v2/spans" }
         val bridgeConfiguration = fakeConfiguration.copy(
             customEndpoints = CustomEndpoints(
                 rum = customRumEndpoint,
@@ -2338,6 +2341,38 @@ internal class DdSdkTest {
             .hasFieldEqualTo("customEndpointUrl", customLogsEndpoint)
         assertThat(traceConfigCaptor.firstValue)
             .hasFieldEqualTo("customEndpointUrl", customTraceEndpoint)
+    }
+
+    @Test
+    fun `𝕄 leave endpoints untouched 𝕎 initialize() {blank custom endpoints}`() {
+        // Given
+        // A blank endpoint means "not configured": forwarding it would point the feature
+        // at an empty URL and silently drop every batch.
+        val bridgeConfiguration = fakeConfiguration.copy(
+            customEndpoints = CustomEndpoints(rum = "", logs = "", trace = "")
+        )
+        val rumConfigCaptor = argumentCaptor<RumConfiguration>()
+        val logsConfigCaptor = argumentCaptor<LogsConfiguration>()
+        val traceConfigCaptor = argumentCaptor<TraceConfiguration>()
+
+        // When
+        testedBridgeSdk.initialize(bridgeConfiguration.toReadableJavaOnlyMap(), mockPromise)
+
+        // Then
+        inOrder(mockDatadog) {
+            verify(mockDatadog).enableRum(rumConfigCaptor.capture())
+            verify(mockDatadog).enableTrace(traceConfigCaptor.capture())
+            verify(mockDatadog).enableLogs(logsConfigCaptor.capture())
+        }
+
+        assertThat(rumConfigCaptor.firstValue)
+            .hasField("featureConfiguration") {
+                it.hasFieldEqualTo("customEndpointUrl", null)
+            }
+        assertThat(logsConfigCaptor.firstValue)
+            .hasFieldEqualTo("customEndpointUrl", null)
+        assertThat(traceConfigCaptor.firstValue)
+            .hasFieldEqualTo("customEndpointUrl", null)
     }
 
     @Test

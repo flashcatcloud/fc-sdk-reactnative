@@ -205,7 +205,7 @@ class DdSdkNativeInitialization internal constructor(
             }
         )
 
-        configuration.customEndpoints?.rum?.let {
+        configuration.customEndpoints?.rum?.takeIf { it.isNotEmpty() }?.let {
             configBuilder.useCustomEndpoint(it)
         }
 
@@ -225,7 +225,7 @@ class DdSdkNativeInitialization internal constructor(
 
     private fun buildLogsConfiguration(configuration: DdSdkConfiguration): LogsConfiguration {
         val configBuilder = LogsConfiguration.Builder()
-        configuration.customEndpoints?.logs?.let {
+        configuration.customEndpoints?.logs?.takeIf { it.isNotEmpty() }?.let {
             configBuilder.useCustomEndpoint(it)
         }
 
@@ -234,7 +234,7 @@ class DdSdkNativeInitialization internal constructor(
 
     private fun buildTraceConfiguration(configuration: DdSdkConfiguration): TraceConfiguration {
         val configBuilder = TraceConfiguration.Builder()
-        configuration.customEndpoints?.trace?.let {
+        configuration.customEndpoints?.trace?.takeIf { it.isNotEmpty() }?.let {
             configBuilder.useCustomEndpoint(it)
         }
 
