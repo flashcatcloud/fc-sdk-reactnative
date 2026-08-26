@@ -1,6 +1,6 @@
 {
     "name": "@flashcatcloud/mobile-react-native-navigation",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "A client-side React Native module to interact with Datadog",
     "keywords": [
         "datadog",
@@ -36,7 +36,7 @@
         "prepare": "rm -rf lib && yarn bob build"
     },
     "devDependencies": {
-        "@flashcatcloud/mobile-react-native": "^0.1.1",
+        "@flashcatcloud/mobile-react-native": "^0.1.2",
         "@testing-library/react-native": "7.0.2",
         "react-native-builder-bob": "0.26.0",
         "react-native-gesture-handler": "1.10.3",
