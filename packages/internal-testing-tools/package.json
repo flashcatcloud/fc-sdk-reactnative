@@ -1,6 +1,6 @@
 {
     "name": "@flashcatcloud/react-native-internal-testing-tools",
-    "version": "0.1.2",
+    "version": "0.1.3",
     "description": "Internal tools for testing the Datadog React Native SDK.",
     "keywords": [
         "datadog",
