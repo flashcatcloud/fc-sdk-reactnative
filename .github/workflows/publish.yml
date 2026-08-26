@@ -1,6 +1,28 @@
 name: Publish packages on NPM
+# A release is a tag. Publishing is what the tag does, so there is no way to ship a
+# version without leaving a permanent marker of what shipped, and `github.ref_name`
+# names the released version everywhere it is reported.
+#
+# `v`-prefixed to match every other SDK in the line (android, ios, cli, miniprogram,
+# kotlin-multiplatform, browser-sdk), and lerna's own default tag format.
+#
+# The manual entry is for dry runs: it builds and packs without publishing, so a bump
+# can be proven before it is tagged. It can also publish, but only from a tag and only
+# when someone types the confirmation -- a real release still cannot come from a branch.
 on:
+    push:
+        tags:
+            - 'v[0-9]+.[0-9]+.[0-9]+'
     workflow_dispatch:
+        inputs:
+            dry_run:
+                description: 'Build and pack without publishing'
+                type: boolean
+                default: true
+            confirm_publish:
+                description: 'Type "yes" to publish for real. Requires a version tag; ignored during a dry run.'
+                type: string
+                default: ''
 
 jobs:
     build:
@@ -11,13 +33,74 @@ jobs:
               with:
                   node-version: '24.x'
                   registry-url: 'https://registry.npmjs.org/'
+
+            - name: Resolve what this run does
+              id: mode
+              run: |
+                # A tag push is always a release.
+                if [ "${{ github.event_name }}" = "push" ]; then
+                  {
+                    echo "publish=true"
+                    echo "version=${GITHUB_REF_NAME#v}"
+                  } >> "$GITHUB_OUTPUT"
+                  echo "Releasing ${GITHUB_REF_NAME}."
+                  exit 0
+                fi
+
+                # A dry run checks the tree it was started from, which is what catches a
+                # bump that missed a file. Started from a tag it checks against that tag,
+                # so a dry run cannot pass on a tag the release would then reject.
+                if [ "${{ inputs.dry_run }}" = "true" ]; then
+                  case "$GITHUB_REF" in
+                    refs/tags/*) want="${GITHUB_REF_NAME#v}" ;;
+                    *) want="$(node -p "require('./lerna.json').version")" ;;
+                  esac
+                  {
+                    echo "publish=false"
+                    echo "version=${want}"
+                  } >> "$GITHUB_OUTPUT"
+                  echo "Dry run on ${GITHUB_REF_NAME}: checking ${want}, building and packing, publishing nothing."
+                  exit 0
+                fi
+
+                case "$GITHUB_REF" in
+                  refs/tags/*) ;;
+                  *)
+                    echo "::error::A release only comes from a version tag, and ${GITHUB_REF_NAME} is not one. Enable dry run, or push a tag."
+                    exit 1
+                    ;;
+                esac
+
+                if [ "${{ inputs.confirm_publish }}" != "yes" ]; then
+                  echo "::error::Publishing for real needs confirm_publish set to \"yes\"."
+                  exit 1
+                fi
+
+                {
+                  echo "publish=true"
+                  echo "version=${GITHUB_REF_NAME#v}"
+                } >> "$GITHUB_OUTPUT"
+                echo "Re-releasing ${GITHUB_REF_NAME} by hand."
+
+            # Before the install, so a version that disagrees with the tree costs seconds
+            # rather than a published version that cannot be taken back.
+            - name: Check every declared version matches
+              run: ./check-version-matches-tag.sh "${{ steps.mode.outputs.version }}"
+
             - run: yarn
-            - run: yarn run lerna publish from-package --yes
+
+            - name: Pack every published package without publishing
+              if: steps.mode.outputs.publish != 'true'
+              run: npx lerna exec --no-private -- npm pack --dry-run
+
+            - name: Publish to npm
+              if: steps.mode.outputs.publish == 'true'
+              run: yarn run lerna publish from-package --yes
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
             - name: Notify DingTalk on success
-              if: success()
+              if: success() && steps.mode.outputs.publish == 'true'
               env:
                   DING_TOKEN_1: ${{ secrets.DING_TALK_TOKEN }}
                   DING_SECRET_1: ${{ secrets.DING_TALK_SECRET }}
@@ -25,7 +108,7 @@ jobs:
                   DING_SECRET_2: ${{ secrets.DING_TALK_SECRET_2 }}
                   DING_GROUPS: "1 2"
                   TITLE: fc-sdk-reactnative 发布通知
-                  TEXT: "### ✅ fc-sdk-reactnative 发布成功\n\n---\n\n 🔖 分支/标签: ${{ github.ref_name }}\n\n 📦 包: lerna 发布的 @flashcatcloud/* 全部包\n\n 👨\u200d💻 发布者: ${{ github.actor }}\n\n 🚀 [查看详情](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+                  TEXT: "### ✅ fc-sdk-reactnative 发布成功\n\n---\n\n 🔖 版本: ${{ github.ref_name }}\n\n 📦 包: lerna 发布的 @flashcatcloud/* 全部包\n\n 👨\u200d💻 发布者: ${{ github.actor }}\n\n 🚀 [查看详情](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
               run: |
                 # A notification must never decide whether a release succeeded, so this
                 # step never fails: `set -e` is deliberately off and an undeliverable
@@ -79,13 +162,13 @@ jobs:
                 done
 
             - name: Notify DingTalk on failure
-              if: failure()
+              if: failure() && steps.mode.outputs.publish == 'true'
               env:
                   DING_TOKEN_1: ${{ secrets.DING_TALK_TOKEN }}
                   DING_SECRET_1: ${{ secrets.DING_TALK_SECRET }}
                   DING_GROUPS: "1"
                   TITLE: fc-sdk-reactnative 发布通知
-                  TEXT: "### ❌ fc-sdk-reactnative 发布失败\n\n---\n\n 🔖 分支/标签: ${{ github.ref_name }}\n\n 👨\u200d💻 发布者: ${{ github.actor }}\n\n 🚀 [查看详情](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
+                  TEXT: "### ❌ fc-sdk-reactnative 发布失败\n\n---\n\n 🔖 版本: ${{ github.ref_name }}\n\n 👨\u200d💻 发布者: ${{ github.actor }}\n\n 🚀 [查看详情](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
               run: |
                 # A notification must never decide whether a release succeeded, so this
                 # step never fails: `set -e` is deliberately off and an undeliverable

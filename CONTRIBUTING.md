@@ -93,21 +93,45 @@ yarn ios
 
 ## Releasing
 
-To bump your SDK version, run the following command, where `x.y.z` is the new version you want to set:
+A release is a tag. Pushing the tag is what publishes, so nothing reaches npm without
+a permanent marker of what shipped.
 
-```sh
-./update-version x.y.z
-```
+1. Bump every place the version is written, where `x.y.z` is the new version:
 
-This bumps the versions in the `lerna.json` and related `package.json` files, and commits them.
+    ```sh
+    ./update-version.sh x.y.z
+    ```
 
-To publish the packages, run the following command:
+    This updates `lerna.json`, every `package.json`, the generated
+    `packages/core/src/version.ts`, and the native `SdkVersion.swift` / `SdkVersion.kt`
+    (they feed `_dd.sdk_version`, so a stale one makes the SDK report the previous
+    version), then commits the result.
 
-```sh
-yarn run lerna publish from-package
-```
+2. Confirm the tree agrees with the version you are about to tag:
 
-This publishes the packages and also adds updated `gitHead` to the corresponding `package.json` files.
+    ```sh
+    ./check-version-matches-tag.sh x.y.z
+    ```
+
+3. Open a PR for the bump, merge it into `publish`, then tag the merge commit and push
+   the tag. The `v` prefix is what the workflow listens for, and matches the rest of
+   the SDK line:
+
+    ```sh
+    git tag vx.y.z <merge-commit>
+    git push origin vx.y.z
+    ```
+
+    `Publish packages on NPM` runs on that tag: it re-runs the check above, then
+    `lerna publish from-package`, which publishes every package whose version is not
+    already on npm.
+
+4. A green pipeline is not proof anyone can install the release. Confirm the packages
+   are actually fetchable, and expect the registry to need a few minutes:
+
+    ```sh
+    npm pack @flashcatcloud/mobile-react-native@x.y.z
+    ```
 
 ### How to test before shipping?
 
