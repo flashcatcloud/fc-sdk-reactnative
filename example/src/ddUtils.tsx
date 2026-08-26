@@ -11,7 +11,12 @@ import {
 // (APPLICATION_ID, CLIENT_TOKEN, ENVIRONMENT).
 import {APPLICATION_ID, CLIENT_TOKEN, ENVIRONMENT} from './ddCredentials';
 
-// New SDK Setup - not available for react-native-navigation
+// Preferred setup: hand this configuration to a <DatadogProvider> wrapping the app root.
+// The provider installs the JS auto-instrumentation as it renders and initializes the native
+// SDK afterwards, so requests made during startup are still collected.
+//
+// Not usable with react-native-navigation, which has no single React root to wrap - see
+// initializeDatadog below.
 export function getDatadogConfig(trackingConsent: TrackingConsent) {
     const config = new DatadogProviderConfiguration(
         CLIENT_TOKEN,
@@ -38,7 +43,12 @@ export function getDatadogConfig(trackingConsent: TrackingConsent) {
     DdSdkReactNative.setAttributes({campaign: "ad-network"})
 }
 
-// Legacy SDK Setup
+// Manual setup. Only correct for react-native-navigation, where there is no single React root
+// for <DatadogProvider> to wrap - every other app should use getDatadogConfig above.
+//
+// initialize() awaits the native SDK before it patches XMLHttpRequest, so requests issued
+// before that resolves produce no resource event at all. Call it at module scope in the entry
+// file, before registering any screen, to keep that window as small as this setup allows.
 export function initializeDatadog(trackingConsent: TrackingConsent) {
 
     const config = new DdSdkReactNativeConfiguration(

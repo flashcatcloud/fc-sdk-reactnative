@@ -46,5 +46,5 @@ If you use `datadog-ci react-native upload` to upload your CodePush bundle and s
 -   `version` to completely override the version
 
 [1]: https://github.com/microsoft/react-native-code-push
-[2]: https://github.com/flashcat/fc-sdk-reactnative/tree/main/packages/core
+[2]: ../core
 [3]: https://github.com/DataDog/datadog-ci/tree/master/src/commands/react-native#codepush

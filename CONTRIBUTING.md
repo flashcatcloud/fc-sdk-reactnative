@@ -163,22 +163,40 @@ use_frameworks!
 ```
 **NOTE:** You do **NOT** need to add `DdSdkReactNative` here manually, `pod install` should find and install it automatically
 
-Now you can go back to your `App.js/tsx` and use `@flashcatcloud/mobile-react-native` from there
+Now you can go back to your `App.js/tsx` and use `@flashcatcloud/mobile-react-native` from there.
+
+Wrap your app root in `DatadogProvider`. It installs the JavaScript auto-instrumentation
+during its own render pass and initializes the native SDK afterwards, so requests made while
+the app starts up are still collected. Initializing by hand with `DdSdkReactNative.initialize()`
+reverses that order and those requests produce no resource event at all — see
+[migrating to DatadogProvider](./docs/migrating_to_datadog_provider.md).
+
 Example code:
 ```
-import { DdSdkReactNative, DdSdkReactNativeConfiguration } from '@flashcatcloud/mobile-react-native';
+import {
+  DatadogProvider,
+  DatadogProviderConfiguration,
+  TrackingConsent,
+} from '@flashcatcloud/mobile-react-native';
+
+const config = new DatadogProviderConfiguration(
+  "<CLIENT_TOKEN>",
+  "<ENVIRONMENT_NAME>",
+  "<RUM_APPLICATION_ID>",
+  true, // track User interactions (e.g.: Tap on buttons)
+  true, // track XHR Resources
+  true, // track Errors
+  TrackingConsent.GRANTED
+)
+config.firstPartyHosts = ['example.com'];
 
 const App: () => React$Node = () => {
-  const config = new DdSdkReactNativeConfiguration(
-    "<CLIENT_TOKEN>",
-    "<ENVIRONMENT_NAME>",
-    "<RUM_APPLICATION_ID>",
-    true, // track User interactions (e.g.: Tap on buttons)
-    true, // track XHR Resources
-    true // track Errors
-  )
-  DdSdkReactNative.initialize(config);
-  ...
+  return (
+    <DatadogProvider configuration={config}>
+      ...
+    </DatadogProvider>
+  );
+}
 ```
 
 Then your project should work without problems ✅ 
@@ -190,7 +208,7 @@ If it doesn't, you should fix it before shipping ❌
 Many great ideas for new features come from the community, and we'd be happy to
 consider yours!
 
-To share your request, you can open an [issue](https://github.com/flashcat/fc-sdk-reactnative/issues/new) 
+To share your request, you can open an [issue](https://github.com/flashcatcloud/fc-sdk-reactnative/issues/new) 
 with the details about what you'd like to see. At a minimum, please provide:
 
  - The goal of the new feature;
@@ -205,7 +223,7 @@ or UI, contact our support team via https://docs.datadoghq.com/help/ for direct,
 faster assistance.
 
 You may submit bug reports concerning the Datadog SDK for Android by 
-[opening a Github issue](https://github.com/flashcat/fc-sdk-reactnative/issues/new).
+[opening a Github issue](https://github.com/flashcatcloud/fc-sdk-reactnative/issues/new).
 At a minimum, please provide:
 
  - A description of the problem;
@@ -233,20 +251,20 @@ the bug are best.
 ## Have a patch?
 
 We welcome code contributions to the library, which you can 
-[submit as a pull request](https://github.com/flashcat/fc-sdk-reactnative/pull/new/master).
+[submit as a pull request](https://github.com/flashcatcloud/fc-sdk-reactnative/compare).
 Before you submit a PR, make sure that you first create an Issue to explain the
 bug or the feature your patch covers, and make sure another Issue or PR doesn't
 already exist.
 
 To create a pull request:
 
-1. **Fork the repository** from https://github.com/flashcat/fc-sdk-reactnative ;
+1. **Fork the repository** from https://github.com/flashcatcloud/fc-sdk-reactnative ;
 2. **Make any changes** for your patch;
 3. **Write tests** that demonstrate how the feature works or how the bug is fixed;
-4. **Update any documentation** such as `docs/GettingStarted.md`, especially for
-    new features;
+4. **Update any documentation** — the [core package README](./packages/core/README.md)
+    and the guides under `docs/`, especially for new features;
 5. **Submit the pull request** from your fork back to this 
-    [repository](https://github.com/flashcat/fc-sdk-reactnative) .
+    [repository](https://github.com/flashcatcloud/fc-sdk-reactnative) .
 
 
 The pull request will be run through our CI pipeline, and a project member will

@@ -12,6 +12,47 @@ yarn add @flashcatcloud/mobile-react-native
 
 Then initialize the SDK with your Flashcat client token and RUM application ID. Data is sent to the Flashcat `CN` site by default; use the `STAGING` site or `customEndpoints` for other environments.
 
+```javascript
+import {
+    DatadogProvider,
+    DatadogProviderConfiguration,
+    TrackingConsent
+} from '@flashcatcloud/mobile-react-native';
+
+const config = new DatadogProviderConfiguration(
+    '<CLIENT_TOKEN>',
+    '<ENVIRONMENT_NAME>',
+    '<RUM_APPLICATION_ID>',
+    true, // track user interactions (taps)
+    true, // track XHR / fetch resources
+    true, // track JS errors
+    TrackingConsent.GRANTED
+);
+config.site = 'CN';
+config.serviceName = '<SERVICE_NAME>';
+config.nativeCrashReportEnabled = true;
+// Your own backend hosts. Only requests matching these carry tracing headers, which is
+// what links a resource in RUM to its backend trace.
+config.firstPartyHosts = ['example.com'];
+
+export default function App() {
+    return (
+        <DatadogProvider configuration={config}>
+            <Navigation />
+        </DatadogProvider>
+    );
+}
+```
+
+Wrap the app root, as high in the tree as you can. `DatadogProvider` installs the JavaScript
+auto-instrumentation during its own render pass and initializes the native SDK afterwards,
+buffering whatever is reported meanwhile — so requests made while the app starts up are
+collected. Initializing by hand with `DdSdkReactNative.initialize()` reverses that order and
+those requests produce no resource event at all; see [migrating to DatadogProvider][10] for
+why, and for the react-native-navigation (Wix) case where the manual call is still required.
+
+The [core package reference][8] documents every configuration option, view tracking and data storage.
+
 The RUM React Native SDK supports [Expo][2].
 
 The RUM React Native SDK supports monitoring hybrid applications.
@@ -47,8 +88,10 @@ Pull requests are welcome. First, open an issue to discuss what you would like t
 For more information, see [Apache License, v2.0][7]
 
 [2]: https://docs.expo.dev/
-[4]: https://github.com/flashcat/fc-sdk-reactnative/blob/develop/TROUBLESHOOTING.md
-[5]: https://github.com/flashcat/fc-sdk-reactnative/issues?q=is%3Aissue
-[6]: https://github.com/flashcat/fc-sdk-reactnative/blob/develop/CONTRIBUTING.md
-[7]: https://github.com/flashcat/fc-sdk-reactnative/blob/main/LICENSE
+[4]: ./TROUBLESHOOTING.md
+[5]: https://github.com/flashcatcloud/fc-sdk-reactnative/issues?q=is%3Aissue
+[6]: ./CONTRIBUTING.md
+[7]: ./LICENSE
+[8]: ./packages/core/README.md
 [9]: https://opentelemetry.io/
+[10]: ./docs/migrating_to_datadog_provider.md

@@ -36,5 +36,5 @@ DdRumReactNativeNavigationTracking.startTracking(viewNamePredicate);
 ```
 
 [1]: https://github.com/wix/react-native-navigation
-[2]: https://github.com/flashcat/fc-sdk-reactnative/tree/main/packages/core
+[2]: ../core
 [3]: https://wix.github.io/react-native-navigation/api/events/#componentdidappear

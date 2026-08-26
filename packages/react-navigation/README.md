@@ -50,4 +50,4 @@ function App() {
 
 
 [1]: https://github.com/react-navigation/react-navigation
-[2]: https://github.com/flashcat/fc-sdk-reactnative/tree/main/packages/core
+[2]: ../core
