@@ -1,0 +1,28 @@
+name: CI
+
+# The test suite only ever ran on a developer's machine: the publish workflow was the
+# first time CI touched a build, and by then it was publishing. Running it on every
+# pull request means a broken change is caught before it can be merged, let alone
+# released.
+on:
+    pull_request:
+    push:
+        branches: [publish]
+
+permissions:
+    contents: read
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+            - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+              with:
+                  node-version: '24.x'
+
+            # Matches the publish workflow's install, so a green run here means the
+            # same tree the release builds from.
+            - run: yarn
+
+            - run: yarn test
