@@ -9,7 +9,10 @@ JavaScript auto-instrumentation only after that resolves. The XHR proxy behind
 call: a request that starts before the patch is applied produces no resource event at all.
 It is not dropped later and cannot be recovered — the SDK never sees it. Because most apps
 fetch their first screen while starting up, that window usually swallows the requests you
-most want to look at. Calling `initialize()` earlier shortens the window but cannot close it.
+most want to look at. Calling `initialize()` earlier narrows that window but does not close it
+from inside a React tree: children mount before any effect of yours can await the call. Closing
+it that way means awaiting initialization in your entry file before the app is registered, which
+trades startup latency for the coverage the provider gives you for free.
 
 `DatadogProvider` installs the instrumentation during its own render pass, before any child
 renders, and initializes the native SDK afterwards. Anything reported meanwhile goes into a

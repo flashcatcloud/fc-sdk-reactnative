@@ -80,7 +80,8 @@ native SDK afterwards — events reported meanwhile are buffered and flushed onc
 Do not initialize by hand with `DdSdkReactNative.initialize()` instead. That call awaits the
 native SDK first and only then patches `XMLHttpRequest`, so requests made while your app is
 starting up produce no resource event at all: they are never recorded, and nothing can recover
-them afterwards. Calling it earlier shortens that window but cannot close it. The one place it
+them afterwards. Calling it earlier narrows that window but does not close it from inside a
+React tree, since children mount before any effect of yours can await the call. The one place it
 is still required is react-native-navigation (Wix), which has no single React root to wrap —
 see [migrating to DatadogProvider][5].
 
