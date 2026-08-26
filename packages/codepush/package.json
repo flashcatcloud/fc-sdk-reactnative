@@ -1,6 +1,6 @@
 {
     "name": "@flashcatcloud/mobile-react-native-code-push",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "A client-side React Native module to interact with Appcenter Codepush and Datadog",
     "keywords": [
         "datadog",
@@ -39,7 +39,7 @@
         "prepare": "rm -rf lib && yarn bob build"
     },
     "devDependencies": {
-        "@flashcatcloud/mobile-react-native": "workspace:0.1.1",
+        "@flashcatcloud/mobile-react-native": "workspace:0.1.2",
         "@testing-library/react-native": "7.0.2",
         "react-native-builder-bob": "0.26.0",
         "react-native-code-push": "7.1.0"
