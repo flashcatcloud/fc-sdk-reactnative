@@ -2,10 +2,13 @@ name: Publish packages on NPM
 # A release is a tag. Publishing is what the tag does, so there is no way to ship a
 # version without leaving a permanent marker of what shipped, and `github.ref_name`
 # names the released version everywhere it is reported.
+#
+# `v`-prefixed to match every other SDK in the line (android, ios, cli, miniprogram,
+# kotlin-multiplatform, browser-sdk), and lerna's own default tag format.
 on:
     push:
         tags:
-            - '[0-9]+.[0-9]+.[0-9]+'
+            - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
     build:

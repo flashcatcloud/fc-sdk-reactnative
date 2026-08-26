@@ -114,11 +114,12 @@ a permanent marker of what shipped.
     ```
 
 3. Open a PR for the bump, merge it into `publish`, then tag the merge commit and push
-   the tag:
+   the tag. The `v` prefix is what the workflow listens for, and matches the rest of
+   the SDK line:
 
     ```sh
-    git tag x.y.z <merge-commit>
-    git push origin x.y.z
+    git tag vx.y.z <merge-commit>
+    git push origin vx.y.z
     ```
 
     `Publish packages on NPM` runs on that tag: it re-runs the check above, then

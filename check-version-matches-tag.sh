@@ -15,7 +15,9 @@ usage() {
   exit 2
 }
 
-expected="$1"
+# Accepts the tag as pushed (`v0.1.3`) or the bare version, so the same script serves
+# the workflow and a person checking before they tag.
+expected="${1#v}"
 [ -n "$expected" ] || usage
 
 fail=0
