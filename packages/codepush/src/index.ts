@@ -56,6 +56,7 @@ const buildPartialConfiguration = (
         actionEventMapper: configuration.actionEventMapper,
         useAccessibilityLabel: configuration.useAccessibilityLabel,
         resourceTracingSamplingRate: configuration.resourceTracingSamplingRate,
+        jsxRuntimes: configuration.jsxRuntimes,
         actionNameAttribute:
             configuration.actionNameAttribute ?? DISCARD_PROPERTY
     };

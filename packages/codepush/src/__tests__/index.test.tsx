@@ -296,6 +296,7 @@ describe('AppCenter Codepush integration', () => {
                 DdSdkReactNative._enableFeaturesFromDatadogProvider
             ).toHaveBeenCalledWith({
                 actionEventMapper: null,
+                jsxRuntimes: [],
                 logEventMapper: null,
                 resourceEventMapper: null,
                 errorEventMapper: null,
@@ -363,6 +364,7 @@ describe('AppCenter Codepush integration', () => {
                 DdSdkReactNative._enableFeaturesFromDatadogProvider
             ).toHaveBeenCalledWith({
                 actionEventMapper: null,
+                jsxRuntimes: [],
                 logEventMapper: null,
                 resourceEventMapper: null,
                 errorEventMapper: null,
