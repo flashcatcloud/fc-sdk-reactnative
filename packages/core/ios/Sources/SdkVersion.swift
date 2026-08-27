@@ -7,4 +7,4 @@
 import Foundation
 
 // This is automatically updated by the update-version.sh script
-let SdkVersion = "0.1.3"
+let SdkVersion = "0.1.4"

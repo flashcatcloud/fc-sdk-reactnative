@@ -1,6 +1,6 @@
 {
     "name": "@flashcatcloud/mobile-react-native-apollo-client",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "private": true,
     "description": "A client-side React Native module to interact with Apollo Client and Datadog",
     "keywords": [
