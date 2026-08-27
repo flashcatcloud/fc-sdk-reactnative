@@ -4,6 +4,8 @@
  * Copyright 2016-Present Datadog, Inc.
  */
 
+import { InternalLog } from '../../../../../../InternalLog';
+import { SdkVerbosity } from '../../../../../../SdkVerbosity';
 import { DdRum } from '../../../../../DdRum';
 import { TracingIdFormat } from '../../../distributedTracing/TracingIdentifier';
 import type { RUMResource } from '../../interfaces/RumResource';
@@ -29,7 +31,15 @@ export class ResourceReporter {
             }
         }
 
-        reportResource(modifiedResource);
+        // Returning the promise, and catching it, is what makes a failure on the way to
+        // DdRum.startResource observable at all: dropping it turned any rejection into a
+        // silent one, and the resource simply never showed up with nothing logged anywhere.
+        return reportResource(modifiedResource).catch(error => {
+            InternalLog.log(
+                `Error reporting RUM resource ${error}`,
+                SdkVerbosity.ERROR
+            );
+        });
     };
 }
 
