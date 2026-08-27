@@ -36,38 +36,51 @@ type PatchedRuntime = {
 };
 
 /**
- * Assigns a property, but only when the host lets us.
+ * Replaces a property, and reports whether it actually took.
  *
- * A host framework can expose its element factories as getter-only properties - nativewind's
- * `react-native-css-interop` does exactly that - and assigning to one throws a TypeError in
- * strict mode. This code runs inside `enableFeatures`, so such a throw used to take resource
- * and error tracking down with it, and through `DatadogProvider` it aborted the native
- * initialization that follows, leaving the app with no RUM data at all. Auto-instrumentation
- * is best-effort: failing to patch one factory must never be the reason the SDK does not start.
+ * A host framework can expose its element factories through accessors rather than plain
+ * properties. Plain assignment then silently does nothing in sloppy mode and throws in strict
+ * mode, so this checks the result instead of trusting either, and falls back to redefining the
+ * property - which still works as long as it is configurable.
+ *
+ * This runs inside `enableFeatures`, where a throw used to take resource and error tracking
+ * down with it and, through `DatadogProvider`, abort the native initialization that follows.
+ * Auto-instrumentation is best-effort: failing to patch one factory must never be the reason
+ * the SDK does not start.
  */
-const assignIfWritable = (
+const replaceProperty = (
     target: Record<string, any>,
     key: string,
     value: unknown
 ): boolean => {
-    const descriptor = Object.getOwnPropertyDescriptor(target, key);
-    if (descriptor && !descriptor.writable && !descriptor.set) {
-        InternalLog.log(
-            `Datadog SDK can't patch "${key}": the property is read-only, the host framework likely owns it`,
-            SdkVerbosity.WARN
-        );
-        return false;
-    }
     try {
         target[key] = value;
-        return true;
+        if (target[key] === value) {
+            return true;
+        }
     } catch (error) {
-        InternalLog.log(
-            `Datadog SDK can't patch "${key}": ${getErrorMessage(error)}`,
-            SdkVerbosity.WARN
-        );
-        return false;
+        // accessor without a setter in strict mode - fall through to defineProperty
     }
+
+    try {
+        Object.defineProperty(target, key, {
+            value,
+            writable: true,
+            enumerable: true,
+            configurable: true
+        });
+        if (target[key] === value) {
+            return true;
+        }
+    } catch (error) {
+        // non-configurable - nothing left to try
+    }
+
+    InternalLog.log(
+        `Datadog SDK can't replace "${key}": the property is neither writable nor configurable`,
+        SdkVerbosity.WARN
+    );
+    return false;
 };
 
 const reactModule = (React as unknown) as Record<string, any>;
@@ -123,12 +136,14 @@ export class DdRumUserInteractionTracking {
 
         const originals: PatchedRuntime['originals'] = {};
         let patchedAnyFactory = false;
+        let foundAnyFactory = false;
 
         for (const key of JSX_FACTORY_KEYS) {
             const originalFactory = runtime[key];
             if (typeof originalFactory !== 'function') {
                 continue;
             }
+            foundAnyFactory = true;
 
             const patchedFactory = (
                 ...args: Parameters<typeof React.createElement>
@@ -138,7 +153,7 @@ export class DdRumUserInteractionTracking {
                     args
                 );
 
-            if (assignIfWritable(runtime, key, patchedFactory)) {
+            if (replaceProperty(runtime, key, patchedFactory)) {
                 originals[key] = originalFactory;
                 patchedAnyFactory = true;
             }
@@ -148,6 +163,25 @@ export class DdRumUserInteractionTracking {
             DdRumUserInteractionTracking.patchedRuntimes.push({
                 runtime,
                 originals
+            });
+            return;
+        }
+
+        if (foundAnyFactory) {
+            // Saying only that a property could not be replaced leaves the integrator to work
+            // out what that costs them. Name the consequence: no action will be recorded for
+            // anything this runtime renders, and this is not something they can fix in
+            // configuration - the element factories have to be instrumented at build time
+            // instead.
+            const message =
+                'Datadog SDK could not instrument a JSX runtime: its element factories are read-only. No RUM action will be recorded for elements it renders.';
+            InternalLog.log(message, SdkVerbosity.ERROR);
+            DdSdk?.telemetryError?.(
+                message,
+                '',
+                'JsxRuntimeNotPatchable'
+            )?.catch(() => {
+                // reporting the failure must not become a second failure
             });
         }
     };
@@ -191,7 +225,7 @@ export class DdRumUserInteractionTracking {
         );
 
         const originalCreateElement = React.createElement;
-        assignIfWritable(
+        replaceProperty(
             reactModule,
             'createElement',
             (...args: Parameters<typeof React.createElement>): any => {
@@ -218,7 +252,7 @@ export class DdRumUserInteractionTracking {
         runtimes.forEach(DdRumUserInteractionTracking.patchJsxRuntime);
 
         const originalMemo = React.memo;
-        assignIfWritable(
+        replaceProperty(
             reactModule,
             'memo',
             (
@@ -260,12 +294,12 @@ export class DdRumUserInteractionTracking {
     }
 
     static stopTracking(): void {
-        assignIfWritable(
+        replaceProperty(
             reactModule,
             'createElement',
             DdRumUserInteractionTracking.originalCreateElement
         );
-        assignIfWritable(
+        replaceProperty(
             reactModule,
             'memo',
             DdRumUserInteractionTracking.originalMemo
@@ -277,7 +311,7 @@ export class DdRumUserInteractionTracking {
         } of DdRumUserInteractionTracking.patchedRuntimes) {
             for (const key of JSX_FACTORY_KEYS) {
                 if (key in originals) {
-                    assignIfWritable(runtime, key, originals[key]);
+                    replaceProperty(runtime, key, originals[key]);
                 }
             }
         }

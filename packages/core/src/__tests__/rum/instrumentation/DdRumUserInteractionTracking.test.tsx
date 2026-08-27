@@ -484,6 +484,47 @@ describe('startTracking with injected jsx runtimes', () => {
         expect(DdRumUserInteractionTracking['isTracking']).toBe(true);
     });
 
+    it('M patch through an accessor W the property is configurable', async () => {
+        // a namespace object built by an interop helper can expose accessors rather than
+        // plain properties; assignment does nothing there, redefining still works
+        const runtime = {};
+        const original = jest.fn();
+        Object.defineProperty(runtime, 'jsx', {
+            get: () => original,
+            enumerable: true,
+            configurable: true
+        });
+
+        DdRumUserInteractionTracking.startTracking({}, [runtime]);
+
+        expect((runtime as any).jsx).not.toBe(original);
+
+        const onPress = jest.fn();
+        const props: Record<string, any> = { onPress };
+        (runtime as any).jsx('View', props);
+        expect(props.onPress).not.toBe(onPress);
+    });
+
+    it('M say what it costs W a runtime cannot be patched at all', async () => {
+        const runtime = {};
+        Object.defineProperty(runtime, 'jsx', {
+            get: () => jest.fn(),
+            enumerable: true,
+            configurable: false
+        });
+
+        expect(() =>
+            DdRumUserInteractionTracking.startTracking({}, [runtime])
+        ).not.toThrow();
+        expect(DdRumUserInteractionTracking['isTracking']).toBe(true);
+        // the integrator must learn the consequence, not just that a property was skipped
+        expect(DdSdk.telemetryError).toHaveBeenCalledWith(
+            expect.stringContaining('No RUM action will be recorded'),
+            '',
+            'JsxRuntimeNotPatchable'
+        );
+    });
+
     it('M restore the injected runtime W stopTracking is called', async () => {
         const jsx = jest.fn();
         const jsxs = jest.fn();

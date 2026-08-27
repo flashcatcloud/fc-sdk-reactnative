@@ -71,9 +71,20 @@ import * as NativeWindJsxRuntime from 'nativewind/jsx-runtime';
 config.jsxRuntimes = [NativeWindJsxRuntime];
 ```
 
-Their factories are sometimes exposed as getter-only properties. The SDK detects that, skips
-them, and logs `Datadog SDK can't patch "jsx"` rather than failing — so check the internal logs
-here as well.
+A runtime's factories may be exposed through accessors rather than plain properties, depending
+on how the module was built and how your bundler models the import. The SDK replaces them
+either way, and only gives up when the property is also non-configurable — a frozen ES module
+namespace, for instance. That case is logged as:
+
+```
+Datadog SDK could not instrument a JSX runtime: its element factories are read-only.
+No RUM action will be recorded for elements it renders.
+```
+
+There is no configuration that recovers from it: the factories have to be instrumented while
+the app is built instead. Two things to try, in order — import the runtime with `require()`
+rather than `import * as`, which skips the interop layer that may have frozen it, and if that
+still fails, open an issue. Views, resources and errors are unaffected either way.
 
 ## 4. Resources arrive but are not linked to backend traces
 
