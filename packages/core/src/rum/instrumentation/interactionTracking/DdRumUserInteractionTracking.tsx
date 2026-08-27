@@ -38,28 +38,41 @@ type PatchedRuntime = {
 /**
  * Replaces a property, and reports whether it actually took.
  *
- * A host framework can expose its element factories through accessors rather than plain
- * properties. Plain assignment then silently does nothing in sloppy mode and throws in strict
- * mode, so this checks the result instead of trusting either, and falls back to redefining the
- * property - which still works as long as it is configurable.
+ * An accessor is left alone on purpose. A host framework that exposes an element factory
+ * through a getter is not merely storing a function there - it is managing that slot, and the
+ * value it returns participates in bookkeeping of its own. Redefining the slot as a plain
+ * property does succeed, and then that bookkeeping silently operates on something the host no
+ * longer controls; the observed result on a nativewind app was the heap growing without bound
+ * until Hermes aborted. Not writable is not an obstacle to push harder against, it is the host
+ * saying this is mine.
  *
- * This runs inside `enableFeatures`, where a throw used to take resource and error tracking
- * down with it and, through `DatadogProvider`, abort the native initialization that follows.
- * Auto-instrumentation is best-effort: failing to patch one factory must never be the reason
- * the SDK does not start.
+ * A plain property that merely refuses writes carries no such logic, so redefining that one is
+ * safe and still worth doing.
+ *
+ * Either way this must not throw: it runs inside `enableFeatures`, where an exception used to
+ * take the other instrumentations - and the native initialization after them - down with it.
  */
 const replaceProperty = (
     target: Record<string, any>,
     key: string,
     value: unknown
 ): boolean => {
+    const descriptor = Object.getOwnPropertyDescriptor(target, key);
+    if (descriptor && (descriptor.get || descriptor.set)) {
+        InternalLog.log(
+            `Datadog SDK won't replace "${key}": it is an accessor, so the host framework owns that slot`,
+            SdkVerbosity.WARN
+        );
+        return false;
+    }
+
     try {
         target[key] = value;
         if (target[key] === value) {
             return true;
         }
     } catch (error) {
-        // accessor without a setter in strict mode - fall through to defineProperty
+        // read-only in strict mode - redefining is still allowed if it is configurable
     }
 
     try {
@@ -92,8 +105,14 @@ const reactModule = (React as unknown) as Record<string, any>;
 export class DdRumUserInteractionTracking {
     private static isTracking = false;
     private static eventsInterceptor: EventsInterceptor = new NoOpEventsInterceptor();
-    private static originalCreateElement = React.createElement;
-    private static originalMemo = React.memo;
+    // Read through the module object, never as `React.createElement`. A host's Babel plugin
+    // can rewrite that member expression to its own factory - react-native-css-interop does -
+    // and then what gets saved here is the host's wrapper while what gets replaced below is
+    // React's own property. Every createElement call in the app, React's internals included,
+    // would be routed through the host's wrapper: input it never expects. Bracket access is
+    // invisible to such a plugin, so both sides stay on the same object.
+    private static originalCreateElement = reactModule['createElement'];
+    private static originalMemo = reactModule['memo'];
     private static patchedRuntimes: PatchedRuntime[] = [];
 
     private static patchCreateElementFunction = (
@@ -224,7 +243,7 @@ export class DdRumUserInteractionTracking {
             options
         );
 
-        const originalCreateElement = React.createElement;
+        const originalCreateElement = reactModule['createElement'];
         replaceProperty(
             reactModule,
             'createElement',
@@ -251,7 +270,7 @@ export class DdRumUserInteractionTracking {
         runtimes.push(...jsxRuntimes);
         runtimes.forEach(DdRumUserInteractionTracking.patchJsxRuntime);
 
-        const originalMemo = React.memo;
+        const originalMemo = reactModule['memo'];
         replaceProperty(
             reactModule,
             'memo',
@@ -259,7 +278,7 @@ export class DdRumUserInteractionTracking {
                 component: any,
                 propsAreEqual?: (prevProps: any, newProps: any) => boolean
             ) => {
-                return originalMemo(component, (prev, next) => {
+                return originalMemo(component, (prev: any, next: any) => {
                     if (!next.onPress || !prev.onPress) {
                         return propsAreEqual
                             ? propsAreEqual(prev, next)

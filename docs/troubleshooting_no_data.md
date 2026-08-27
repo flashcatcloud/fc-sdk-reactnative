@@ -71,17 +71,29 @@ import * as NativeWindJsxRuntime from 'nativewind/jsx-runtime';
 config.jsxRuntimes = [NativeWindJsxRuntime];
 ```
 
-A runtime's factories may be exposed through accessors rather than plain properties, depending
-on how the module was built and how your bundler models the import. The SDK replaces them
-either way, and only gives up when the property is also non-configurable — a frozen ES module
-namespace, for instance. That case is logged as:
+A runtime may expose its factories through accessors rather than plain properties. The SDK
+leaves those alone, on purpose: a host that puts a getter there is managing the slot, not just
+storing a function in it, and taking it over breaks bookkeeping the host still believes it
+controls. It is logged as:
+
+```
+Datadog SDK won't replace "createElement": it is an accessor, so the host framework owns that slot
+```
+
+Seeing this for `createElement` or `memo` on a nativewind app is expected and harmless — under
+the automatic JSX transform your components never call `React.createElement`, so instrumenting
+the runtime you declared in `jsxRuntimes` is what actually matters. One side effect worth
+knowing: with `memo` left alone, a memoized component whose `onPress` the SDK wraps will
+re-render on every parent render, because the wrapper is a new function each time.
+
+When no factory on a runtime could be replaced at all, the SDK says what it costs:
 
 ```
 Datadog SDK could not instrument a JSX runtime: its element factories are read-only.
 No RUM action will be recorded for elements it renders.
 ```
 
-There is no configuration that recovers from it: the factories have to be instrumented while
+There is no configuration that recovers from that: the factories have to be instrumented while
 the app is built instead. Two things to try, in order — import the runtime with `require()`
 rather than `import * as`, which skips the interop layer that may have frozen it, and if that
 still fails, open an issue. Views, resources and errors are unaffected either way.

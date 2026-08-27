@@ -484,13 +484,31 @@ describe('startTracking with injected jsx runtimes', () => {
         expect(DdRumUserInteractionTracking['isTracking']).toBe(true);
     });
 
-    it('M patch through an accessor W the property is configurable', async () => {
-        // a namespace object built by an interop helper can expose accessors rather than
-        // plain properties; assignment does nothing there, redefining still works
+    it('M leave an accessor alone W the host owns that slot', async () => {
+        // A host that exposes a factory through a getter is managing that slot, not just
+        // storing a function in it. Redefining it does succeed and then the host's own
+        // bookkeeping operates on something it no longer controls - on a nativewind app that
+        // showed up as the heap growing until Hermes aborted at startup.
         const runtime = {};
         const original = jest.fn();
         Object.defineProperty(runtime, 'jsx', {
             get: () => original,
+            enumerable: true,
+            configurable: true
+        });
+
+        DdRumUserInteractionTracking.startTracking({}, [runtime]);
+
+        expect((runtime as any).jsx).toBe(original);
+    });
+
+    it('M redefine a plain read-only property W it is configurable', async () => {
+        // no getter means no host logic behind the slot, so taking it over is safe
+        const runtime = {};
+        const original = jest.fn();
+        Object.defineProperty(runtime, 'jsx', {
+            value: original,
+            writable: false,
             enumerable: true,
             configurable: true
         });
