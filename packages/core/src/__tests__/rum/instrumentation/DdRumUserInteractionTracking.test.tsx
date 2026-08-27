@@ -543,6 +543,33 @@ describe('startTracking with injected jsx runtimes', () => {
         );
     });
 
+    it("M leave React's own factory alone W the app declared its runtime", async () => {
+        // A styling library that owns the element factory can route React.createElement
+        // through machinery of its own. Replacing it then feeds that machinery calls it was
+        // never written to receive - measured on a release build as the heap growing until
+        // Hermes aborted at startup. Once the app has told us where its JSX comes from,
+        // there is nothing to gain there and a crash to lose.
+        const before = React.createElement;
+        const runtime: Record<string, unknown> = {
+            jsx: jest.fn(),
+            jsxs: jest.fn()
+        };
+
+        DdRumUserInteractionTracking.startTracking({}, [runtime]);
+
+        expect(React.createElement).toBe(before);
+        // the declared runtime is still instrumented - that is what records the taps
+        expect(runtime.jsx).not.toBe(before);
+    });
+
+    it("M patch React's own factory W no runtime was declared", async () => {
+        const before = React.createElement;
+
+        DdRumUserInteractionTracking.startTracking({});
+
+        expect(React.createElement).not.toBe(before);
+    });
+
     it('M restore the injected runtime W stopTracking is called', async () => {
         const jsx = jest.fn();
         const jsxs = jest.fn();

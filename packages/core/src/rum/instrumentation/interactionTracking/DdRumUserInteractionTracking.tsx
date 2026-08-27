@@ -243,17 +243,37 @@ export class DdRumUserInteractionTracking {
             options
         );
 
+        // React's own factory is left alone once the app has told us which runtime it
+        // compiles to. Two reasons, and the second one is why this is not merely tidy.
+        //
+        // Under the automatic JSX transform such an app never calls React.createElement -
+        // its elements come from the runtime it declared - so patching it buys no action.
+        //
+        // And it is not free. A styling library that owns the element factory can route
+        // React.createElement through machinery of its own; replacing it then feeds that
+        // machinery calls it was never written to receive, including React's internal ones.
+        // Measured on a release build of a nativewind app: the heap grew without bound until
+        // Hermes aborted during startup. Skipping this patch there is what stops the crash -
+        // replacing the factory more carefully does not, which two earlier attempts at this
+        // established the hard way.
+        //
+        // `memo` stays patched either way: it only restores the original onPress for
+        // comparison, and was measured not to contribute to the crash.
+        const appDeclaredItsRuntime = jsxRuntimes.length > 0;
+
         const originalCreateElement = reactModule['createElement'];
-        replaceProperty(
-            reactModule,
-            'createElement',
-            (...args: Parameters<typeof React.createElement>): any => {
-                return this.patchCreateElementFunction(
-                    originalCreateElement,
-                    args
-                );
-            }
-        );
+        if (!appDeclaredItsRuntime) {
+            replaceProperty(
+                reactModule,
+                'createElement',
+                (...args: Parameters<typeof React.createElement>): any => {
+                    return this.patchCreateElementFunction(
+                        originalCreateElement,
+                        args
+                    );
+                }
+            );
+        }
 
         const runtimes: JsxRuntimeModule[] = [];
         try {
