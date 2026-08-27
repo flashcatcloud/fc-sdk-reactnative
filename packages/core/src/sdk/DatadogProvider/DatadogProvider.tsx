@@ -66,7 +66,19 @@ const initializeDatadog = async (
     configuration: DatadogProviderConfiguration,
     onInitialization?: () => void
 ) => {
-    await DdSdkReactNative._initializeFromDatadogProvider(configuration);
+    try {
+        await DdSdkReactNative._initializeFromDatadogProvider(configuration);
+    } catch (error) {
+        // This promise is started during render and nobody awaits it, so without this the
+        // rejection leaves no trace at all - not even a console entry in a release build where
+        // the app strips console calls. A failure here means the SDK never initialized and no
+        // event will ever be sent, which is exactly the case worth shouting about.
+        InternalLog.log(
+            `Error initializing the Datadog SDK ${error}`,
+            SdkVerbosity.ERROR
+        );
+        return;
+    }
     if (onInitialization) {
         try {
             onInitialization();

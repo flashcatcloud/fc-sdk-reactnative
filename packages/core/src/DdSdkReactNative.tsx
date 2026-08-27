@@ -40,6 +40,11 @@ import { GlobalState } from './sdk/GlobalState/GlobalState';
 import { UserInfoSingleton } from './sdk/UserInfoSingleton/UserInfoSingleton';
 import type { UserInfo } from './sdk/UserInfoSingleton/types';
 import { DdSdkConfiguration } from './types';
+import {
+    getErrorMessage,
+    getErrorName,
+    getErrorStackTrace
+} from './utils/errorUtils';
 import { adaptLongTaskThreshold } from './utils/longTasksUtils';
 import { version as sdkVersion } from './version';
 
@@ -359,6 +364,26 @@ export class DdSdkReactNative {
         );
     };
 
+    private static startFeature(name: string, start: () => void): void {
+        try {
+            start();
+        } catch (error) {
+            InternalLog.log(
+                `Datadog SDK could not start ${name}: ${getErrorMessage(
+                    error
+                )}`,
+                SdkVerbosity.ERROR
+            );
+            DdSdk?.telemetryError?.(
+                `Failed to start ${name}: ${getErrorMessage(error)}`,
+                getErrorStackTrace(error),
+                getErrorName(error)
+            )?.catch(() => {
+                // reporting the failure must not become a second failure
+            });
+        }
+    }
+
     private static enableFeatures(
         configuration: AutoInstrumentationParameters
     ) {
@@ -379,27 +404,43 @@ export class DdSdkReactNative {
             return;
         }
 
+        // Each feature is isolated: one of them failing to install must cost only its own
+        // events. Before this, an exception here propagated out of enableFeatures, and since
+        // _initializeFromDatadogProvider calls it before initializeNativeSDK - on a promise
+        // nobody awaits - it also silently aborted the native initialization, leaving the app
+        // with no RUM data at all rather than with one missing event type.
         if (
             configuration.trackInteractions &&
             !globalThis.__DD_RN_BABEL_PLUGIN_ENABLED__
         ) {
-            DdRumUserInteractionTracking.startTracking({
-                actionNameAttribute: configuration.actionNameAttribute,
-                useAccessibilityLabel: configuration.useAccessibilityLabel
-            });
+            DdSdkReactNative.startFeature('interaction tracking', () =>
+                DdRumUserInteractionTracking.startTracking(
+                    {
+                        actionNameAttribute: configuration.actionNameAttribute,
+                        useAccessibilityLabel:
+                            configuration.useAccessibilityLabel
+                    },
+                    configuration.jsxRuntimes
+                )
+            );
         }
 
         if (configuration.trackResources) {
-            DdRumResourceTracking.startTracking({
-                tracingSamplingRate: configuration.resourceTracingSamplingRate,
-                firstPartyHosts: formatFirstPartyHosts(
-                    configuration.firstPartyHosts
-                )
-            });
+            DdSdkReactNative.startFeature('resource tracking', () =>
+                DdRumResourceTracking.startTracking({
+                    tracingSamplingRate:
+                        configuration.resourceTracingSamplingRate,
+                    firstPartyHosts: formatFirstPartyHosts(
+                        configuration.firstPartyHosts
+                    )
+                })
+            );
         }
 
         if (configuration.trackErrors) {
-            DdRumErrorTracking.startTracking();
+            DdSdkReactNative.startFeature('error tracking', () =>
+                DdRumErrorTracking.startTracking()
+            );
         }
 
         if (configuration.logEventMapper) {
