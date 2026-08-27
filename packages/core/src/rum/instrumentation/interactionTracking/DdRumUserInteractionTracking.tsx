@@ -105,8 +105,14 @@ const reactModule = (React as unknown) as Record<string, any>;
 export class DdRumUserInteractionTracking {
     private static isTracking = false;
     private static eventsInterceptor: EventsInterceptor = new NoOpEventsInterceptor();
-    private static originalCreateElement = React.createElement;
-    private static originalMemo = React.memo;
+    // Read through the module object, never as `React.createElement`. A host's Babel plugin
+    // can rewrite that member expression to its own factory - react-native-css-interop does -
+    // and then what gets saved here is the host's wrapper while what gets replaced below is
+    // React's own property. Every createElement call in the app, React's internals included,
+    // would be routed through the host's wrapper: input it never expects. Bracket access is
+    // invisible to such a plugin, so both sides stay on the same object.
+    private static originalCreateElement = reactModule['createElement'];
+    private static originalMemo = reactModule['memo'];
     private static patchedRuntimes: PatchedRuntime[] = [];
 
     private static patchCreateElementFunction = (
@@ -237,7 +243,7 @@ export class DdRumUserInteractionTracking {
             options
         );
 
-        const originalCreateElement = React.createElement;
+        const originalCreateElement = reactModule['createElement'];
         replaceProperty(
             reactModule,
             'createElement',
@@ -264,7 +270,7 @@ export class DdRumUserInteractionTracking {
         runtimes.push(...jsxRuntimes);
         runtimes.forEach(DdRumUserInteractionTracking.patchJsxRuntime);
 
-        const originalMemo = React.memo;
+        const originalMemo = reactModule['memo'];
         replaceProperty(
             reactModule,
             'memo',
@@ -272,7 +278,7 @@ export class DdRumUserInteractionTracking {
                 component: any,
                 propsAreEqual?: (prevProps: any, newProps: any) => boolean
             ) => {
-                return originalMemo(component, (prev, next) => {
+                return originalMemo(component, (prev: any, next: any) => {
                     if (!next.onPress || !prev.onPress) {
                         return propsAreEqual
                             ? propsAreEqual(prev, next)
