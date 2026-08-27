@@ -21,6 +21,58 @@ import { areObjectShallowEqual } from './ShallowObjectEqualityChecker';
 import { getJsxRuntimes } from './getJsxRuntime';
 
 /**
+ * A JSX runtime: any module exposing `jsx` / `jsxs` / `jsxDEV` element factories.
+ * `react/jsx-runtime` is one; a module that wraps it is another.
+ */
+export type JsxRuntimeModule = Record<string, unknown>;
+
+const JSX_FACTORY_KEYS = ['jsx', 'jsxs', 'jsxDEV'] as const;
+
+type JsxFactoryKey = typeof JSX_FACTORY_KEYS[number];
+
+type PatchedRuntime = {
+    runtime: JsxRuntimeModule;
+    originals: Partial<Record<JsxFactoryKey, unknown>>;
+};
+
+/**
+ * Assigns a property, but only when the host lets us.
+ *
+ * A host framework can expose its element factories as getter-only properties - nativewind's
+ * `react-native-css-interop` does exactly that - and assigning to one throws a TypeError in
+ * strict mode. This code runs inside `enableFeatures`, so such a throw used to take resource
+ * and error tracking down with it, and through `DatadogProvider` it aborted the native
+ * initialization that follows, leaving the app with no RUM data at all. Auto-instrumentation
+ * is best-effort: failing to patch one factory must never be the reason the SDK does not start.
+ */
+const assignIfWritable = (
+    target: Record<string, any>,
+    key: string,
+    value: unknown
+): boolean => {
+    const descriptor = Object.getOwnPropertyDescriptor(target, key);
+    if (descriptor && !descriptor.writable && !descriptor.set) {
+        InternalLog.log(
+            `Datadog SDK can't patch "${key}": the property is read-only, the host framework likely owns it`,
+            SdkVerbosity.WARN
+        );
+        return false;
+    }
+    try {
+        target[key] = value;
+        return true;
+    } catch (error) {
+        InternalLog.log(
+            `Datadog SDK can't patch "${key}": ${getErrorMessage(error)}`,
+            SdkVerbosity.WARN
+        );
+        return false;
+    }
+};
+
+const reactModule = (React as unknown) as Record<string, any>;
+
+/**
  * Provides RUM auto-instrumentation feature to track user interaction as RUM events.
  * For now we are only covering the "onPress" events.
  */
@@ -29,8 +81,7 @@ export class DdRumUserInteractionTracking {
     private static eventsInterceptor: EventsInterceptor = new NoOpEventsInterceptor();
     private static originalCreateElement = React.createElement;
     private static originalMemo = React.memo;
-    private static originalJsx = null;
-    private static originalDevJsx = null;
+    private static patchedRuntimes: PatchedRuntime[] = [];
 
     private static patchCreateElementFunction = (
         originalFunction: typeof React.createElement,
@@ -58,11 +109,68 @@ export class DdRumUserInteractionTracking {
     };
 
     /**
+     * Wraps every element factory a runtime exposes.
+     *
+     * All three keys matter: under the automatic JSX transform an element with a single child
+     * compiles to `jsx` and one with several children to `jsxs`, so patching only `jsx` leaves
+     * every multi-child element uninstrumented. `jsxDEV` lives on the dev runtime, which is a
+     * different module - handling the keys per runtime keeps install and uninstall symmetric.
+     */
+    private static patchJsxRuntime = (runtime: JsxRuntimeModule): void => {
+        if (!runtime) {
+            return;
+        }
+
+        const originals: PatchedRuntime['originals'] = {};
+        let patchedAnyFactory = false;
+
+        for (const key of JSX_FACTORY_KEYS) {
+            const originalFactory = runtime[key];
+            if (typeof originalFactory !== 'function') {
+                continue;
+            }
+
+            const patchedFactory = (
+                ...args: Parameters<typeof React.createElement>
+            ): ReturnType<typeof React.createElement> =>
+                DdRumUserInteractionTracking.patchCreateElementFunction(
+                    originalFactory as typeof React.createElement,
+                    args
+                );
+
+            if (assignIfWritable(runtime, key, patchedFactory)) {
+                originals[key] = originalFactory;
+                patchedAnyFactory = true;
+            }
+        }
+
+        if (patchedAnyFactory) {
+            DdRumUserInteractionTracking.patchedRuntimes.push({
+                runtime,
+                originals
+            });
+        }
+    };
+
+    /**
      * Starts tracking user interactions and sends a RUM Action event every time a new interaction was detected.
      * Please note that we are only considering as valid - for - tracking only the user interactions that have
      * a visible output (either an UI state change or a Resource request)
+     *
+     * @param options interception options
+     * @param jsxRuntimes additional JSX runtimes the app compiles its own JSX to, on top of
+     * React's. Required whenever the app sets a custom `jsxImportSource` (nativewind and any
+     * other css-interop based styling library): such a runtime wraps React's factories at
+     * import time, which happens while the bundle is evaluated - long before this function
+     * runs - so patching `react/jsx-runtime` afterwards can no longer reach the app's elements.
+     * They cannot be required from here: Metro resolves requires statically, so a hard-coded
+     * `require('nativewind/jsx-runtime')` would break bundling for every app that does not
+     * depend on it.
      */
-    static startTracking(options: DdEventsInterceptorOptions): void {
+    static startTracking(
+        options: DdEventsInterceptorOptions,
+        jsxRuntimes: JsxRuntimeModule[] = []
+    ): void {
         // extra safety to avoid wrapping more than 1 time this function
         if (DdRumUserInteractionTracking.isTracking) {
             InternalLog.log(
@@ -72,7 +180,7 @@ export class DdRumUserInteractionTracking {
             return;
         }
 
-        DdSdk?.sendTelemetryLog(
+        DdSdk?.sendTelemetryLog?.(
             BABEL_PLUGIN_TELEMETRY,
             DdBabelInteractionTracking.getTelemetryConfig(),
             { onlyOnce: true }
@@ -82,74 +190,67 @@ export class DdRumUserInteractionTracking {
             options
         );
 
-        const original = React.createElement;
-        React.createElement = (
-            ...args: Parameters<typeof React.createElement>
-        ): any => {
-            return this.patchCreateElementFunction(original, args);
-        };
+        const originalCreateElement = React.createElement;
+        assignIfWritable(
+            reactModule,
+            'createElement',
+            (...args: Parameters<typeof React.createElement>): any => {
+                return this.patchCreateElementFunction(
+                    originalCreateElement,
+                    args
+                );
+            }
+        );
 
+        const runtimes: JsxRuntimeModule[] = [];
         try {
             const [jsxRuntime, jsxDevRuntime] = getJsxRuntimes();
-            const originalJsx = jsxRuntime?.jsx;
-            const originalDevJsx = jsxDevRuntime?.jsxDEV;
-
-            this.originalJsx = originalJsx;
-            this.originalDevJsx = originalDevJsx;
-
-            if (originalJsx) {
-                jsxRuntime.jsx = (
-                    ...args: Parameters<typeof React.createElement>
-                ): ReturnType<typeof React.createElement> => {
-                    return this.patchCreateElementFunction(originalJsx, args);
-                };
+            if (jsxRuntime) {
+                runtimes.push(jsxRuntime);
             }
-
-            if (originalDevJsx) {
-                jsxRuntime.jsxDEV = (
-                    ...args: Parameters<typeof React.createElement>
-                ): ReturnType<typeof React.createElement> => {
-                    return this.patchCreateElementFunction(
-                        originalDevJsx,
-                        args
-                    );
-                };
+            if (jsxDevRuntime) {
+                runtimes.push(jsxDevRuntime);
             }
         } catch (e) {
-            DdSdk.telemetryDebug(getErrorMessage(e));
+            DdSdk?.telemetryDebug?.(getErrorMessage(e));
         }
+        runtimes.push(...jsxRuntimes);
+        runtimes.forEach(DdRumUserInteractionTracking.patchJsxRuntime);
 
         const originalMemo = React.memo;
+        assignIfWritable(
+            reactModule,
+            'memo',
+            (
+                component: any,
+                propsAreEqual?: (prevProps: any, newProps: any) => boolean
+            ) => {
+                return originalMemo(component, (prev, next) => {
+                    if (!next.onPress || !prev.onPress) {
+                        return propsAreEqual
+                            ? propsAreEqual(prev, next)
+                            : areObjectShallowEqual(prev, next);
+                    }
+                    // we replace "our" onPress from the props by the original for comparison
+                    const { onPress: _prevOnPress, ...partialPrevProps } = prev;
+                    const prevProps = {
+                        ...partialPrevProps,
+                        onPress: prev.__DATADOG_INTERNAL_ORIGINAL_ON_PRESS__
+                    };
 
-        React.memo = (
-            component: any,
-            propsAreEqual?: (prevProps: any, newProps: any) => boolean
-        ) => {
-            return originalMemo(component, (prev, next) => {
-                if (!next.onPress || !prev.onPress) {
+                    const { onPress: _nextOnPress, ...partialNextProps } = next;
+                    const nextProps = {
+                        ...partialNextProps,
+                        onPress: next.__DATADOG_INTERNAL_ORIGINAL_ON_PRESS__
+                    };
+
+                    // if no comparison function is provided we do shallow comparison
                     return propsAreEqual
-                        ? propsAreEqual(prev, next)
-                        : areObjectShallowEqual(prev, next);
-                }
-                // we replace "our" onPress from the props by the original for comparison
-                const { onPress: _prevOnPress, ...partialPrevProps } = prev;
-                const prevProps = {
-                    ...partialPrevProps,
-                    onPress: prev.__DATADOG_INTERNAL_ORIGINAL_ON_PRESS__
-                };
-
-                const { onPress: _nextOnPress, ...partialNextProps } = next;
-                const nextProps = {
-                    ...partialNextProps,
-                    onPress: next.__DATADOG_INTERNAL_ORIGINAL_ON_PRESS__
-                };
-
-                // if no comparison function is provided we do shallow comparison
-                return propsAreEqual
-                    ? propsAreEqual(prevProps, nextProps)
-                    : areObjectShallowEqual(nextProps, prevProps);
-            });
-        };
+                        ? propsAreEqual(prevProps, nextProps)
+                        : areObjectShallowEqual(nextProps, prevProps);
+                });
+            }
+        );
 
         DdRumUserInteractionTracking.isTracking = true;
         InternalLog.log(
@@ -158,18 +259,30 @@ export class DdRumUserInteractionTracking {
         );
     }
 
-    static stopTracking() {
-        React.createElement = this.originalCreateElement;
-        React.memo = this.originalMemo;
-        DdRumUserInteractionTracking.isTracking = false;
-        if (this.originalJsx || this.originalDevJsx) {
-            const [jsxRuntime, jsxDevRuntime] = getJsxRuntimes();
+    static stopTracking(): void {
+        assignIfWritable(
+            reactModule,
+            'createElement',
+            DdRumUserInteractionTracking.originalCreateElement
+        );
+        assignIfWritable(
+            reactModule,
+            'memo',
+            DdRumUserInteractionTracking.originalMemo
+        );
 
-            jsxRuntime.jsx = this.originalJsx;
-            jsxDevRuntime.jsxDEV = this.originalDevJsx;
-
-            this.originalJsx = null;
-            this.originalDevJsx = null;
+        for (const {
+            runtime,
+            originals
+        } of DdRumUserInteractionTracking.patchedRuntimes) {
+            for (const key of JSX_FACTORY_KEYS) {
+                if (key in originals) {
+                    assignIfWritable(runtime, key, originals[key]);
+                }
+            }
         }
+        DdRumUserInteractionTracking.patchedRuntimes = [];
+
+        DdRumUserInteractionTracking.isTracking = false;
     }
 }

@@ -24,6 +24,7 @@ import { TrackingConsent } from './TrackingConsent';
 import { DdLogs } from './logs/DdLogs';
 import { DdRum } from './rum/DdRum';
 import { DdBabelInteractionTracking } from './rum/instrumentation/interactionTracking/DdBabelInteractionTracking';
+import type { JsxRuntimeModule } from './rum/instrumentation/interactionTracking/DdRumUserInteractionTracking';
 import { __ddExtractText } from './rum/instrumentation/interactionTracking/ddBabelUtils';
 import { DatadogTracingContext } from './rum/instrumentation/resourceTracking/distributedTracing/DatadogTracingContext';
 import { DatadogTracingIdentifier } from './rum/instrumentation/resourceTracking/distributedTracing/DatadogTracingIdentifier';
@@ -85,5 +86,6 @@ export type {
     Timestamp,
     FirstPartyHost,
     AutoInstrumentationConfiguration,
-    PartialInitializationConfiguration
+    PartialInitializationConfiguration,
+    JsxRuntimeModule
 };

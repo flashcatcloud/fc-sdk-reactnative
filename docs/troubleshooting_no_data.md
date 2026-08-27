@@ -18,8 +18,12 @@ it is only printed when `trackResources` is enabled, and its absence is the sing
 reason an app reports views but no API calls. (Both strings still carry the upstream name this
 SDK was forked from; grep for them verbatim.)
 
-If neither line appears, initialization never ran: check that the provider is actually mounted,
-and that no exception is being swallowed around it.
+A third line, `Datadog SDK could not start <feature>`, means one instrumentation failed to
+install. The others, and the native SDK itself, still start — you lose only that feature's
+events. Section 3 covers the most common cause.
+
+If neither of the first two lines appears, initialization never ran: check that the provider is
+actually mounted, and that no exception is being swallowed around it.
 
 ## 2. Views and crashes arrive, but no API calls
 
@@ -43,7 +47,35 @@ in the tree as you can — the provider only covers what renders below it. See
 react-native-navigation (Wix) has no single React root to wrap, so it must keep the manual
 call. Put it at module scope in your entry file, before any screen is registered.
 
-## 3. Resources arrive but are not linked to backend traces
+## 3. Views and API calls arrive, but no tap actions
+
+Check whether your Babel config sets a custom `jsxImportSource`. nativewind does, and so does
+any other styling library built on `react-native-css-interop`:
+
+```javascript
+// babel.config.js
+presets: [['babel-preset-expo', { jsxImportSource: 'nativewind' }]];
+```
+
+With that in place your app's JSX no longer compiles to `react/jsx-runtime` — it compiles to
+the library's runtime, which wraps React's element factories **while the bundle is evaluated**,
+long before the SDK starts. Patching `react/jsx-runtime` afterwards can no longer reach your
+elements, so no `onPress` is instrumented and no action is ever recorded.
+
+The SDK cannot require those modules itself: Metro resolves requires statically, so a
+hard-coded one would break bundling for every app that does not depend on it. Pass them in:
+
+```javascript
+import * as NativeWindJsxRuntime from 'nativewind/jsx-runtime';
+
+config.jsxRuntimes = [NativeWindJsxRuntime];
+```
+
+Their factories are sometimes exposed as getter-only properties. The SDK detects that, skips
+them, and logs `Datadog SDK can't patch "jsx"` rather than failing — so check the internal logs
+here as well.
+
+## 4. Resources arrive but are not linked to backend traces
 
 Set `firstPartyHosts`. The SDK adds tracing headers only to requests whose host matches, so
 with it unset every resource is a dead end:
@@ -56,7 +88,7 @@ Pass bare hosts, not URLs — no scheme, port or path. Also check
 `resourceTracingSamplingRate`, which defaults to `20`: at that value four out of five matching
 requests carry no tracing headers by design.
 
-## 4. Nothing arrives at all
+## 5. Nothing arrives at all
 
 - **Wrong destination.** `site` accepts `'CN'` (default) and `'STAGING'`. For a private
   deployment leave `site` alone and set `customEndpoints` to your own intake URLs instead;
@@ -69,7 +101,7 @@ requests carry no tracing headers by design.
 - **Consent.** Nothing is collected under `TrackingConsent.NOT_GRANTED`, and events collected
   under `PENDING` are discarded unless consent is later granted.
 
-## 5. Only in development
+## 6. Only in development
 
 Two request kinds are filtered on purpose in dev builds, and only in dev builds: the Expo
 `/logs` endpoint and the React Native packager's `/symbolicate`. Both are noise from the
