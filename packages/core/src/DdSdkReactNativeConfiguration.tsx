@@ -11,6 +11,7 @@ import type { LogEventMapper } from './logs/types';
 import type { ActionEventMapper } from './rum/eventMappers/actionEventMapper';
 import type { ErrorEventMapper } from './rum/eventMappers/errorEventMapper';
 import type { ResourceEventMapper } from './rum/eventMappers/resourceEventMapper';
+import type { JsxRuntimeModule } from './rum/instrumentation/interactionTracking/DdRumUserInteractionTracking';
 import type { FirstPartyHost } from './rum/types';
 import { PropagatorType } from './rum/types';
 
@@ -126,6 +127,7 @@ export const DEFAULTS = {
     nativeViewTracking: false,
     nativeInteractionTracking: false,
     getFirstPartyHosts: () => [],
+    getJsxRuntimes: () => [],
     getAdditionalConfiguration: () => ({}),
     trackingConsent: TrackingConsent.GRANTED,
     telemetrySampleRate: 20.0,
@@ -354,6 +356,23 @@ export class DdSdkReactNativeConfiguration {
      */
     public actionNameAttribute?: string;
 
+    /**
+     * Additional JSX runtimes the app compiles its own JSX to, on top of React's.
+     *
+     * Set this whenever the app uses a custom `jsxImportSource` - nativewind and other
+     * css-interop based styling libraries do. Such a runtime wraps React's element factories
+     * while the bundle is evaluated, long before the SDK starts, so patching
+     * `react/jsx-runtime` afterwards no longer reaches the app's elements and no RUM action
+     * is ever recorded. The SDK cannot require these modules itself: Metro resolves requires
+     * statically, so a hard-coded one would break bundling for apps that do not depend on it.
+     *
+     * ```js
+     * import * as NativeWindJsxRuntime from 'nativewind/jsx-runtime';
+     * config.jsxRuntimes = [NativeWindJsxRuntime];
+     * ```
+     */
+    public jsxRuntimes: JsxRuntimeModule[] = DEFAULTS.getJsxRuntimes();
+
     public logEventMapper: LogEventMapper | null = DEFAULTS.logEventMapper;
 
     public errorEventMapper: ErrorEventMapper | null =
@@ -399,6 +418,7 @@ export type AutoInstrumentationConfiguration = {
     readonly actionEventMapper?: ActionEventMapper | null;
     readonly useAccessibilityLabel?: boolean;
     readonly actionNameAttribute?: string;
+    readonly jsxRuntimes?: JsxRuntimeModule[];
 };
 
 /**
@@ -416,6 +436,7 @@ export type AutoInstrumentationParameters = {
     readonly actionEventMapper: ActionEventMapper | null;
     readonly useAccessibilityLabel: boolean;
     readonly actionNameAttribute?: string;
+    readonly jsxRuntimes: JsxRuntimeModule[];
 };
 
 /**
@@ -449,7 +470,8 @@ export const addDefaultValuesToAutoInstrumentationConfiguration = (
             features.actionEventMapper === undefined
                 ? DEFAULTS.actionEventMapper
                 : features.actionEventMapper,
-        useAccessibilityLabel: DEFAULTS.useAccessibilityLabel
+        useAccessibilityLabel: DEFAULTS.useAccessibilityLabel,
+        jsxRuntimes: features.jsxRuntimes || DEFAULTS.getJsxRuntimes()
     };
 };
 

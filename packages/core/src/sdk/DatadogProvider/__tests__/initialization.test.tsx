@@ -8,7 +8,10 @@ import { version as reactNativeVersion } from 'react-native/package.json';
 import { NativeModules } from 'react-native';
 
 import { InitializationMode } from '../../../DdSdkReactNativeConfiguration';
+import { DdSdkReactNative } from '../../../DdSdkReactNative';
 import { DdRum } from '../../../rum/DdRum';
+import { DdRumErrorTracking } from '../../../rum/instrumentation/DdRumErrorTracking';
+import { DdRumUserInteractionTracking } from '../../../rum/instrumentation/interactionTracking/DdRumUserInteractionTracking';
 import { RumActionType } from '../../../rum/types';
 import { DdTrace } from '../../../trace/DdTrace';
 import { DefaultTimeProvider } from '../../../utils/time-provider/DefaultTimeProvider';
@@ -48,6 +51,35 @@ describe('DatadogProvider', () => {
         (nowMock as any).mockReturnValue('timestamp_not_specified');
     });
     describe('initialization', () => {
+        it('initializes the native SDK when an instrumentation fails to start', async () => {
+            // enableFeatures runs before initializeNativeSDK here, on a promise nobody awaits.
+            // An instrumentation throwing - nativewind makes the element factory read-only,
+            // which is one way to get there - used to abort the native initialization too, so
+            // the app ended up with no RUM data at all instead of one missing event type.
+            (DdSdkReactNative as any).wasAutoInstrumented = false;
+            const interactionTracking = jest
+                .spyOn(DdRumUserInteractionTracking, 'startTracking')
+                .mockImplementation(() => {
+                    throw new Error('Cannot assign to read only property');
+                });
+            const errorTracking = jest.spyOn(
+                DdRumErrorTracking,
+                'startTracking'
+            );
+
+            try {
+                renderWithProvider();
+                await flushPromises();
+
+                expect(NativeModules.DdSdk.initialize).toHaveBeenCalledTimes(1);
+                // the features after the failing one still get installed
+                expect(errorTracking).toHaveBeenCalled();
+            } finally {
+                interactionTracking.mockRestore();
+                errorTracking.mockRestore();
+            }
+        });
+
         it('renders its children and initializes the SDK once', async () => {
             const {
                 getByText,

@@ -444,6 +444,100 @@ describe('startTracking memoization', () => {
     });
 });
 
+describe('startTracking with injected jsx runtimes', () => {
+    it('M wrap onPress W the app compiles JSX to another runtime', async () => {
+        const jsx = jest.fn((_type: any, props: any) => props);
+        const jsxs = jest.fn((_type: any, props: any) => props);
+        const runtime: Record<string, unknown> = { jsx, jsxs };
+
+        DdRumUserInteractionTracking.startTracking({}, [runtime]);
+
+        // both factories matter: a single-child element compiles to jsx, several to jsxs
+        expect(runtime.jsx).not.toBe(jsx);
+        expect(runtime.jsxs).not.toBe(jsxs);
+
+        for (const key of ['jsx', 'jsxs']) {
+            const onPress = jest.fn();
+            const props: Record<string, any> = { onPress };
+            (runtime[key] as any)('View', props);
+
+            expect(props.onPress).not.toBe(onPress);
+            expect(props.__DATADOG_INTERNAL_ORIGINAL_ON_PRESS__).toBe(onPress);
+            props.onPress();
+            expect(onPress).toHaveBeenCalledTimes(1);
+        }
+    });
+
+    it('M keep tracking W a runtime factory is read-only', async () => {
+        // nativewind's react-native-css-interop exposes its factories as getter-only
+        // properties; assigning to one throws, and that used to abort the whole SDK startup
+        const runtime = {};
+        Object.defineProperty(runtime, 'jsx', {
+            get: () => () => null,
+            enumerable: true,
+            configurable: true
+        });
+
+        expect(() =>
+            DdRumUserInteractionTracking.startTracking({}, [runtime])
+        ).not.toThrow();
+        expect(DdRumUserInteractionTracking['isTracking']).toBe(true);
+    });
+
+    it('M patch through an accessor W the property is configurable', async () => {
+        // a namespace object built by an interop helper can expose accessors rather than
+        // plain properties; assignment does nothing there, redefining still works
+        const runtime = {};
+        const original = jest.fn();
+        Object.defineProperty(runtime, 'jsx', {
+            get: () => original,
+            enumerable: true,
+            configurable: true
+        });
+
+        DdRumUserInteractionTracking.startTracking({}, [runtime]);
+
+        expect((runtime as any).jsx).not.toBe(original);
+
+        const onPress = jest.fn();
+        const props: Record<string, any> = { onPress };
+        (runtime as any).jsx('View', props);
+        expect(props.onPress).not.toBe(onPress);
+    });
+
+    it('M say what it costs W a runtime cannot be patched at all', async () => {
+        const runtime = {};
+        Object.defineProperty(runtime, 'jsx', {
+            get: () => jest.fn(),
+            enumerable: true,
+            configurable: false
+        });
+
+        expect(() =>
+            DdRumUserInteractionTracking.startTracking({}, [runtime])
+        ).not.toThrow();
+        expect(DdRumUserInteractionTracking['isTracking']).toBe(true);
+        // the integrator must learn the consequence, not just that a property was skipped
+        expect(DdSdk.telemetryError).toHaveBeenCalledWith(
+            expect.stringContaining('No RUM action will be recorded'),
+            '',
+            'JsxRuntimeNotPatchable'
+        );
+    });
+
+    it('M restore the injected runtime W stopTracking is called', async () => {
+        const jsx = jest.fn();
+        const jsxs = jest.fn();
+        const runtime: Record<string, unknown> = { jsx, jsxs };
+
+        DdRumUserInteractionTracking.startTracking({}, [runtime]);
+        DdRumUserInteractionTracking.stopTracking();
+
+        expect(runtime.jsx).toBe(jsx);
+        expect(runtime.jsxs).toBe(jsxs);
+    });
+});
+
 describe('startTracking', () => {
     /**
      * WARNING: Because of caching in the require, the following 2 tests need
