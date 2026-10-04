@@ -49,7 +49,9 @@ internal fun ReadableMap.asDdSdkConfiguration(): DdSdkConfiguration {
         bundleLogsWithTraces = getBoolean("bundleLogsWithTraces"),
         trackNonFatalAnrs = getBooleanOrNull("trackNonFatalAnrs"),
         batchProcessingLevel = getString("batchProcessingLevel"),
-        initialResourceThreshold = getDoubleOrNull("initialResourceThreshold")
+        initialResourceThreshold = getDoubleOrNull("initialResourceThreshold"),
+        sessionOnError = getBooleanOrNull("sessionOnError"),
+        sessionReplayOnError = getBooleanOrNull("sessionReplayOnError")
     )
 }
 
@@ -140,6 +142,8 @@ internal object DefaultConfiguration {
     const val bundleLogsWithRum = true
     const val bundleLogsWithTraces = true
     const val initialResourceThreshold = 0.1
+    const val sessionOnError = false
+    const val sessionReplayOnError = false
 }
 
 @Suppress("CyclomaticComplexMethod")
@@ -176,7 +180,9 @@ internal fun JSONDdSdkConfiguration.asDdSdkConfiguration(): DdSdkConfiguration {
         this.bundleLogsWithTraces ?: DefaultConfiguration.bundleLogsWithTraces,
         this.trackNonFatalAnrs,
         this.batchProcessingLevel,
-        this.initialResourceThreshold ?: DefaultConfiguration.initialResourceThreshold
+        this.initialResourceThreshold ?: DefaultConfiguration.initialResourceThreshold,
+        this.sessionOnError ?: DefaultConfiguration.sessionOnError,
+        this.sessionReplayOnError ?: DefaultConfiguration.sessionReplayOnError
     )
 }
 
@@ -241,6 +247,8 @@ internal fun DdSdkConfiguration.toReadableMap(): ReadableMap {
     trackNonFatalAnrs?.let { map.putBoolean("trackNonFatalAnrs", it) }
     additionalConfig?.let { map.putMap("additionalConfig", it.toWritableMap()) }
     initialResourceThreshold?.let { map.putDouble("initialResourceThreshold", it)}
+    sessionOnError?.let { map.putBoolean("sessionOnError", it) }
+    sessionReplayOnError?.let { map.putBoolean("sessionReplayOnError", it) }
     return map
 }
 

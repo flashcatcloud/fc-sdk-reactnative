@@ -120,6 +120,8 @@ export const formatFirstPartyHosts = (
 export const DEFAULTS = {
     nativeCrashReportEnabled: false,
     sessionSamplingRate: 100.0,
+    sessionOnError: false,
+    sessionReplayOnError: false,
     resourceTracingSamplingRate: 20.0,
     site: 'CN',
     longTaskThresholdMs: 0,
@@ -166,6 +168,28 @@ export class DdSdkReactNativeConfiguration {
      * Percentage of sampled RUM sessions. Range `0`-`100`.
      */
     public sessionSamplingRate: number = DEFAULTS.sessionSamplingRate;
+    /**
+     * Also keeps the sessions `sessionSamplingRate` leaves out, but only those that report an error.
+     *
+     * Such a session is collected in memory without uploading anything, keeping only its last
+     * minute. If it reports an error, that minute is uploaded and the session carries on like any
+     * collected one; if it ends without one, nothing of it is ever sent. An error dropped by
+     * `errorEventMapper` does not count - but on Android, an error that error tracking also logs
+     * through `DdLogs` reaches RUM a second time from the native logger, which counts unless
+     * `logEventMapper` drops that log too. Its events report a session sample rate of 0, as it
+     * stands for itself rather than for the population a rate would imply.
+     *
+     * Default `false`.
+     */
+    public sessionOnError: boolean = DEFAULTS.sessionOnError;
+    /**
+     * Also keeps the replays the Session Replay sample rate leaves out, but only those of sessions
+     * that report an error. A session kept only through `sessionOnError` holds its replay until its
+     * events are released.
+     *
+     * Needs `@flashcatcloud/mobile-react-native-session-replay`. Default `false`.
+     */
+    public sessionReplayOnError: boolean = DEFAULTS.sessionReplayOnError;
     /**
      * Percentage of tracing integrations for network calls between your app and your backend. Range `0`-`100`.
      */
@@ -480,6 +504,8 @@ export type PartialInitializationConfiguration = {
     readonly env: string;
     readonly applicationId: string;
     readonly sessionSamplingRate?: number;
+    readonly sessionOnError?: boolean;
+    readonly sessionReplayOnError?: boolean;
     readonly site?: string;
     readonly verbosity?: SdkVerbosity | undefined;
     readonly nativeViewTracking?: boolean;

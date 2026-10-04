@@ -59,6 +59,8 @@ class DdSdkNativeInitializationTests: XCTestCase {
         let expectedFirstPartyHosts: [String: Set<TracingHeaderType>]? = ["example.com": [.b3multi, .tracecontext]]
         XCTAssertEqual(configuration?.firstPartyHosts, expectedFirstPartyHosts)
         XCTAssertEqual(configuration?.initialResourceThreshold, 0.5)
+        XCTAssertEqual(configuration?.sessionOnError, true)
+        XCTAssertEqual(configuration?.sessionReplayOnError, true)
     }
 
     func testReturnsConfigurationWithMinimalData() {
@@ -95,6 +97,8 @@ class DdSdkNativeInitializationTests: XCTestCase {
         let expectedFirstPartyHosts: [String: Set<TracingHeaderType>]? = [:]
         XCTAssertEqual(configuration?.firstPartyHosts, expectedFirstPartyHosts)
         XCTAssertEqual(configuration?.initialResourceThreshold, nil)
+        XCTAssertEqual(configuration?.sessionOnError, false)
+        XCTAssertEqual(configuration?.sessionReplayOnError, false)
     }
 
     func testPrintsMessageWithIncorrectFile() {

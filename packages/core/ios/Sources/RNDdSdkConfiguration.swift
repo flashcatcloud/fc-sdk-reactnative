@@ -43,6 +43,8 @@ extension NSDictionary {
         let trackWatchdogTerminations = object(forKey: "trackWatchdogTerminations") as? Bool
         let batchProcessingLevel = object(forKey: "batchProcessingLevel") as? NSString
         let initialResourceThreshold = object(forKey: "initialResourceThreshold") as? Double
+        let sessionOnError = object(forKey: "sessionOnError") as? Bool
+        let sessionReplayOnError = object(forKey: "sessionReplayOnError") as? Bool
 
         return DdSdkConfiguration(
             clientToken: (clientToken != nil) ? clientToken! : String(),
@@ -75,7 +77,9 @@ extension NSDictionary {
             appHangThreshold: appHangThreshold,
             trackWatchdogTerminations: trackWatchdogTerminations ?? DefaultConfiguration.trackWatchdogTerminations,
             batchProcessingLevel: batchProcessingLevel.asBatchProcessingLevel(),
-            initialResourceThreshold: initialResourceThreshold
+            initialResourceThreshold: initialResourceThreshold,
+            sessionOnError: sessionOnError ?? DefaultConfiguration.sessionOnError,
+            sessionReplayOnError: sessionReplayOnError ?? DefaultConfiguration.sessionReplayOnError
         )
     }
 
@@ -206,6 +210,8 @@ internal struct DefaultConfiguration {
     static let bundleLogsWithRum = true
     static let bundleLogsWithTraces = true
     static let trackWatchdogTerminations = false
+    static let sessionOnError = false
+    static let sessionReplayOnError = false
 }
 
 extension Dictionary where Key == String, Value == AnyObject {
@@ -244,6 +250,8 @@ extension Dictionary where Key == String, Value == AnyObject {
         let trackWatchdogTerminations = configuration["trackWatchdogTerminations"] as? Bool
         let batchProcessingLevel = configuration["batchProcessingLevel"] as? NSString
         let initialResourceThreshold = configuration["initialResourceThreshold"] as? Double
+        let sessionOnError = configuration["sessionOnError"] as? Bool
+        let sessionReplayOnError = configuration["sessionReplayOnError"] as? Bool
         
         return DdSdkConfiguration(
             clientToken: clientToken ?? String(),
@@ -279,7 +287,9 @@ extension Dictionary where Key == String, Value == AnyObject {
             appHangThreshold: appHangThreshold,
             trackWatchdogTerminations: trackWatchdogTerminations ?? DefaultConfiguration.trackWatchdogTerminations,
             batchProcessingLevel: batchProcessingLevel.asBatchProcessingLevel(),
-            initialResourceThreshold: initialResourceThreshold
+            initialResourceThreshold: initialResourceThreshold,
+            sessionOnError: sessionOnError ?? DefaultConfiguration.sessionOnError,
+            sessionReplayOnError: sessionReplayOnError ?? DefaultConfiguration.sessionReplayOnError
         )
     }
 }

@@ -120,7 +120,8 @@ requests carry no tracing headers by design.
   in the console. A token that is valid but belongs to another application produces a silent
   no-op, not an error.
 - **Sampling.** `sessionSamplingRate` is a percentage of *sessions*. At a low value most test
-  runs legitimately report nothing; set it to `100` while integrating.
+  runs legitimately report nothing; set it to `100` while integrating. With `sessionOnError`,
+  a session the rate left out sends nothing at all until it reports an error.
 - **Consent.** Nothing is collected under `TrackingConsent.NOT_GRANTED`, and events collected
   under `PENDING` are discarded unless consent is later granted.
 

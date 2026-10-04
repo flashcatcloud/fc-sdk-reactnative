@@ -35,6 +35,12 @@ SessionReplay.enable({
 
 **Note**: All configuration properties are optional and should be adjusted based on your application's needs.
 
+To also keep the replays `replaySampleRate` leaves out, but only for sessions that report an error, set `sessionReplayOnError` on the SDK configuration (not on `SessionReplay.enable`), next to `sessionOnError`:
+
+```js
+datadogConfiguration.sessionReplayOnError = true;
+```
+
 ## Start or stop the recording manually
 
 By default, Session Replay starts recording automatically. However, if you prefer to manually start recording at a specific point in your application, you can use the optional `startRecordingImmediately` parameter as shown below, and later call `SessionReplay.startRecording()`. You can also use `SessionReplay.stopRecording()` to stop the recording anytime.

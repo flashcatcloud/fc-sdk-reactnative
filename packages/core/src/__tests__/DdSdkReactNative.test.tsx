@@ -507,6 +507,50 @@ describe('DdSdkReactNative', () => {
                 })
             );
         });
+
+        it('initializes with the on-error switches off by default', async () => {
+            // GIVEN
+            const configuration = new DdSdkReactNativeConfiguration(
+                '2',
+                'env',
+                '1'
+            );
+
+            // WHEN
+            await DdSdkReactNative.initialize(configuration);
+
+            // THEN
+            expect(NativeModules.DdSdk.initialize).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    sessionOnError: false,
+                    sessionReplayOnError: false
+                })
+            );
+        });
+
+        it('initializes with sessionOnError and sessionReplayOnError when they are specified', async () => {
+            // GIVEN
+            const configuration = new DdSdkReactNativeConfiguration(
+                '2',
+                'env',
+                '1'
+            );
+            configuration.sessionSamplingRate = 0;
+            configuration.sessionOnError = true;
+            configuration.sessionReplayOnError = true;
+
+            // WHEN
+            await DdSdkReactNative.initialize(configuration);
+
+            // THEN
+            expect(NativeModules.DdSdk.initialize).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    sampleRate: 0,
+                    sessionOnError: true,
+                    sessionReplayOnError: true
+                })
+            );
+        });
     });
 
     describe('feature enablement', () => {

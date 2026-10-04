@@ -1119,6 +1119,42 @@ class DdSdkTests: XCTestCase {
         XCTAssertEqual(ddConfig.trackBackgroundEvents, false)
     }
 
+    func testSessionOnErrorIsOffByDefault() {
+        let configuration = NSDictionary.mockAny().asDdSdkConfiguration()
+
+        let ddConfig = DdSdkNativeInitialization().buildRUMConfiguration(
+            configuration: configuration
+        )
+
+        XCTAssertFalse(configuration.sessionOnError)
+        XCTAssertFalse(configuration.sessionReplayOnError)
+        XCTAssertFalse(ddConfig.sessionOnError)
+    }
+
+    func testSessionOnErrorEnabled() {
+        let configuration = NSDictionary.mockAny(sampleRate: 0, sessionOnError: true).asDdSdkConfiguration()
+
+        let ddConfig = DdSdkNativeInitialization().buildRUMConfiguration(
+            configuration: configuration
+        )
+
+        XCTAssertEqual(ddConfig.sessionSampleRate, 0)
+        XCTAssertTrue(ddConfig.sessionOnError)
+    }
+
+    func testEnableFeaturesHandsSessionReplayOnErrorToSessionReplay() {
+        defer { DatadogSDKWrapper.shared.sessionReplayOnError = false }
+        DatadogSDKWrapper.shared.setCoreInstance(core: MockDatadogCore())
+
+        for sessionReplayOnError in [true, false] {
+            let configuration = NSDictionary.mockAny(sessionReplayOnError: sessionReplayOnError).asDdSdkConfiguration()
+
+            DdSdkNativeInitialization().enableFeatures(sdkConfiguration: configuration)
+
+            XCTAssertEqual(DatadogSDKWrapper.shared.sessionReplayOnError, sessionReplayOnError)
+        }
+    }
+
     func testConfigurationTelemetryOverride() throws {
         let core = MockDatadogCore()
         let configuration: DdSdkConfiguration = .mockAny(
@@ -1379,7 +1415,9 @@ extension DdSdkConfiguration {
         appHangThreshold: Double? = nil,
         trackWatchdogTerminations: Bool = false,
         batchProcessingLevel: NSString? = "MEDIUM",
-        initialResourceThreshold: Double? = nil
+        initialResourceThreshold: Double? = nil,
+        sessionOnError: Bool = false,
+        sessionReplayOnError: Bool = false
     ) -> DdSdkConfiguration {
         DdSdkConfiguration(
             clientToken: clientToken as String,
@@ -1412,7 +1450,9 @@ extension DdSdkConfiguration {
             appHangThreshold: appHangThreshold,
             trackWatchdogTerminations: trackWatchdogTerminations,
             batchProcessingLevel: batchProcessingLevel.asBatchProcessingLevel(),
-            initialResourceThreshold: initialResourceThreshold
+            initialResourceThreshold: initialResourceThreshold,
+            sessionOnError: sessionOnError,
+            sessionReplayOnError: sessionReplayOnError
         )
     }
 }
@@ -1444,7 +1484,9 @@ extension NSDictionary {
         firstPartyHosts: NSArray? = nil,
         bundleLogsWithRum: Bool? = nil,
         bundleLogsWithTraces: Bool? = nil,
-        batchProcessingLevel: NSString = "MEDIUM"
+        batchProcessingLevel: NSString = "MEDIUM",
+        sessionOnError: Bool? = nil,
+        sessionReplayOnError: Bool? = nil
     ) -> NSDictionary {
         var config = NSMutableDictionary()
         config["clientToken"] = clientToken
@@ -1473,6 +1515,8 @@ extension NSDictionary {
         config["bundleLogsWithRum"] = bundleLogsWithRum
         config["bundleLogsWithTraces"] = bundleLogsWithTraces
         config["batchProcessingLevel"] = batchProcessingLevel
+        config["sessionOnError"] = sessionOnError
+        config["sessionReplayOnError"] = sessionReplayOnError
         return config
     }
 }

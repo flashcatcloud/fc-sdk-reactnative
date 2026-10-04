@@ -1367,6 +1367,54 @@ internal class DdSdkTest {
     }
 
     @Test
+    fun `𝕄 initialize native SDK 𝕎 initialize() {sessionOnError, sessionReplayOnError}`(
+        @Forgery configuration: DdSdkConfiguration
+    ) {
+        // Given
+        val bridgeConfiguration = configuration.copy(
+            sampleRate = 0.0,
+            sessionOnError = true,
+            sessionReplayOnError = true
+        )
+        val rumConfigCaptor = argumentCaptor<RumConfiguration>()
+
+        // When
+        testedBridgeSdk.initialize(bridgeConfiguration.toReadableJavaOnlyMap(), mockPromise)
+
+        // Then
+        verify(mockDatadog).enableRum(rumConfigCaptor.capture())
+        assertThat(rumConfigCaptor.firstValue)
+            .hasField("featureConfiguration") {
+                it.hasFieldEqualTo("sampleRate", 0f)
+                it.hasFieldEqualTo("sessionOnError", true)
+                it.hasFieldEqualTo("sessionReplayOnError", true)
+            }
+    }
+
+    @Test
+    fun `𝕄 initialize native SDK with the on-error switches off 𝕎 initialize() {switches not set}`(
+        @Forgery configuration: DdSdkConfiguration
+    ) {
+        // Given
+        val bridgeConfiguration = configuration.copy(
+            sessionOnError = null,
+            sessionReplayOnError = null
+        )
+        val rumConfigCaptor = argumentCaptor<RumConfiguration>()
+
+        // When
+        testedBridgeSdk.initialize(bridgeConfiguration.toReadableJavaOnlyMap(), mockPromise)
+
+        // Then
+        verify(mockDatadog).enableRum(rumConfigCaptor.capture())
+        assertThat(rumConfigCaptor.firstValue)
+            .hasField("featureConfiguration") {
+                it.hasFieldEqualTo("sessionOnError", false)
+                it.hasFieldEqualTo("sessionReplayOnError", false)
+            }
+    }
+
+    @Test
     fun `𝕄 initialize native SDK 𝕎 initialize() {rare vitals frequency update}`(
         @Forgery configuration: DdSdkConfiguration
     ) {

@@ -117,6 +117,8 @@ class DdSdkNativeInitialization internal constructor(
         if (configuration.sampleRate != null) {
             configBuilder.setSessionSampleRate(configuration.sampleRate.toFloat())
         }
+        configBuilder.setSessionOnError(configuration.sessionOnError ?: false)
+        configBuilder.setSessionReplayOnError(configuration.sessionReplayOnError ?: false)
 
         configBuilder.trackFrustrations(configuration.trackFrustrations ?: true)
         configBuilder.trackBackgroundEvents(configuration.trackBackgroundEvents ?: false)

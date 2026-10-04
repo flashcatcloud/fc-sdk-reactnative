@@ -80,6 +80,7 @@ public class DdSdkNativeInitialization: NSObject {
     }
 
     func enableFeatures(sdkConfiguration: DdSdkConfiguration) {
+        DatadogSDKWrapper.shared.sessionReplayOnError = sdkConfiguration.sessionReplayOnError
         let rumConfig = buildRUMConfiguration(configuration: sdkConfiguration)
         DatadogSDKWrapper.shared.enableRUM(with: rumConfig)
         
@@ -169,7 +170,7 @@ public class DdSdkNativeInitialization: NSObject {
             networkSettledResourcePredicate = TimeBasedTNSResourcePredicate(threshold: initialResourceThreshold)
         }
         
-        return RUM.Configuration(
+        var rumConfiguration = RUM.Configuration(
             applicationID: configuration.applicationId,
             sessionSampleRate: (configuration.sampleRate as? NSNumber)?.floatValue ?? Float(DefaultConfiguration.sessionSamplingRate),
             uiKitViewsPredicate: uiKitViewsPredicate,
@@ -198,6 +199,8 @@ public class DdSdkNativeInitialization: NSObject {
             customEndpoint: customRUMEndpointURL,
             telemetrySampleRate: (configuration.telemetrySampleRate as? NSNumber)?.floatValue ?? Float(DefaultConfiguration.telemetrySampleRate)
         )
+        rumConfiguration.sessionOnError = configuration.sessionOnError
+        return rumConfiguration
     }
     
     func buildLogsConfiguration(configuration: DdSdkConfiguration) -> Logs.Configuration {

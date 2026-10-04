@@ -29,6 +29,10 @@ public class DatadogSDKWrapper {
     internal var loggerConfiguration = DatadogLogs.Logger.Configuration()
     // Core instance
     private var coreInstance: DatadogCoreProtocol? = nil
+    /// Whether to keep the replays the replay sample rate leaves out in case their session reports
+    /// an error. Set with the rest of the SDK configuration, and read by Session Replay, which on
+    /// iOS carries this switch in its own configuration.
+    public internal(set) var sessionReplayOnError = false
 
     private init() { }
 

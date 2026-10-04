@@ -81,6 +81,8 @@ public class DdSessionReplayImplementation: NSObject {
             }
         }
         
+        sessionReplayConfiguration.sessionReplayOnError = DatadogSDKWrapper.shared.sessionReplayOnError
+
         sessionReplayConfiguration.setAdditionalNodeRecorders([
             SvgViewRecorder(
                 uiManager: uiManager,

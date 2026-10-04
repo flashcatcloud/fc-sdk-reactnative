@@ -101,6 +101,8 @@ fun DdSdkConfiguration.toReadableJavaOnlyMap(): ReadableMap {
     map.put("bundleLogsWithTraces", bundleLogsWithTraces)
 
     trackNonFatalAnrs?.let { map.put("trackNonFatalAnrs", it) }
+    sessionOnError?.let { map.put("sessionOnError", it) }
+    sessionReplayOnError?.let { map.put("sessionReplayOnError", it) }
 
     if (batchProcessingLevel != null) {
         map["batchProcessingLevel"] = batchProcessingLevel

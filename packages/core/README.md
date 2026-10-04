@@ -53,6 +53,10 @@ datadogConfiguration.site = 'CN';
 datadogConfiguration.nativeCrashReportEnabled = true;
 // Optional: sample RUM sessions (here, 80% of sessions are reported. Default = 100%)
 datadogConfiguration.sessionSamplingRate = 80;
+// Optional: also keep the sessions left out by `sessionSamplingRate` that report an error. They are
+// held in memory and send nothing until their first error, which uploads the minute before it.
+// Default = false
+datadogConfiguration.sessionOnError = true;
 // Optional: sample the tracing integration for calls between your app and your backend (here, 80% of
 // calls to your instrumented backend are linked from the RUM view to the trace. Default = 20%)
 // You need to specify the hosts of your backends to enable tracing with these backends
