@@ -37,6 +37,14 @@
                     "description": "Percentage of sampled RUM sessions. Range `0`-`100`.",
                     "type": "integer"
                 },
+                "sessionOnError": {
+                    "description": "Also keeps the sessions `sessionSamplingRate` leaves out, but only those that report an error. Defaults to `false`.",
+                    "type": "boolean"
+                },
+                "sessionReplayOnError": {
+                    "description": "Also keeps the replays the Session Replay sample rate leaves out, but only those of sessions that report an error. Needs Session Replay. Defaults to `false`.",
+                    "type": "boolean"
+                },
                 "site": {
                     "description": "The Flashcat site to send data to (can be 'CN' or 'STAGING', default is 'CN').",
                     "type": "string",

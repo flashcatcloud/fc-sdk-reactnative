@@ -41,6 +41,8 @@
         },
         "serviceName": "my.app",
         "sessionSamplingRate": 80,
+        "sessionOnError": true,
+        "sessionReplayOnError": true,
         "site": "STAGING",
         "telemetrySampleRate": 60,
         "trackBackgroundEvents": true,

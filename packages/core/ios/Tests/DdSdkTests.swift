@@ -1119,6 +1119,64 @@ class DdSdkTests: XCTestCase {
         XCTAssertEqual(ddConfig.trackBackgroundEvents, false)
     }
 
+    func testSessionOnErrorIsOffByDefault() {
+        let configuration = NSDictionary.mockAny().asDdSdkConfiguration()
+
+        let ddConfig = DdSdkNativeInitialization().buildRUMConfiguration(
+            configuration: configuration
+        )
+
+        XCTAssertFalse(configuration.sessionOnError)
+        XCTAssertFalse(configuration.sessionReplayOnError)
+        XCTAssertFalse(ddConfig.sessionOnError)
+    }
+
+    func testSessionOnErrorEnabled() {
+        let configuration = NSDictionary.mockAny(sampleRate: 0, sessionOnError: true).asDdSdkConfiguration()
+
+        let ddConfig = DdSdkNativeInitialization().buildRUMConfiguration(
+            configuration: configuration
+        )
+
+        XCTAssertEqual(ddConfig.sessionSampleRate, 0)
+        XCTAssertTrue(ddConfig.sessionOnError)
+    }
+
+    func testInitializationPublishesSessionReplayOnErrorBeforeTheCore() {
+        defer { DatadogSDKWrapper.shared.sessionReplayOnError = false }
+        // Session Replay may be enabled from an on-core-initialized listener: the switch must be
+        // readable by then.
+        var sessionReplayOnErrorWhenCoreInitialized: Bool? = nil
+        DatadogSDKWrapper.shared.addOnCoreInitializedListener(listener: { _ in
+            sessionReplayOnErrorWhenCoreInitialized = DatadogSDKWrapper.shared.sessionReplayOnError
+        })
+        let configuration = NSDictionary.mockAny(sessionReplayOnError: true).asDdSdkConfiguration()
+
+        DdSdkNativeInitialization().initialize(sdkConfiguration: configuration)
+
+        XCTAssertEqual(sessionReplayOnErrorWhenCoreInitialized, true)
+        XCTAssertTrue(DatadogSDKWrapper.shared.sessionReplayOnError)
+    }
+
+    func testErrorEventMapperDropsTheLoggerCopyOfATrackedError() throws {
+        let ddConfig = DdSdkNativeInitialization().buildRUMConfiguration(configuration: .mockAny())
+        let errorEventMapper = try XCTUnwrap(ddConfig.errorEventMapper)
+
+        // The log that JS error tracking sends alongside the RUM error, forwarded by the logger.
+        let loggerCopy = RUMErrorEvent.mockRandom(source: .logger, contextInfo: ["_dd.error_log.is_crash": true])
+        XCTAssertNil(errorEventMapper(loggerCopy))
+
+        // A log the application sent itself.
+        let loggerError = RUMErrorEvent.mockRandom(source: .logger)
+        XCTAssertNotNil(errorEventMapper(loggerError))
+
+        // The tracked error itself.
+        for source in [RUMErrorEvent.Error.Source.source, .console, .custom] {
+            let trackedError = RUMErrorEvent.mockRandom(source: source, contextInfo: ["_dd.error_log.is_crash": true])
+            XCTAssertNotNil(errorEventMapper(trackedError))
+        }
+    }
+
     func testConfigurationTelemetryOverride() throws {
         let core = MockDatadogCore()
         let configuration: DdSdkConfiguration = .mockAny(
@@ -1379,7 +1437,9 @@ extension DdSdkConfiguration {
         appHangThreshold: Double? = nil,
         trackWatchdogTerminations: Bool = false,
         batchProcessingLevel: NSString? = "MEDIUM",
-        initialResourceThreshold: Double? = nil
+        initialResourceThreshold: Double? = nil,
+        sessionOnError: Bool = false,
+        sessionReplayOnError: Bool = false
     ) -> DdSdkConfiguration {
         DdSdkConfiguration(
             clientToken: clientToken as String,
@@ -1412,7 +1472,9 @@ extension DdSdkConfiguration {
             appHangThreshold: appHangThreshold,
             trackWatchdogTerminations: trackWatchdogTerminations,
             batchProcessingLevel: batchProcessingLevel.asBatchProcessingLevel(),
-            initialResourceThreshold: initialResourceThreshold
+            initialResourceThreshold: initialResourceThreshold,
+            sessionOnError: sessionOnError,
+            sessionReplayOnError: sessionReplayOnError
         )
     }
 }
@@ -1444,7 +1506,9 @@ extension NSDictionary {
         firstPartyHosts: NSArray? = nil,
         bundleLogsWithRum: Bool? = nil,
         bundleLogsWithTraces: Bool? = nil,
-        batchProcessingLevel: NSString = "MEDIUM"
+        batchProcessingLevel: NSString = "MEDIUM",
+        sessionOnError: Bool? = nil,
+        sessionReplayOnError: Bool? = nil
     ) -> NSDictionary {
         var config = NSMutableDictionary()
         config["clientToken"] = clientToken
@@ -1473,6 +1537,8 @@ extension NSDictionary {
         config["bundleLogsWithRum"] = bundleLogsWithRum
         config["bundleLogsWithTraces"] = bundleLogsWithTraces
         config["batchProcessingLevel"] = batchProcessingLevel
+        config["sessionOnError"] = sessionOnError
+        config["sessionReplayOnError"] = sessionReplayOnError
         return config
     }
 }

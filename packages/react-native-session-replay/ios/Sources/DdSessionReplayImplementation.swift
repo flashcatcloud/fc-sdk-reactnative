@@ -94,6 +94,9 @@ public class DdSessionReplayImplementation: NSObject {
         ])
         
         if let core = DatadogSDKWrapper.shared.getCoreInstance() {
+            // Read after the core: the SDK sets the switch before it creates the core, so a core
+            // that exists comes with the configured value.
+            sessionReplayConfiguration.sessionReplayOnError = DatadogSDKWrapper.shared.sessionReplayOnError
             sessionReplay.enable(
                 with: sessionReplayConfiguration,
                 in: core

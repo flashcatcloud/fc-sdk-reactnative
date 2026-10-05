@@ -42,6 +42,8 @@ import DatadogRUM
      - trackWatchdogTerminations: Whether the SDK should track application termination by the watchdog
      - batchProcessingLevel: Maximum number of batches processed sequentially without a delay
      - initialResourceThreshold: The amount of time after a view starts where a Resource should be considered when calculating Time to Network-Settled (TNS)
+     - sessionOnError: Also keeps the sessions the sample rate leaves out, but only those that report an error.
+     - sessionReplayOnError: Also keeps the replays the Session Replay sample rate leaves out, but only those of sessions that report an error.
  */
 @objc(DdSdkConfiguration)
 public class DdSdkConfiguration: NSObject {
@@ -76,6 +78,8 @@ public class DdSdkConfiguration: NSObject {
     public var trackWatchdogTerminations: Bool
     public var batchProcessingLevel: Datadog.Configuration.BatchProcessingLevel
     public var initialResourceThreshold: Double? = nil
+    public var sessionOnError: Bool
+    public var sessionReplayOnError: Bool
 
     public init(
         clientToken: String,
@@ -108,7 +112,9 @@ public class DdSdkConfiguration: NSObject {
         appHangThreshold: Double?,
         trackWatchdogTerminations: Bool,
         batchProcessingLevel: Datadog.Configuration.BatchProcessingLevel,
-        initialResourceThreshold: Double?
+        initialResourceThreshold: Double?,
+        sessionOnError: Bool,
+        sessionReplayOnError: Bool
     ) {
         self.clientToken = clientToken
         self.env = env
@@ -141,6 +147,8 @@ public class DdSdkConfiguration: NSObject {
         self.trackWatchdogTerminations = trackWatchdogTerminations
         self.batchProcessingLevel = batchProcessingLevel
         self.initialResourceThreshold = initialResourceThreshold
+        self.sessionOnError = sessionOnError
+        self.sessionReplayOnError = sessionReplayOnError
     }
 }
 

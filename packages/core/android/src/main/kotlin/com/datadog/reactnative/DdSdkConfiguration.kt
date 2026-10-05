@@ -43,6 +43,8 @@ import java.net.Proxy
  * @param trackNonFatalAnrs Enables tracking of non-fatal ANRs on Android.
  * @param batchProcessingLevel The preferred number of batches of data that will be sent in a single upload (can be 'LOW', 'MEDIUM' (default), 'HIGH')
  * @param initialResourceThreshold "The amount of time after a view starts where a Resource should be considered when calculating Time to Network-Settled (TNS)"
+ * @param sessionOnError Also keeps the sessions the sample rate leaves out, but only those that report an error.
+ * @param sessionReplayOnError Also keeps the replays the Session Replay sample rate leaves out, but only those of sessions that report an error.
  */
 data class DdSdkConfiguration(
     val clientToken: String,
@@ -73,7 +75,9 @@ data class DdSdkConfiguration(
     val bundleLogsWithTraces: Boolean? = null,
     val trackNonFatalAnrs: Boolean? = null,
     val batchProcessingLevel: String? = null,
-    val initialResourceThreshold: Double? = null
+    val initialResourceThreshold: Double? = null,
+    val sessionOnError: Boolean? = null,
+    val sessionReplayOnError: Boolean? = null
 )
 
 internal data class JSONConfigurationFile(
@@ -107,7 +111,9 @@ internal data class JSONDdSdkConfiguration(
     val bundleLogsWithTraces: Boolean? = null,
     val trackNonFatalAnrs: Boolean? = null,
     val batchProcessingLevel: String? = null,
-    val initialResourceThreshold: Double? = null
+    val initialResourceThreshold: Double? = null,
+    val sessionOnError: Boolean? = null,
+    val sessionReplayOnError: Boolean? = null
 )
 
 internal data class JSONProxyConfiguration(

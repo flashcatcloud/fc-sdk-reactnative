@@ -189,6 +189,14 @@ class DdLogsWrapper implements DdLogsType {
         fingerprint: string = '',
         source?: ErrorSource
     ): Promise<void> => {
+        // Internal provenance, restored after the mapper like the source type: the native bridges
+        // rely on it to drop the logger copy of an error RUM already reported. Read before the
+        // mapper, which may edit the context in place.
+        const isTrackedErrorLog =
+            !!context &&
+            (context as Record<string, unknown>)[
+                DdAttributes.errorLogIsCrash
+            ] === true;
         const rawLogEvent: RawLogWithError = {
             message,
             errorKind,
@@ -212,6 +220,13 @@ class DdLogsWrapper implements DdLogsType {
             const updatedContext = validateContext(mappedEvent.context);
 
             updatedContext[DdAttributes.errorSourceType] = 'react-native';
+            if (isTrackedErrorLog) {
+                updatedContext[DdAttributes.errorLogIsCrash] = true;
+                // The crash flag belongs to the RUM error the log goes with. Kept for the mapper,
+                // but on the log it would make the copy the native logger forwards to RUM a crash,
+                // which no error mapper can drop.
+                delete updatedContext[DdAttributes.errorIsCrash];
+            }
 
             if (fingerprint && fingerprint !== '') {
                 updatedContext[DdAttributes.errorFingerprint] = fingerprint;

@@ -54,6 +54,8 @@ describe('DdSdkReactNativeConfiguration', () => {
                   "resourceEventMapper": null,
                   "resourceTracingSamplingRate": 20,
                   "serviceName": undefined,
+                  "sessionOnError": false,
+                  "sessionReplayOnError": false,
                   "sessionSamplingRate": 100,
                   "site": "CN",
                   "telemetrySampleRate": 20,
@@ -123,7 +125,9 @@ describe('DdSdkReactNativeConfiguration', () => {
                         },
                         bundleLogsWithRum: true,
                         bundleLogsWithTraces: true,
-                        initialResourceThreshold: 0.123
+                        initialResourceThreshold: 0.123,
+                        sessionOnError: true,
+                        sessionReplayOnError: true
                     }
                 )
             ).toMatchInlineSnapshot(`
@@ -165,6 +169,8 @@ describe('DdSdkReactNativeConfiguration', () => {
                   "resourceEventMapper": [Function],
                   "resourceTracingSamplingRate": 100,
                   "serviceName": "com.test.app",
+                  "sessionOnError": true,
+                  "sessionReplayOnError": true,
                   "sessionSamplingRate": 80,
                   "site": "STAGING",
                   "telemetrySampleRate": 20,
@@ -242,6 +248,8 @@ describe('DdSdkReactNativeConfiguration', () => {
                   "resourceEventMapper": null,
                   "resourceTracingSamplingRate": 0,
                   "serviceName": "",
+                  "sessionOnError": false,
+                  "sessionReplayOnError": false,
                   "sessionSamplingRate": 0,
                   "site": "",
                   "telemetrySampleRate": 20,

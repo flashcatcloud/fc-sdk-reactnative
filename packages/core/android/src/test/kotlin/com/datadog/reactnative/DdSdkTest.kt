@@ -24,6 +24,7 @@ import com.datadog.android.rum._RumInternalProxy
 import com.datadog.android.rum.configuration.VitalsUpdateFrequency
 import com.datadog.android.rum.metric.networksettled.TimeBasedInitialResourceIdentifier
 import com.datadog.android.rum.model.ActionEvent
+import com.datadog.android.rum.model.ErrorEvent
 import com.datadog.android.rum.model.ResourceEvent
 import com.datadog.android.rum.tracking.ActivityViewTrackingStrategy
 import com.datadog.android.telemetry.model.TelemetryConfigurationEvent
@@ -33,6 +34,7 @@ import com.datadog.tools.unit.GenericAssert.Companion.assertThat
 import com.datadog.tools.unit.MockRumMonitor
 import com.datadog.tools.unit.TestUiThreadExecutor
 import com.datadog.tools.unit.forge.BaseConfigurator
+import com.datadog.tools.unit.getFieldValue
 import com.datadog.tools.unit.setStaticValue
 import com.datadog.tools.unit.toReadableArray
 import com.datadog.tools.unit.toReadableJavaOnlyMap
@@ -1367,6 +1369,79 @@ internal class DdSdkTest {
     }
 
     @Test
+    fun `𝕄 initialize native SDK 𝕎 initialize() {sessionOnError, sessionReplayOnError}`(
+        @Forgery configuration: DdSdkConfiguration
+    ) {
+        // Given
+        val bridgeConfiguration = configuration.copy(
+            sampleRate = 0.0,
+            sessionOnError = true,
+            sessionReplayOnError = true
+        )
+        val rumConfigCaptor = argumentCaptor<RumConfiguration>()
+
+        // When
+        testedBridgeSdk.initialize(bridgeConfiguration.toReadableJavaOnlyMap(), mockPromise)
+
+        // Then
+        verify(mockDatadog).enableRum(rumConfigCaptor.capture())
+        assertThat(rumConfigCaptor.firstValue)
+            .hasField("featureConfiguration") {
+                it.hasFieldEqualTo("sampleRate", 0f)
+                it.hasFieldEqualTo("sessionOnError", true)
+                it.hasFieldEqualTo("sessionReplayOnError", true)
+            }
+    }
+
+    @Test
+    fun `𝕄 initialize native SDK 𝕎 initialize() {one on-error switch}`(
+        @Forgery configuration: DdSdkConfiguration,
+        forge: Forge
+    ) {
+        // Given
+        val sessionOnError = forge.aBool()
+        val bridgeConfiguration = configuration.copy(
+            sessionOnError = sessionOnError,
+            sessionReplayOnError = !sessionOnError
+        )
+        val rumConfigCaptor = argumentCaptor<RumConfiguration>()
+
+        // When
+        testedBridgeSdk.initialize(bridgeConfiguration.toReadableJavaOnlyMap(), mockPromise)
+
+        // Then
+        verify(mockDatadog).enableRum(rumConfigCaptor.capture())
+        assertThat(rumConfigCaptor.firstValue)
+            .hasField("featureConfiguration") {
+                it.hasFieldEqualTo("sessionOnError", sessionOnError)
+                it.hasFieldEqualTo("sessionReplayOnError", !sessionOnError)
+            }
+    }
+
+    @Test
+    fun `𝕄 initialize native SDK with on-error switches off 𝕎 initialize() {not set}`(
+        @Forgery configuration: DdSdkConfiguration
+    ) {
+        // Given
+        val bridgeConfiguration = configuration.copy(
+            sessionOnError = null,
+            sessionReplayOnError = null
+        )
+        val rumConfigCaptor = argumentCaptor<RumConfiguration>()
+
+        // When
+        testedBridgeSdk.initialize(bridgeConfiguration.toReadableJavaOnlyMap(), mockPromise)
+
+        // Then
+        verify(mockDatadog).enableRum(rumConfigCaptor.capture())
+        assertThat(rumConfigCaptor.firstValue)
+            .hasField("featureConfiguration") {
+                it.hasFieldEqualTo("sessionOnError", false)
+                it.hasFieldEqualTo("sessionReplayOnError", false)
+            }
+    }
+
+    @Test
     fun `𝕄 initialize native SDK 𝕎 initialize() {rare vitals frequency update}`(
         @Forgery configuration: DdSdkConfiguration
     ) {
@@ -1908,6 +1983,70 @@ internal class DdSdkTest {
                 val droppedEvent = actionMapper.map(actionEvent)
                 assertThat(droppedEvent).isNull()
             }
+    }
+
+    // endregion
+
+    // region error mapper
+
+    @Test
+    fun `𝕄 set an error mapper that drops the logger copy of a tracked error 𝕎 initialize() {}`(
+        @Forgery errorEvent: ErrorEvent
+    ) {
+        // Given
+        val loggerCopy = errorEvent.copy(
+            error = errorEvent.error.copy(source = ErrorEvent.ErrorSource.LOGGER)
+        )
+        loggerCopy.context?.additionalProperties?.put("_dd.error_log.is_crash", true)
+
+        // When
+        testedBridgeSdk.initialize(fakeConfiguration.toReadableJavaOnlyMap(), mockPromise)
+
+        // Then
+        assertThat(capturedErrorEventMapper().map(loggerCopy)).isNull()
+    }
+
+    @Test
+    fun `𝕄 set an error mapper that keeps a logger error 𝕎 initialize() {not from the JS SDK}`(
+        @Forgery errorEvent: ErrorEvent
+    ) {
+        // Given
+        val loggerError = errorEvent.copy(
+            error = errorEvent.error.copy(source = ErrorEvent.ErrorSource.LOGGER)
+        )
+
+        // When
+        testedBridgeSdk.initialize(fakeConfiguration.toReadableJavaOnlyMap(), mockPromise)
+
+        // Then
+        assertThat(capturedErrorEventMapper().map(loggerError)).isSameAs(loggerError)
+    }
+
+    @Test
+    fun `𝕄 set an error mapper that keeps the tracked error itself 𝕎 initialize() {}`(
+        @Forgery errorEvent: ErrorEvent,
+        forge: Forge
+    ) {
+        // Given
+        val source = forge.anElementFrom(
+            ErrorEvent.ErrorSource.values().filter { it != ErrorEvent.ErrorSource.LOGGER }
+        )
+        val trackedError = errorEvent.copy(error = errorEvent.error.copy(source = source))
+        trackedError.context?.additionalProperties?.put("_dd.error_log.is_crash", true)
+
+        // When
+        testedBridgeSdk.initialize(fakeConfiguration.toReadableJavaOnlyMap(), mockPromise)
+
+        // Then
+        assertThat(capturedErrorEventMapper().map(trackedError)).isSameAs(trackedError)
+    }
+
+    private fun capturedErrorEventMapper(): EventMapper<ErrorEvent> {
+        val rumConfigCaptor = argumentCaptor<RumConfiguration>()
+        verify(mockDatadog).enableRum(rumConfigCaptor.capture())
+        val featureConfiguration: Any = rumConfigCaptor.firstValue
+            .getFieldValue("featureConfiguration")
+        return featureConfiguration.getFieldValue("errorEventMapper")
     }
 
     // endregion

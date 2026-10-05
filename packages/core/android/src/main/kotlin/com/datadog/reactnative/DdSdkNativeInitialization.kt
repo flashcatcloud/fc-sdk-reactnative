@@ -22,6 +22,7 @@ import com.datadog.android.rum._RumInternalProxy
 import com.datadog.android.rum.configuration.VitalsUpdateFrequency
 import com.datadog.android.rum.metric.networksettled.TimeBasedInitialResourceIdentifier
 import com.datadog.android.rum.model.ActionEvent
+import com.datadog.android.rum.model.ErrorEvent
 import com.datadog.android.rum.model.ResourceEvent
 import com.datadog.android.rum.tracking.ActivityViewTrackingStrategy
 import com.datadog.android.telemetry.model.TelemetryConfigurationEvent
@@ -117,6 +118,8 @@ class DdSdkNativeInitialization internal constructor(
         if (configuration.sampleRate != null) {
             configBuilder.setSessionSampleRate(configuration.sampleRate.toFloat())
         }
+        configBuilder.setSessionOnError(configuration.sessionOnError ?: false)
+        configBuilder.setSessionReplayOnError(configuration.sessionReplayOnError ?: false)
 
         configBuilder.trackFrustrations(configuration.trackFrustrations ?: true)
         configBuilder.trackBackgroundEvents(configuration.trackBackgroundEvents ?: false)
@@ -161,6 +164,24 @@ class DdSdkNativeInitialization internal constructor(
             object : EventMapper<ActionEvent> {
                 override fun map(event: ActionEvent): ActionEvent? {
                     if (event.context?.additionalProperties?.containsKey(DdSdkImplementation.DD_DROP_ACTION) == true
+                    ) {
+                        return null
+                    }
+                    return event
+                }
+            }
+        )
+
+        configBuilder.setErrorEventMapper(
+            object : EventMapper<ErrorEvent> {
+                override fun map(event: ErrorEvent): ErrorEvent? {
+                    // JS error tracking reports an error to RUM and, flagged with this attribute,
+                    // to Logs at once; the native logger then forwards every error log back to
+                    // RUM. Dropping that copy leaves one RUM error per JS error, the one the JS
+                    // `errorEventMapper` decided on.
+                    if (event.error.source == ErrorEvent.ErrorSource.LOGGER &&
+                        event.context?.additionalProperties
+                            ?.containsKey(DdSdkImplementation.DD_ERROR_LOG_IS_CRASH) == true
                     ) {
                         return null
                     }

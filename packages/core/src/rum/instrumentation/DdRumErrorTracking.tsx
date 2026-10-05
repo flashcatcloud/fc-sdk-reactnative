@@ -17,6 +17,7 @@ import {
     DEFAULT_ERROR_NAME
 } from '../../utils/errorUtils';
 import { executeWithDelay } from '../../utils/jsUtils';
+import { DdAttributes } from '../DdAttributes';
 import { DdRum } from '../DdRum';
 import { ErrorSource } from '../types';
 
@@ -72,7 +73,7 @@ export class DdRumErrorTracking {
         const stacktrace = getErrorStackTrace(error);
         const errorName = getErrorName(error);
         this.reportError(message, ErrorSource.SOURCE, stacktrace, errorName, {
-            '_dd.error.is_crash': isFatal,
+            [DdAttributes.errorIsCrash]: isFatal,
             '_dd.error.raw': error
         }).then(async () => {
             DdRumErrorTracking.isInDefaultErrorHandler = true;
@@ -153,7 +154,7 @@ export class DdRumErrorTracking {
                 stacktrace,
                 {
                     ...context,
-                    '_dd.error_log.is_crash': true
+                    [DdAttributes.errorLogIsCrash]: true
                 },
                 undefined,
                 source

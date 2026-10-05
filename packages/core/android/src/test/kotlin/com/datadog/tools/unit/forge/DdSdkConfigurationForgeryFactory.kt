@@ -81,6 +81,8 @@ class DdSdkConfigurationForgeryFactory : ForgeryFactory<DdSdkConfiguration> {
             bundleLogsWithRum = forge.aBool(),
             bundleLogsWithTraces = forge.aBool(),
             trackNonFatalAnrs = forge.aBool(),
+            sessionOnError = forge.aNullable { aBool() },
+            sessionReplayOnError = forge.aNullable { aBool() },
             batchProcessingLevel = forge.aNullable {
                 anElementFrom(
                     "LOW",

@@ -48,6 +48,9 @@ public class DdSdkNativeInitialization: NSObject {
             return
         }
         self.setVerbosityLevel(configuration: sdkConfiguration)
+        // Published before the core, so that Session Replay enabled from an on-core-initialized
+        // listener reads the configured value.
+        DatadogSDKWrapper.shared.sessionReplayOnError = sdkConfiguration.sessionReplayOnError
 
         let coreConfiguration = self.buildSDKConfiguration(configuration: sdkConfiguration)
         DatadogSDKWrapper.shared.initialize(
@@ -169,7 +172,7 @@ public class DdSdkNativeInitialization: NSObject {
             networkSettledResourcePredicate = TimeBasedTNSResourcePredicate(threshold: initialResourceThreshold)
         }
         
-        return RUM.Configuration(
+        var rumConfiguration = RUM.Configuration(
             applicationID: configuration.applicationId,
             sessionSampleRate: (configuration.sampleRate as? NSNumber)?.floatValue ?? Float(DefaultConfiguration.sessionSamplingRate),
             uiKitViewsPredicate: uiKitViewsPredicate,
@@ -194,10 +197,23 @@ public class DdSdkNativeInitialization: NSObject {
                 }
                 return actionEvent
             },
+            errorEventMapper: { errorEvent in
+                // JS error tracking reports an error to RUM and, flagged with this attribute, to
+                // Logs at once; the native logger then forwards every error log back to RUM.
+                // Dropping that copy leaves one RUM error per JS error, the one the JS
+                // `errorEventMapper` decided on.
+                if errorEvent.error.source == .logger,
+                   errorEvent.context?.contextInfo[InternalConfigurationAttributes.errorLogIsCrash] != nil {
+                    return nil
+                }
+                return errorEvent
+            },
             onSessionStart: DdSdkSessionStartedListener.instance.rumSessionListener,
             customEndpoint: customRUMEndpointURL,
             telemetrySampleRate: (configuration.telemetrySampleRate as? NSNumber)?.floatValue ?? Float(DefaultConfiguration.telemetrySampleRate)
         )
+        rumConfiguration.sessionOnError = configuration.sessionOnError
+        return rumConfiguration
     }
     
     func buildLogsConfiguration(configuration: DdSdkConfiguration) -> Logs.Configuration {

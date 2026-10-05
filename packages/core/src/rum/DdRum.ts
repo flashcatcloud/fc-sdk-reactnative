@@ -252,6 +252,13 @@ class DdRumWrapper implements DdRumType {
         timestampMs: number = this.timeProvider.now(),
         fingerprint?: string
     ): Promise<void> => {
+        // Whether the error crashed the app is a fact of the error, not of its context: kept
+        // whatever the mapper does to the context. Read before the mapper, which may edit the
+        // context in place.
+        const isCrash =
+            !!context &&
+            (context as Record<string, unknown>)[DdAttributes.errorIsCrash] ===
+                true;
         const mappedEvent = this.errorEventMapper.applyEventMapper({
             message,
             source,
@@ -269,6 +276,9 @@ class DdRumWrapper implements DdRumType {
         const updatedContext: any = validateContext(mappedEvent.context);
 
         updatedContext[DdAttributes.errorSourceType] = 'react-native';
+        if (isCrash) {
+            updatedContext[DdAttributes.errorIsCrash] = true;
+        }
 
         const _debugId = debugId;
         if (_debugId) {

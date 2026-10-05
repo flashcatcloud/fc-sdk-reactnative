@@ -121,6 +121,8 @@ internal class DdSdkNativeInitializationTest {
             "[B3MULTI, TRACECONTEXT]"
         )
         assertThat(configuration.initialResourceThreshold).isEqualTo(0.5)
+        assertThat(configuration.sessionOnError).isEqualTo(true)
+        assertThat(configuration.sessionReplayOnError).isEqualTo(true)
     }
 
     @Test
@@ -162,6 +164,8 @@ internal class DdSdkNativeInitializationTest {
         assertThat(configuration.proxyConfig).isNull()
         assertThat(configuration.firstPartyHosts).isNull()
         assertThat(configuration.initialResourceThreshold).isEqualTo(0.1)
+        assertThat(configuration.sessionOnError).isEqualTo(false)
+        assertThat(configuration.sessionReplayOnError).isEqualTo(false)
     }
 
     @Test

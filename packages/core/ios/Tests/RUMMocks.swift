@@ -513,3 +513,20 @@ extension RUMActionEvent: RandomMockable {
         )
     }
 }
+
+extension RUMErrorEvent {
+    static func mockRandom(
+        source: RUMErrorEvent.Error.Source,
+        contextInfo: [String: Encodable] = [:]
+    ) -> RUMErrorEvent {
+        return RUMErrorEvent(
+            dd: .init(session: .init(plan: .plan1, sessionPrecondition: nil)),
+            application: .init(id: .mockRandom()),
+            context: .init(contextInfo: contextInfo),
+            date: .mockRandom(),
+            error: .init(message: .mockRandom(), source: source),
+            session: .init(hasReplay: nil, id: .mockRandom(), type: .user),
+            view: .init(id: .mockRandom(), url: .mockRandom())
+        )
+    }
+}

@@ -7,7 +7,7 @@
 import XCTest
 @testable import DatadogSDKReactNativeSessionReplay
 import DatadogSessionReplay
-import DatadogSDKReactNative
+@testable import DatadogSDKReactNative
 import DatadogInternal
 import React
 
@@ -79,6 +79,30 @@ internal class DdSessionReplayTests: XCTestCase {
         ))
     }
     
+    func testEnablesSessionReplayWithTheSessionReplayOnErrorOfTheSDKConfiguration() {
+        for sessionReplayOnError in [true, false] {
+            let sessionReplayMock = MockSessionReplay()
+            DatadogSDKWrapper.shared.sessionReplayOnError = sessionReplayOnError
+            defer { DatadogSDKWrapper.shared.sessionReplayOnError = false }
+
+            DdSessionReplayImplementation(
+                sessionReplayProvider: { sessionReplayMock },
+                uiManager: MockUIManager(),
+                fabricWrapper: MockFabricWrapper()
+            ).enable(
+                replaySampleRate: 0,
+                customEndpoint: "",
+                imagePrivacyLevel: "MASK_ALL",
+                touchPrivacyLevel: "HIDE",
+                textAndInputPrivacyLevel: "MASK_ALL",
+                startRecordingImmediately: true,
+                resolve: mockResolve,
+                reject: mockReject)
+
+            XCTAssertEqual(sessionReplayMock.enabledConfiguration?.sessionReplayOnError, sessionReplayOnError)
+        }
+    }
+
     func testEnablesSessionReplayWithBadPrivacyLevels() {
         let sessionReplayMock = MockSessionReplay()
         let uiManagerMock = MockUIManager()
@@ -165,8 +189,10 @@ private class MockSessionReplay: SessionReplayProtocol {
     }
 
     public var calledMethods = [CalledMethod]()
+    public var enabledConfiguration: SessionReplay.Configuration?
 
     func enable(with configuration: SessionReplay.Configuration, in core: DatadogCoreProtocol) {
+        enabledConfiguration = configuration
         calledMethods.append(
             .enable(
                 replaySampleRate: configuration.replaySampleRate,

@@ -108,6 +108,11 @@ internal struct InternalConfigurationAttributes {
     /// It flags the action as dropped by the user so it can be dropped in the action mapper.
     /// Expects `Bool` value.
     static let dropAction = "_dd.action.drop_action"
+
+    /// Custom attribute of the log that JS error tracking sends alongside each RUM error it reports.
+    /// The native logger forwards error logs to RUM; the error mapper drops that copy.
+    /// Expects `Bool` value.
+    static let errorLogIsCrash = "_dd.error_log.is_crash"
 }
 
 /// Error messages that can be thrown to the JS SDK

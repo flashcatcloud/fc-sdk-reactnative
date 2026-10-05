@@ -128,6 +128,8 @@ describe('DatadogProvider', () => {
                   "resourceTracingSamplingRate": 20,
                   "sampleRate": 100,
                   "serviceName": undefined,
+                  "sessionOnError": false,
+                  "sessionReplayOnError": false,
                   "site": "CN",
                   "telemetrySampleRate": 20,
                   "trackBackgroundEvents": false,
