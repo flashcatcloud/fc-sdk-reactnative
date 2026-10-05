@@ -72,6 +72,47 @@ describe('DdLogs', () => {
             }
         );
 
+        it('keeps the crash flag of a tracked error off the log but visible to the mapper', async () => {
+            const seenByMapper: Record<string, unknown>[] = [];
+            DdLogs.registerLogEventMapper(log => {
+                seenByMapper.push({ ...log.context });
+                return log;
+            });
+
+            await DdLogs.error('message', 'TypeError', 'message', 'stack', {
+                '_dd.error_log.is_crash': true,
+                '_dd.error.is_crash': true
+            });
+            // A log the application sends itself keeps its own context.
+            await DdLogs.error('own', 'TypeError', 'own', 'stack', {
+                '_dd.error.is_crash': true
+            });
+
+            expect(seenByMapper[0]['_dd.error.is_crash']).toBe(true);
+            expect(NativeModules.DdLogs.errorWithError).toHaveBeenNthCalledWith(
+                1,
+                'message',
+                'TypeError',
+                'message',
+                'stack',
+                {
+                    '_dd.error.source_type': 'react-native',
+                    '_dd.error_log.is_crash': true
+                }
+            );
+            expect(NativeModules.DdLogs.errorWithError).toHaveBeenNthCalledWith(
+                2,
+                'own',
+                'TypeError',
+                'own',
+                'stack',
+                {
+                    '_dd.error.is_crash': true,
+                    '_dd.error.source_type': 'react-native'
+                }
+            );
+        });
+
         it('registers event mapper and maps logs', async () => {
             const logEventMapper: LogEventMapper = log => {
                 return {

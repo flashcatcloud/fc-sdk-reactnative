@@ -145,13 +145,6 @@ export class DdRumErrorTracking {
         errorName: string,
         context: object = {}
     ): Promise<[void, void]> => {
-        // The crash flag stays on the RUM error. On the log it would make the copy the native
-        // logger forwards to RUM a crash, which no error mapper can drop.
-        const logContext: Record<string, unknown> = {
-            ...context,
-            [DdAttributes.errorLogIsCrash]: true
-        };
-        delete logContext[DdAttributes.errorIsCrash];
         return Promise.all([
             DdRum.addError(message, source, stacktrace, context),
             DdLogs.error(
@@ -159,7 +152,10 @@ export class DdRumErrorTracking {
                 errorName,
                 message,
                 stacktrace,
-                logContext,
+                {
+                    ...context,
+                    [DdAttributes.errorLogIsCrash]: true
+                },
                 undefined,
                 source
             )

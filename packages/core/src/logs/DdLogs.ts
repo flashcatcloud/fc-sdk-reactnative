@@ -221,6 +221,10 @@ class DdLogsWrapper implements DdLogsType {
             updatedContext[DdAttributes.errorSourceType] = 'react-native';
             if (isTrackedErrorLog) {
                 updatedContext[DdAttributes.errorLogIsCrash] = true;
+                // The crash flag belongs to the RUM error the log goes with. Kept for the mapper,
+                // but on the log it would make the copy the native logger forwards to RUM a crash,
+                // which no error mapper can drop.
+                delete updatedContext[DdAttributes.errorIsCrash];
             }
 
             if (fingerprint && fingerprint !== '') {

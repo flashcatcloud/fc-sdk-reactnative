@@ -1170,6 +1170,36 @@ describe('DdRum', () => {
                 );
             });
 
+            test('keeps the crash flag when the mapper replaces the context', async () => {
+                DdRum.registerErrorEventMapper(event => ({
+                    ...event,
+                    context: { sanitized: true }
+                }));
+                try {
+                    await DdRum.addError(
+                        'error',
+                        ErrorSource.SOURCE,
+                        'stacktrace',
+                        { '_dd.error.is_crash': true, secret: 'value' }
+                    );
+                } finally {
+                    DdRum.unregisterErrorEventMapper();
+                }
+
+                expect(NativeModules.DdRum.addError).toHaveBeenCalledWith(
+                    'error',
+                    ErrorSource.SOURCE,
+                    'stacktrace',
+                    {
+                        sanitized: true,
+                        '_dd.error.is_crash': true,
+                        '_dd.error.source_type': 'react-native'
+                    },
+                    expect.anything(),
+                    ''
+                );
+            });
+
             test('uses empty context with error when context is invalid or null', async () => {
                 const context: any = 123;
                 await DdRum.addError(
