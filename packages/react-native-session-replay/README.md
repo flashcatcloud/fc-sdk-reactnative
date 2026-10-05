@@ -35,7 +35,7 @@ SessionReplay.enable({
 
 **Note**: All configuration properties are optional and should be adjusted based on your application's needs.
 
-To also keep the replays `replaySampleRate` leaves out, but only for sessions that report an error, set `sessionReplayOnError` on the SDK configuration (not on `SessionReplay.enable`), next to `sessionOnError`:
+To also keep the replays `replaySampleRate` leaves out, but only for sessions that report an error, set `sessionReplayOnError` on the SDK configuration (not on `SessionReplay.enable`). It does not need `sessionOnError`: a session the session sample rate collects keeps its replay on error too.
 
 ```js
 datadogConfiguration.sessionReplayOnError = true;

@@ -1142,16 +1142,38 @@ class DdSdkTests: XCTestCase {
         XCTAssertTrue(ddConfig.sessionOnError)
     }
 
-    func testEnableFeaturesHandsSessionReplayOnErrorToSessionReplay() {
+    func testInitializationPublishesSessionReplayOnErrorBeforeTheCore() {
         defer { DatadogSDKWrapper.shared.sessionReplayOnError = false }
-        DatadogSDKWrapper.shared.setCoreInstance(core: MockDatadogCore())
+        // Session Replay may be enabled from an on-core-initialized listener: the switch must be
+        // readable by then.
+        var sessionReplayOnErrorWhenCoreInitialized: Bool? = nil
+        DatadogSDKWrapper.shared.addOnCoreInitializedListener(listener: { _ in
+            sessionReplayOnErrorWhenCoreInitialized = DatadogSDKWrapper.shared.sessionReplayOnError
+        })
+        let configuration = NSDictionary.mockAny(sessionReplayOnError: true).asDdSdkConfiguration()
 
-        for sessionReplayOnError in [true, false] {
-            let configuration = NSDictionary.mockAny(sessionReplayOnError: sessionReplayOnError).asDdSdkConfiguration()
+        DdSdkNativeInitialization().initialize(sdkConfiguration: configuration)
 
-            DdSdkNativeInitialization().enableFeatures(sdkConfiguration: configuration)
+        XCTAssertEqual(sessionReplayOnErrorWhenCoreInitialized, true)
+        XCTAssertTrue(DatadogSDKWrapper.shared.sessionReplayOnError)
+    }
 
-            XCTAssertEqual(DatadogSDKWrapper.shared.sessionReplayOnError, sessionReplayOnError)
+    func testErrorEventMapperDropsTheLoggerCopyOfATrackedError() throws {
+        let ddConfig = DdSdkNativeInitialization().buildRUMConfiguration(configuration: .mockAny())
+        let errorEventMapper = try XCTUnwrap(ddConfig.errorEventMapper)
+
+        // The log that JS error tracking sends alongside the RUM error, forwarded by the logger.
+        let loggerCopy = RUMErrorEvent.mockRandom(source: .logger, contextInfo: ["_dd.error_log.is_crash": true])
+        XCTAssertNil(errorEventMapper(loggerCopy))
+
+        // A log the application sent itself.
+        let loggerError = RUMErrorEvent.mockRandom(source: .logger)
+        XCTAssertNotNil(errorEventMapper(loggerError))
+
+        // The tracked error itself.
+        for source in [RUMErrorEvent.Error.Source.source, .console, .custom] {
+            let trackedError = RUMErrorEvent.mockRandom(source: source, contextInfo: ["_dd.error_log.is_crash": true])
+            XCTAssertNotNil(errorEventMapper(trackedError))
         }
     }
 

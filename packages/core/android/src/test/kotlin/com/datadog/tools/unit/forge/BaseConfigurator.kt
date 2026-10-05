@@ -24,6 +24,7 @@ open class BaseConfigurator :
         forge.addFactory(TelemetryConfigurationEventForgeryFactory())
         forge.addFactory(ResourceEventForgeryFactory())
         forge.addFactory(ActionEventForgeryFactory())
+        forge.addFactory(ErrorEventForgeryFactory())
         forge.useJvmFactories()
     }
 }

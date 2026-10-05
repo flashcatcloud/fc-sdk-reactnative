@@ -174,9 +174,7 @@ export class DdSdkReactNativeConfiguration {
      * Such a session is collected in memory without uploading anything, keeping only its last
      * minute. If it reports an error, that minute is uploaded and the session carries on like any
      * collected one; if it ends without one, nothing of it is ever sent. An error dropped by
-     * `errorEventMapper` does not count - but on Android, an error that error tracking also logs
-     * through `DdLogs` reaches RUM a second time from the native logger, which counts unless
-     * `logEventMapper` drops that log too. Its events report a session sample rate of 0, as it
+     * `errorEventMapper` does not count. Its events report a session sample rate of 0, as it
      * stands for itself rather than for the population a rate would imply.
      *
      * Default `false`.

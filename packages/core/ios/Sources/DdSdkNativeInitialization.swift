@@ -48,6 +48,9 @@ public class DdSdkNativeInitialization: NSObject {
             return
         }
         self.setVerbosityLevel(configuration: sdkConfiguration)
+        // Published before the core, so that Session Replay enabled from an on-core-initialized
+        // listener reads the configured value.
+        DatadogSDKWrapper.shared.sessionReplayOnError = sdkConfiguration.sessionReplayOnError
 
         let coreConfiguration = self.buildSDKConfiguration(configuration: sdkConfiguration)
         DatadogSDKWrapper.shared.initialize(
@@ -80,7 +83,6 @@ public class DdSdkNativeInitialization: NSObject {
     }
 
     func enableFeatures(sdkConfiguration: DdSdkConfiguration) {
-        DatadogSDKWrapper.shared.sessionReplayOnError = sdkConfiguration.sessionReplayOnError
         let rumConfig = buildRUMConfiguration(configuration: sdkConfiguration)
         DatadogSDKWrapper.shared.enableRUM(with: rumConfig)
         
@@ -194,6 +196,17 @@ public class DdSdkNativeInitialization: NSObject {
                     return nil
                 }
                 return actionEvent
+            },
+            errorEventMapper: { errorEvent in
+                // JS error tracking reports an error to RUM and, flagged with this attribute, to
+                // Logs at once; the native logger then forwards every error log back to RUM.
+                // Dropping that copy leaves one RUM error per JS error, the one the JS
+                // `errorEventMapper` decided on.
+                if errorEvent.error.source == .logger,
+                   errorEvent.context?.contextInfo[InternalConfigurationAttributes.errorLogIsCrash] != nil {
+                    return nil
+                }
+                return errorEvent
             },
             onSessionStart: DdSdkSessionStartedListener.instance.rumSessionListener,
             customEndpoint: customRUMEndpointURL,

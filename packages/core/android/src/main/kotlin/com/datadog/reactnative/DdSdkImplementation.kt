@@ -276,6 +276,7 @@ class DdSdkImplementation(
         internal const val DD_VERSION_SUFFIX = "_dd.version_suffix"
         internal const val DD_DROP_RESOURCE = "_dd.resource.drop_resource"
         internal const val DD_DROP_ACTION = "_dd.action.drop_action"
+        internal const val DD_ERROR_LOG_IS_CRASH = "_dd.error_log.is_crash"
         internal const val MONITOR_JS_ERROR_MESSAGE = "Error monitoring JS refresh rate"
         internal const val PACKAGE_INFO_NOT_FOUND_ERROR_MESSAGE = "Error getting package info"
         internal const val NAME = "DdSdk"
