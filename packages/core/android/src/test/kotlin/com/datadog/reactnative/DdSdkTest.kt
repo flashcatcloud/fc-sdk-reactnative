@@ -1394,6 +1394,31 @@ internal class DdSdkTest {
     }
 
     @Test
+    fun `𝕄 initialize native SDK 𝕎 initialize() {one on-error switch}`(
+        @Forgery configuration: DdSdkConfiguration,
+        forge: Forge
+    ) {
+        // Given
+        val sessionOnError = forge.aBool()
+        val bridgeConfiguration = configuration.copy(
+            sessionOnError = sessionOnError,
+            sessionReplayOnError = !sessionOnError
+        )
+        val rumConfigCaptor = argumentCaptor<RumConfiguration>()
+
+        // When
+        testedBridgeSdk.initialize(bridgeConfiguration.toReadableJavaOnlyMap(), mockPromise)
+
+        // Then
+        verify(mockDatadog).enableRum(rumConfigCaptor.capture())
+        assertThat(rumConfigCaptor.firstValue)
+            .hasField("featureConfiguration") {
+                it.hasFieldEqualTo("sessionOnError", sessionOnError)
+                it.hasFieldEqualTo("sessionReplayOnError", !sessionOnError)
+            }
+    }
+
+    @Test
     fun `𝕄 initialize native SDK with on-error switches off 𝕎 initialize() {not set}`(
         @Forgery configuration: DdSdkConfiguration
     ) {

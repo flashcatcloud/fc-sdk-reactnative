@@ -193,6 +193,7 @@ class DdLogsWrapper implements DdLogsType {
         // rely on it to drop the logger copy of an error RUM already reported. Read before the
         // mapper, which may edit the context in place.
         const isTrackedErrorLog =
+            !!context &&
             (context as Record<string, unknown>)[
                 DdAttributes.errorLogIsCrash
             ] === true;

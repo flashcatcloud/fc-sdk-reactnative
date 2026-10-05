@@ -1170,6 +1170,24 @@ describe('DdRum', () => {
                 );
             });
 
+            test('accepts a null context', async () => {
+                await DdRum.addError(
+                    'error',
+                    ErrorSource.CUSTOM,
+                    'stacktrace',
+                    null as any
+                );
+
+                expect(NativeModules.DdRum.addError).toHaveBeenCalledWith(
+                    'error',
+                    ErrorSource.CUSTOM,
+                    'stacktrace',
+                    { '_dd.error.source_type': 'react-native' },
+                    expect.anything(),
+                    ''
+                );
+            });
+
             test('keeps the crash flag when the mapper replaces the context', async () => {
                 DdRum.registerErrorEventMapper(event => ({
                     ...event,

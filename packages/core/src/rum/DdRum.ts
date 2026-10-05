@@ -256,8 +256,9 @@ class DdRumWrapper implements DdRumType {
         // whatever the mapper does to the context. Read before the mapper, which may edit the
         // context in place.
         const isCrash =
+            !!context &&
             (context as Record<string, unknown>)[DdAttributes.errorIsCrash] ===
-            true;
+                true;
         const mappedEvent = this.errorEventMapper.applyEventMapper({
             message,
             source,

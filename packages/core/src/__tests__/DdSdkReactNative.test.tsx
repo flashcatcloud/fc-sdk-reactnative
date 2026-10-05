@@ -528,6 +528,31 @@ describe('DdSdkReactNative', () => {
             );
         });
 
+        it.each([
+            [true, false],
+            [false, true]
+        ])(
+            'initializes with sessionOnError %s and sessionReplayOnError %s',
+            async (sessionOnError, sessionReplayOnError) => {
+                const configuration = new DdSdkReactNativeConfiguration(
+                    '2',
+                    'env',
+                    '1'
+                );
+                configuration.sessionOnError = sessionOnError;
+                configuration.sessionReplayOnError = sessionReplayOnError;
+
+                await DdSdkReactNative.initialize(configuration);
+
+                expect(NativeModules.DdSdk.initialize).toHaveBeenCalledWith(
+                    expect.objectContaining({
+                        sessionOnError,
+                        sessionReplayOnError
+                    })
+                );
+            }
+        );
+
         it('initializes with sessionOnError and sessionReplayOnError when they are specified', async () => {
             // GIVEN
             const configuration = new DdSdkReactNativeConfiguration(
