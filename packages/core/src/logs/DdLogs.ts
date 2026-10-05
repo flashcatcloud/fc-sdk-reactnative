@@ -212,6 +212,11 @@ class DdLogsWrapper implements DdLogsType {
             const updatedContext = validateContext(mappedEvent.context);
 
             updatedContext[DdAttributes.errorSourceType] = 'react-native';
+            // Internal provenance, restored after the mapper like the source type: the native
+            // bridges rely on it to drop the logger copy of an error RUM already reported.
+            if ((context as any)[DdAttributes.errorLogIsCrash] === true) {
+                updatedContext[DdAttributes.errorLogIsCrash] = true;
+            }
 
             if (fingerprint && fingerprint !== '') {
                 updatedContext[DdAttributes.errorFingerprint] = fingerprint;

@@ -19,6 +19,17 @@ export const DdAttributes = {
     errorFingerprint: '_dd.error.fingerprint',
 
     /**
+     * Whether the RUM error is a crash, read by the native SDKs.
+     */
+    errorIsCrash: '_dd.error.is_crash',
+
+    /**
+     * Marks the log that error tracking sends alongside each RUM error it reports. The native
+     * logger forwards error logs to RUM; the bridges drop that copy, so the error counts once.
+     */
+    errorLogIsCrash: '_dd.error_log.is_crash',
+
+    /**
      * Debug ID attached to a log or a RUM event.
      * The Debug ID establishes a unique connection between a bundle and its corresponding sourcemap.
      * Expects {@link String} value.

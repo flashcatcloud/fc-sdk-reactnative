@@ -17,6 +17,7 @@ import {
     DEFAULT_ERROR_NAME
 } from '../../utils/errorUtils';
 import { executeWithDelay } from '../../utils/jsUtils';
+import { DdAttributes } from '../DdAttributes';
 import { DdRum } from '../DdRum';
 import { ErrorSource } from '../types';
 
@@ -72,7 +73,7 @@ export class DdRumErrorTracking {
         const stacktrace = getErrorStackTrace(error);
         const errorName = getErrorName(error);
         this.reportError(message, ErrorSource.SOURCE, stacktrace, errorName, {
-            '_dd.error.is_crash': isFatal,
+            [DdAttributes.errorIsCrash]: isFatal,
             '_dd.error.raw': error
         }).then(async () => {
             DdRumErrorTracking.isInDefaultErrorHandler = true;
@@ -144,6 +145,13 @@ export class DdRumErrorTracking {
         errorName: string,
         context: object = {}
     ): Promise<[void, void]> => {
+        // The crash flag stays on the RUM error. On the log it would make the copy the native
+        // logger forwards to RUM a crash, which no error mapper can drop.
+        const logContext: Record<string, unknown> = {
+            ...context,
+            [DdAttributes.errorLogIsCrash]: true
+        };
+        delete logContext[DdAttributes.errorIsCrash];
         return Promise.all([
             DdRum.addError(message, source, stacktrace, context),
             DdLogs.error(
@@ -151,10 +159,7 @@ export class DdRumErrorTracking {
                 errorName,
                 message,
                 stacktrace,
-                {
-                    ...context,
-                    '_dd.error_log.is_crash': true
-                },
+                logContext,
                 undefined,
                 source
             )

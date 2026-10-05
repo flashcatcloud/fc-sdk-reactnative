@@ -31,6 +31,30 @@ describe('DdLogs', () => {
             DdLogs.unregisterLogEventMapper();
         });
 
+        it('keeps the error tracking marker when the mapper replaces the context', async () => {
+            DdLogs.registerLogEventMapper(log => ({
+                ...log,
+                context: { replaced: true }
+            }));
+
+            await DdLogs.error('message', 'TypeError', 'message', 'stack', {
+                '_dd.error_log.is_crash': true,
+                custom: 'value'
+            });
+
+            expect(NativeModules.DdLogs.errorWithError).toHaveBeenCalledWith(
+                'message',
+                'TypeError',
+                'message',
+                'stack',
+                {
+                    replaced: true,
+                    '_dd.error.source_type': 'react-native',
+                    '_dd.error_log.is_crash': true
+                }
+            );
+        });
+
         it('registers event mapper and maps logs', async () => {
             const logEventMapper: LogEventMapper = log => {
                 return {
