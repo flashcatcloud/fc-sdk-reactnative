@@ -3,6 +3,10 @@
  * This product includes software developed at Datadog (https://www.datadoghq.com/).
  * Copyright 2016-Present Datadog, Inc.
  */
+// The generated Swift header references RCTPromiseResolveBlock / RCTPromiseRejectBlock but only pulls
+// React in through `@import React`, which is skipped in Objective-C++ files (C++ modules are off).
+// Import React's bridge types explicitly so these .mm files compile on every React Native version.
+#import <React/RCTBridgeModule.h>
 // Import this first to prevent require cycles
 #if __has_include("DatadogSDKReactNative-Swift.h")
 #import <DatadogSDKReactNative-Swift.h>
